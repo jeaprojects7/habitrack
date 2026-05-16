@@ -52,8 +52,8 @@ ob_start();
             <a href="" class="back-button btn btn-icon bg-green-600 hover:bg-green-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
         </div>
         
-        <!-- Switcher -->
-        <div class="fixed top-1/4 -left-2 z-3">
+        <!-- Switcher removed 51626-->
+        <!-- <div class="fixed top-1/4 -left-2 z-3">
             <span class="relative inline-block rotate-90">
                 <input type="checkbox" class="checkbox opacity-0 absolute" id="chk" />
                 <label class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-700 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" for="chk">
@@ -62,16 +62,16 @@ ob_start();
                     <span class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] size-7"></span>
                 </label>
             </span>
-        </div>
+        </div> -->
         <!-- Switcher -->
 
-        <!-- LTR & RTL Mode Code -->
-        <div class="fixed top-[40%] -left-3 z-50">
+        <!-- LTR & RTL Mode Code removed 51626-->
+        <!-- <div class="fixed top-[40%] -left-3 z-50">
             <a href="" id="switchRtl">
                 <span class="py-1 px-3 relative inline-block rounded-b-md -rotate-90 bg-white dark:bg-slate-900 shadow-md dark:shadow dark:shadow-gray-800 font-semibold rtl:block ltr:hidden" >LTR</span>
                 <span class="py-1 px-3 relative inline-block rounded-b-md -rotate-90 bg-white dark:bg-slate-900 shadow-md dark:shadow dark:shadow-gray-800 font-semibold ltr:block rtl:hidden">RTL</span>
             </a>
-        </div>
+        </div> -->
         <!-- LTR & RTL Mode Code -->
 
         <!-- JAVASCRIPTS -->
@@ -79,6 +79,12 @@ ob_start();
         <script src="<?php echo $static_url; ?>/libs/feather-icons/feather.min.js"></script>
         <script src="<?php echo $static_url; ?>/js/plugins.init.js"></script>
         <script src="<?php echo $static_url; ?>/js/app.js"></script>
+
+        <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> added 51326 -->
         <!-- JAVASCRIPTS -->
+         <!-- added v 2 lines 51626 -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/habitrack/views/Adminassets/js/agentlogin.js"></script>
     </body>
 </html>

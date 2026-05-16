@@ -17,10 +17,10 @@ $static_url = '/habitrack/views/Adminassets';
 
                     <div class="max-w-[1000px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-700 rounded-md">
                         <a href="home.php"><img src="<?php echo $static_url; ?>/images/logo-icon-64.png" class="mx-auto" alt=""></a>
-                        <h5 class="my-6 text-xl font-semibold">CLIENT SIGN-UP</h5>
+                        <h5 class="my-6 text-xl font-semibold">ADMIN SIGN-UP</h5>
                         
 
-                        <input type="hidden" name="clientID" id="clientID">
+                        <input type="hidden" name="adminID" id="adminID">
                             
                         <form class="text-start" method="POST">
                             <div class="grid grid-cols-4 gap-4">
@@ -65,7 +65,7 @@ $static_url = '/habitrack/views/Adminassets';
                             </div>
                             <div class="grid grid-cols-1 gap-4">
                                 <div class="flex justify-center">
-                                    <button type="button" name="btn-signup" id="btn-signup"
+                                    <button type="button" name="btn-signup-admin" id="btn-signup-admin"
                                     class="btn bg-green-600 hover:bg-green-700 text-white rounded-md px-6 py-2">
                                         Sign Up
                                     </button>
@@ -79,8 +79,4 @@ $static_url = '/habitrack/views/Adminassets';
                 </div>
             </div>
         </section><!--end section -->
-        <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-
-        <!-- added 51626 - sweetalert2 cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

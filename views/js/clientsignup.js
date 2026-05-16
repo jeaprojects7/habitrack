@@ -24,7 +24,7 @@
 
 
         $.ajax({
-            url: "/habitrack_tryWsignin/ajax/clientsignup.save.ajax.php",
+            url: "/habitrack/ajax/clientsignup.save.ajax.php",
             method: "POST",
             data: client,
             cache: false,
@@ -66,11 +66,33 @@
             });
 
             if (emptyFields.length > 0) {
-                alert("SALA KA")
+                // added 51626
+                Swal.fire({
+                icon: "error",
+                title: "<span style='font-size:35px;'>Missing Fields</span>",
+                html: `
+                    <div style="font-size:25px; text-align:center;">
+                        Please fill in the following fields:<br><br>
+
+                        <div style="display:inline-block; text-align:left;">
+                            ${emptyFields.map(field => `• ${field}`).join("<br>")}
+                        </div>
+                    </div>
+                `,
+                confirmButtonText: "OK"
+            });
                 return;
+            }else{
+                saveClient(); //changed 51326
+                // added 51626
+                Swal.fire({
+                    icon: "success",
+                    title: "<span style='font-size:35px;'>Success</span>",
+                    html: "<span style='font-size:25px;'>Account created successfully!</span>",
+                    showConfirmButton: true
+                }).then(() => {
+                    window.location = "clientlogin";
+                });
+                //window.location = "login"; /* added 51226 */
             }
-            saveClient();
-            
-            window.location = "login"; /* added 51226 */
-            
     });

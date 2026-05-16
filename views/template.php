@@ -6,15 +6,20 @@
 $static_url = '/habitrack/views/Adminassets';
 
 $allowedRoutes = [
-    'login',
+    'clientlogin', //changed login to clientlogin 51626
+    //'login', 
+    'agentlogin', //added 51626
+    'adminlogin', //added 51626
     'logout',
     'clientsignup',
     'index', /* added 51026 */
     'home',
+    'agentDashboard', /* added 51326 */
+    'adminDashboard', /* added 51326 */
     '404'
 ];
 
-$route = $_GET['route'] ?? 'login'; /* added 51226 */
+$route = $_GET['route'] ?? 'clientlogin'; /* added 51226 */
 $route = basename($route);
 
 if (!in_array($route, $allowedRoutes)) {
@@ -26,7 +31,7 @@ if (!in_array($route, $allowedRoutes)) {
 <html lang="en" class="light scroll-smooth" dir="ltr">
     <head>
         <meta charset="UTF-8">
-        <title>Hously - PHP Real Estate Landing & Admin Dashboard Template</title>
+        <title>Habitrack</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="Tailwind CSS Saas & Software Landing Page Template">
         <meta name="keywords" content="agency, application, business, clean, creative, cryptocurrency, it solutions, modern, multipurpose, nft marketplace, portfolio, saas, software, tailwind css">
@@ -135,7 +140,9 @@ if (!in_array($route, $allowedRoutes)) {
                     "clientsignup" => [
                     "clientsignup.js"
                     ],
-                    "login" => ["login.js"] //added 050726
+                    "clientlogin" => ["clientlogin.js"], //added 050726 changed from login to clientlogin 51626
+                    "agentlogin" => ["agentlogin.js"], //added 050726 changed from login to clientlogin 51626
+                    "adminlogin" => ["adminlogin.js"] //added 51626
                     
                 ];
 
@@ -143,7 +150,7 @@ if (!in_array($route, $allowedRoutes)) {
                         foreach ($routeScripts[$route] as $script) {
                         $scriptPath = "views/js/" . $script;
                         if (file_exists($scriptPath)) {
-                            echo '<script src="/habitrack_tryWsignin/' . $scriptPath . '"></script>';
+                            echo '<script src="/habitrack/' . $scriptPath . '"></script>';
                         }
                     }
                 }

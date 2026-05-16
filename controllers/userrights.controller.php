@@ -20,15 +20,38 @@ class ControllerUserRights{
 				    if ($answer == 'ok') {
                         echo '<script>
 									window.location = "sidebar.php";
-								</script>';
-				    }
-				}else{
-					echo '<br><div style="text-align:center;" class="alert alert-danger">User or password incorrect</div>';
+								</script>'; //changed to v 51326
+						/* echo ' 
+						<script>
+						Swal.fire({
+							title: "Login Successful!",
+							icon: "success",
+							confirmButtonText: "Continue"
+						}).then(() => {
+							window.location = "sidebar.php";
+						});
+						</script> 
+						'; added 51326*/
+				   /*  }
+				}else{ */
+					/* echo '<br><div style="text-align:center;" class="alert alert-danger">User or password incorrect</div>'; changed to v 51326 */
+					/* echo '
+					<script>
+					document.addEventListener("DOMContentLoaded", function() {
+						Swal.fire({
+							title: "Login Failed",
+							text: "User or password incorrect",
+							icon: "error",
+							confirmButtonText: "Try Again"
+						});
+					});
+					</script> 
+					';added 51326 */
 				}
+			}
 			
 		}
 	}
-
 
 
 }

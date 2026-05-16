@@ -12,31 +12,42 @@ ob_start();
 session_start();
 
 
-require_once __DIR__ . "/../../models/connection.php"; 
-require_once __DIR__ . "/../../models/clientsignup.model.php"; 
+/* require_once __DIR__ . "/../../controllers/login.controller.php";
+
+ControllerLogin::ctrLogin(); */
+
+//require_once __DIR__ . "/../../models/connection.php"; 
+//require_once __DIR__ . "/../../models/clientsignup.model.php"; 
+
+require_once __DIR__ . "/../../controllers/clientsignup.controller.php"; /* added 51426 */
 
 
-if(isset($_POST['login'])){
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+//removed changed to line 23 51426 
+// if(isset($_POST['login'])){
 
-    $user = ModelClient::mdlGetClientLogin($username, $password); 
+//     $username = $_POST['username'];
+//     $password = $_POST['password'];
+ 
+//     $userClient = ModelClient::mdlGetClientLogin($username, $password); /* changed user to userClient 51326 */
+
     
-    if($user){
+//     if($userClient){ /* changed $user to $userClient 51326*/
 
-        $_SESSION["clientID"] = $user["clientID"]; 
-        $_SESSION["clientEmail"] = $user["clientEmail"]; 
+//         $_SESSION["clientID"] = $userClient["clientID"]; 
+//         $_SESSION["clientEmail"] = $userClient["clientEmail"]; 
 
-        $_SESSION["loggedIn"] = "ok";
+//         $_SESSION["loggedIn"] = "ok";
         
-        header("Location: home"); 
-        exit();
+//         $clientUser = $_SESSION["clientID"]; /* added from sir 51426 */
+        
+        
+//         exit();
 
-    }else{
-        echo "<script>alert('Invalid username or password');</script>";
-    }
-}
+//     }else{
+//         echo "<script>alert('Invalid username or password');</script>";
+//     }
+// }
 ?>
 
         
@@ -88,9 +99,22 @@ if(isset($_POST['login'])){
         </div>
 
         <div class="mb-4">
-            <button type="submit" name="login" class="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">
+            <button type="submit" name="login" id = "login"class="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">
                 Login / Sign in
             </button>
+            <?php
+            
+            $login = new ControllerClient();
+            $login -> ctrClientLogin();
+        
+        //    if(isset($_SESSION["clientID"])){ /* chat 51426 */
+        //         // client logged in
+        //     }else if(isset($_SESSION["agentID"])){
+        //         // agent logged in
+        //     }else if(isset($_SESSION["adminID"])){
+        //         // admin logged in
+        //     }
+            ?>
         </div>
         <div class="text-center">
                                     <span class="text-slate-400 me-2">Don't have an account ?</span> <a href="clientsignup" class="text-black dark:text-white font-bold">Sign Up</a>

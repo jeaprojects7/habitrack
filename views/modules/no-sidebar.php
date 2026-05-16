@@ -52,8 +52,8 @@ ob_start();
             <a href="" class="back-button btn btn-icon bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md"><i data-feather="arrow-left" class="size-4"></i></a>
         </div>
 
-        <!-- Switcher -->
-        <div class="fixed top-[30%] -end-2 z-50">
+        <!-- Switcher removed 51626-->
+        <!-- <div class="fixed top-[30%] -end-2 z-50">
             <span class="relative inline-block rotate-90">
                 <input type="checkbox" class="checkbox opacity-0 absolute" id="chk" />
                 <label class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-700 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" for="chk">
@@ -62,16 +62,16 @@ ob_start();
                     <span class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] size-7"></span>
                 </label>
             </span>
-        </div>
+        </div> -->
         <!-- Switcher -->
 
-        <!-- LTR & RTL Mode Code -->
-        <div class="fixed top-[40%] -end-3 z-50">
+        <!-- LTR & RTL Mode Code removed 51626-->
+        <!-- <div class="fixed top-[40%] -end-3 z-50">
             <a href="" id="switchRtl">
                 <span class="py-1 px-3 relative inline-block rounded-b-md -rotate-90 bg-white dark:bg-slate-900 shadow-md dark:shadow dark:shadow-gray-700 font-bold rtl:block ltr:hidden" >LTR</span>
                 <span class="py-1 px-3 relative inline-block rounded-t-md -rotate-90 bg-white dark:bg-slate-900 shadow-md dark:shadow dark:shadow-gray-700 font-bold ltr:block rtl:hidden">RTL</span>
             </a>
-        </div>
+        </div> -->
         <!-- LTR & RTL Mode Code -->
 
         <!-- JAVASCRIPTS -->
