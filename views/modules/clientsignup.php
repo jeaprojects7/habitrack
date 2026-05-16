@@ -52,12 +52,15 @@ $static_url = '/habitrack/views/Adminassets';
 
                                 <div class="mb-4">
                                     <label class="font-medium">Phone Number:</label>
-                                    <input name="phonenumber" id="phonenumber" type="text" class="form-input mt-3" placeholder="Enter Phone Number">
+                                    <!-- changed v 51626 -->
+                                    <input name="phonenumber" id="phonenumber" type="text" class="form-input mt-3" placeholder="Enter Phone Number"
+                                    maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
                                 </div>
 
                                 <div class="mb-4">
                                     <label class="font-medium">Password:</label>
-                                    <input name="password" id="password" type="password" class="form-input mt-3" placeholder="Password">
+                                    <!-- added maxlength v 51626 -->
+                                    <input name="password" id="password" type="password" class="form-input mt-3" placeholder="Password" maxlength="10">
                                 </div>
 
                                 
