@@ -38,7 +38,10 @@ function loginClient() {
             clientLoginEmail: email,
             clientLoginPass: password
         },
+        dataType: 'text',
         success: function (response) {
+            console.log(response);
+            
 
             if (response.trim() === "success") {
 

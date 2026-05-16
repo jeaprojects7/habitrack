@@ -9,7 +9,7 @@ ob_start();
 $navlink_content = ob_get_clean(); // Capture the navlink content
 ob_start();
 
-session_start();
+// session_start();
 
 
 require_once __DIR__ . "/../../models/connection.php"; 

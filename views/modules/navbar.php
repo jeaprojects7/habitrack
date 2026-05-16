@@ -1,144 +1,184 @@
-<!-- Top Header (amo ni ya iya ka navbar-->
-<div class="top-header">
-    <div class="header-bar flex justify-between">
-        <div class="flex items-center space-x-1">
-            <!-- Logo -->
-            <a href="#" class="xl:hidden block me-2">
-                <img src="<?php echo $static_url; ?>/images/logo-icon-32.png" class="md:hidden block" alt="">
-                <span class="md:block hidden">
-                    <img src="<?php echo $static_url; ?>/images/logo-dark.png" class="inline-block dark:hidden" alt="">
-                    <img src="<?php echo $static_url; ?>/images/logo-light.png" class="hidden dark:inline-block" alt="">
-                </span>
-            </a>
-            <!-- Logo -->
+<?php $static_url = '/habitrack/views/Adminassets'; ?>
 
-            <!-- show or close sidebar -->
-            <a id="close-sidebar" class="size-8 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-[20px] text-center bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-100 dark:border-gray-800 text-slate-900 dark:text-white rounded-md" href="javascript:void(0)">
-                <i data-feather="menu" class="size-4"></i>
-            </a>
-            <!-- show or close sidebar -->
+<!-- <div id="navbar" class="sticky top-0 z-40 w-full h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"> -->
+    <!-- changed this ^ to this v -->
+<div id="navbar"
+class="fixed top-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
+style="left:300px; z-index:30; transition:0.3s;"> <!-- ga work na ni pero wala sa hamburger -->
+<!-- <div id="navbar"
+class="fixed top-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300"
+style="left:300px; z-index:30;"> --> <!-- changed this ^to this v for the collapse thingy 51726 -->
+<!-- <div id="navbar"
+class="fixed top-0 left-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
+style="z-index:30;"> -->
+    <!-- LEFT -->
+    <div class="flex items-center gap-4">
 
-            <!-- Searchbar -->
-            <div class="ps-1.5">
-                <div class="form-icon relative sm:block hidden">
-                    <i class="mdi mdi-magnify absolute top-1/2 -translate-y-1/2 mt-[1px] start-3"></i>
-                    <input type="text" class="form-input w-56 ps-9 py-2 px-3 h-8 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-gray-100 dark:border-gray-800 focus:ring-0 bg-white" name="s" id="searchItem" placeholder="Search...">
-                </div>
-            </div>
-            <!-- Searchbar -->
+        <button id="toggle-sidebar" class="p-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+            <i data-feather="menu" class="w-5 h-5"></i>
+        </button>
+
+        <div class="relative">
+            <i data-feather="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" placeholder="Search..."
+                class="border border-gray-200 dark:border-gray-700 rounded-lg pl-9 pr-4 py-2 w-56 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <ul class="list-none mb-0 space-x-1">
-            
+    </div>
+
+    <!-- RIGHT -->
+    <div class="flex items-center gap-4">
+
+        <!-- NOTIFICATION BELL -->
+        <div class="relative" id="notif-wrapper">
+            <button id="notif-btn" class="relative p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors">
+                <i data-feather="bell" class="w-5 h-5"></i>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
 
             <!-- Notification Dropdown -->
-            <li class="dropdown inline-block relative">
-                <button data-dropdown-toggle="dropdown" class="dropdown-toggle size-8 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-[20px] text-center bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-100 dark:border-gray-800 text-slate-900 dark:text-white rounded-md" type="button">
-                    <i data-feather="bell" class="size-4"></i>
-                    <span class="absolute top-0 end-0 flex items-center justify-center bg-red-600 text-white text-[10px] font-bold rounded-md size-2 after:content-[''] after:absolute after:h-2 after:w-2 after:bg-red-600 after:top-0 after:end-0 after:rounded-md after:animate-ping"></span>
-                </button>
-                <!-- Dropdown menu -->
-                <div class="dropdown-menu absolute end-0 m-0 mt-4 z-10 w-64 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-700 hidden" onclick="event.stopPropagation();">
-                    <span class="px-4 py-4 flex justify-between">
-                        <span class="font-semibold">Notifications</span>
-                        <span class="flex items-center justify-center bg-red-600/20 text-red-600 text-[10px] font-bold rounded-md w-5 max-h-5 ms-1">3</span>
-                    </span>
-                    <ul class="py-2 text-start h-64 border-t border-gray-100 dark:border-gray-800" data-simplebar>
-                        <li>
-                            <a href="#!" class="block font-medium py-1.5 px-4">
-                                <div class="flex items-center">
-                                    <div class="size-10 rounded-md shadow shadow-green-600/10 dark:shadow-gray-700 bg-green-600/10 dark:bg-slate-800 text-green-600 dark:text-white flex items-center justify-center">
-                                        <i data-feather="shopping-cart" class="size-4"></i>
-                                    </div>
-                                    <div class="ms-2">
-                                        <span class="text-[15px] font-medium block">Order Complete</span>
-                                        <small class="text-slate-400">15 min ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#!" class="block font-medium py-1.5 px-4">
-                                <div class="flex items-center">
-                                    <img src="<?php echo $static_url; ?>/images/client/04.jpg" class="size-10 rounded-md shadow dark:shadow-gray-700" alt="">
-                                    <div class="ms-2">
-                                        <span class="text-[15px] font-medium block"><span class="font-semibold">Message</span> from Luis</span>
-                                        <small class="text-slate-400">1 hour ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#!" class="block font-medium py-1.5 px-4">
-                                <div class="flex items-center">
-                                    <div class="size-10 rounded-md shadow shadow-green-600/10 dark:shadow-gray-700 bg-green-600/10 dark:bg-slate-800 text-green-600 dark:text-white flex items-center justify-center">
-                                        <i data-feather="dollar-sign" class="size-4"></i>
-                                    </div>
-                                    <div class="ms-2">
-                                        <span class="text-[15px] font-medium block"><span class="font-semibold">One Refund Request</span></span>
-                                        <small class="text-slate-400">2 hour ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#!" class="block font-medium py-1.5 px-4">
-                                <div class="flex items-center">
-                                    <div class="size-10 rounded-md shadow shadow-green-600/10 dark:shadow-gray-700 bg-green-600/10 dark:bg-slate-800 text-green-600 dark:text-white flex items-center justify-center">
-                                        <i data-feather="truck" class="size-4"></i>
-                                    </div>
-                                    <div class="ms-2">
-                                        <span class="text-[15px] font-medium block">Deliverd your Order</span>
-                                        <small class="text-slate-400">Yesterday</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#!" class="block font-medium py-1.5 px-4">
-                                <div class="flex items-center">
-                                    <img src="<?php echo $static_url; ?>/images/client/05.jpg" class="size-10 rounded-md shadow dark:shadow-gray-700" alt="">
-                                    <div class="ms-2">
-                                        <span class="text-[15px] font-medium block"><span class="font-semibold">Cally</span> started following you</span>
-                                        <small class="text-slate-400">2 days ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li><!--end dropdown-->
-            <!-- Notification Dropdown -->
+            <div id="notif-dropdown"
+                class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 z-50">
 
-            <!-- User/Profile Dropdown -->
-            <li class="dropdown inline-block relative">
-                <button data-dropdown-toggle="dropdown" class="dropdown-toggle items-center" type="button">
-                    <span class="size-8 inline-flex items-center justify-center tracking-wide align-middle duration-500 text-[20px] text-center bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-100 dark:border-gray-800 text-slate-900 dark:text-white rounded-md"><img src="<?php echo $static_url; ?>/images/client/07.jpg" class="rounded-md" alt=""></span>
-                </button>
-                <!-- Dropdown menu -->
-                <div class="dropdown-menu absolute end-0 m-0 mt-4 z-10 w-44 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-700 hidden" onclick="event.stopPropagation();">
-                    <ul class="py-2 text-start">
-                        <li>
-                            <a href="profile.php" class="block py-1 px-4 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><i class="mdi mdi-account-outline me-2"></i>Profile</a>
-                        </li>
-                        <li>
-                            <a href="chat.php" class="block py-1 px-4 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><i class="mdi mdi-chat-outline me-2"></i>Chat</a>
-                        </li>
-                        <li>
-                            <a href="profile-setting.php" class="block py-1 px-4 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><i class="mdi mdi-cog-outline me-2"></i>Settings</a>
-                        </li>
-                        <li class="border-t border-gray-100 dark:border-gray-800 my-2"></li>
-                        <li>
-                            <a href="lock-screen.php" class="block py-1 px-4 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><i class="mdi mdi-lock-outline me-2"></i>Lockscreen</a>
-                        </li>
-                        <li>
-                            <a href="/habitrack" class="block py-1 px-4 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><i class="mdi mdi-logout me-2"></i>Logout</a>
-                        </li>
-                    </ul>
+                <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-slate-700">
+                    <h6 class="font-semibold text-sm text-gray-700 dark:text-white">Notifications</h6>
+                    <span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">3 New</span>
                 </div>
-            </li><!--end dropdown-->
-            <!-- User/Profile Dropdown -->
-        </ul>
+
+                <ul class="divide-y divide-gray-100 dark:divide-slate-700 max-h-64 overflow-y-auto">
+                    <li class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <i data-feather="home" class="w-4 h-4 text-blue-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-700 dark:text-white font-medium">New property listed</p>
+                            <p class="text-xs text-gray-400">2 minutes ago</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
+                        <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                            <i data-feather="user" class="w-4 h-4 text-green-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-700 dark:text-white font-medium">New user registered</p>
+                            <p class="text-xs text-gray-400">10 minutes ago</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-slate-700 cursor-pointer">
+                        <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center flex-shrink-0">
+                            <i data-feather="message-circle" class="w-4 h-4 text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-700 dark:text-white font-medium">New message received</p>
+                            <p class="text-xs text-gray-400">1 hour ago</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="px-4 py-3 border-t border-gray-100 dark:border-slate-700 text-center">
+                    <a href="#" class="text-sm text-blue-500 hover:underline">View all notifications</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="relative" id="profile-wrapper">
+            <button id="profile-btn" class="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg px-2 py-1 transition-colors">
+                <img src="<?php echo $static_url; ?>/images/client/07.jpg"
+                     class="w-9 h-9 rounded-full object-cover border-2 border-gray-200">
+                <i data-feather="chevron-down" class="w-4 h-4 text-gray-500"></i>
+            </button>
+
+            <!-- Profile Dropdown -->
+            <div id="profile-dropdown"
+                class="hidden absolute right-0 mt-2 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 z-50">
+
+                <div class="px-4 py-3 border-b border-gray-100 dark:border-slate-700">
+                    <p class="text-sm font-semibold text-gray-700 dark:text-white">
+                        <?php echo isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : 'Admin'; ?>
+                    </p>
+                    <p class="text-xs text-gray-400">
+                        <?php echo isset($_SESSION['email']) ? htmlspecialchars($_SESSION['email']) : 'admin@habitrack.com'; ?>
+                    </p>
+                </div>
+
+                <ul class="py-1">
+                    <li>
+                        <a href="?route=userProfile" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <i data-feather="user" class="w-4 h-4"></i> My Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="?route=settings" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <i data-feather="settings" class="w-4 h-4"></i> Settings
+                        </a>
+                    </li>
+                    <li class="border-t border-gray-100 dark:border-slate-700">
+                        <a href="logout" class="flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-slate-700">
+                            <i data-feather="log-out" class="w-4 h-4"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
     </div>
 </div>
-<!-- Top Header -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ── SIDEBAR TOGGLE ──────────────────────────────────────────
+    const toggleBtn = document.getElementById('toggle-sidebar');
+    const sidebar   = document.getElementById('sidebar');
+    const spacer    = document.getElementById('sidebar-spacer');
+    const layoutPage = document.querySelector('.layout-page');
+
+    if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', function () {
+            const isHidden = sidebar.classList.toggle('-translate-x-full');
+
+            // shrink/expand spacer so content fills the gap
+            if (spacer) {
+            // In navbar.php toggle JS - update this line:
+            spacer.style.width = isHidden ? '0px' : '280px';
+            }
+        });
+    }
+
+    // ── NOTIFICATION DROPDOWN ───────────────────────────────────
+    const notifBtn      = document.getElementById('notif-btn');
+    const notifDropdown = document.getElementById('notif-dropdown');
+
+    if (notifBtn && notifDropdown) {
+        notifBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('hidden');
+            profileDropdown.classList.add('hidden'); // close other
+        });
+    }
+
+    // ── PROFILE DROPDOWN ────────────────────────────────────────
+    const profileBtn      = document.getElementById('profile-btn');
+    const profileDropdown = document.getElementById('profile-dropdown');
+
+    if (profileBtn && profileDropdown) {
+        profileBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+            notifDropdown.classList.add('hidden'); // close other
+        });
+    }
+
+    // ── CLOSE DROPDOWNS ON OUTSIDE CLICK ────────────────────────
+    document.addEventListener('click', function () {
+        if (notifDropdown)    notifDropdown.classList.add('hidden');
+        if (profileDropdown)  profileDropdown.classList.add('hidden');
+    });
+
+
+
+});
+</script>

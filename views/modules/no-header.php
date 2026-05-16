@@ -85,6 +85,6 @@ ob_start();
          <!-- added v 2 lines 51626 -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="/habitrack/views/Adminassets/js/agentlogin.js"></script>
+        <script src="/habitrack/views/js/clientlogin.js"></script>
     </body>
 </html>
