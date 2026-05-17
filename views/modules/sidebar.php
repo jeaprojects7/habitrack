@@ -115,7 +115,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
             <!-- Dashboard -->
             <li>
-                <a href="?route=home"
+                <a href="home"
                    class="sidebar-link <?php echo (!isset($_GET['route']) || $_GET['route'] === 'home') ? 'active' : ''; ?> ">
                     <i data-feather="grid" style="width:18px;height:18px;flex-shrink:0;"></i>
                     <span>Dashboard</span>
@@ -124,7 +124,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
             <!-- Explore Properties -->
             <li>
-                <a href="?route=exploreProperties"
+                <a href="exploreProperties"
                    class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'exploreProperties') ? 'active' : ''; ?>">
                     <i data-feather="home" style="width:18px;height:18px;flex-shrink:0;"></i>
                     <span>Explore Properties</span>
@@ -133,7 +133,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
             <!-- Favorite Properties -->
             <li>
-                <a href="?route=favoriteProperties"
+                <a href="favoriteProperties"
                    class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'favoriteProperties') ? 'active' : ''; ?>">
                     <i data-feather="heart" style="width:18px;height:18px;flex-shrink:0;"></i>
                     <span>Favorite Properties</span>
@@ -142,7 +142,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
             <!-- Add Properties -->
             <li>
-                <a href="?route=addProperties"
+                <a href="addProperties"
                    class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'addProperties') ? 'active' : ''; ?>">
                     <i data-feather="plus-square" style="width:18px;height:18px;flex-shrink:0;"></i>
                     <span>Add Properties</span>
@@ -170,7 +170,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     <i data-feather="chevron-right" class="submenu-arrow"></i>
                 </button>
                 <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="?route=userProfile">My Profile</a></li>
+                    <li><a href="userProfile">My Profile</a></li>
                     <li><a href="#">Settings</a></li>
                 </ul>
             </li>
@@ -225,9 +225,9 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     <i data-feather="chevron-right" class="submenu-arrow"></i>
                 </button>
                 <ul id="auth-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="?route=clientlogin">Login</a></li>
-                    <li><a href="?route=clientsignup">Register</a></li>
-                    <li><a href="?route=logout">Logout</a></li>
+                    <li><a href="clientlogin">Login</a></li>
+                    <li><a href="clientsignup">Register</a></li>
+                    <li><a href="logout">Logout</a></li>
                 </ul>
             </li>
 
@@ -241,7 +241,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                 <ul id="misc-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
                     <li><a href="#">Coming Soon</a></li>
                     <li><a href="#">Maintenance</a></li>
-                    <li><a href="?route=404">404 Page</a></li>
+                    <li><a href="404">404 Page</a></li>
                 </ul>
             </li>
 

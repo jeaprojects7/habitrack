@@ -54,44 +54,63 @@ tailwind.config = {
     <main>
 <?php
 
-$static_url = '/habitrack/views/Adminassets';
+if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_GET["route"])){
+    $route = basename($_GET["route"]);
+    $allowedRoutes = [
+        'clientlogin',
+        'agentlogin',
+        'adminlogin',
+        'clientsignup',
+        'home',
+        'agentDashboard',
+        'adminDashboard',
+        'home',
+        'logout'
+    ];
+    if (in_array($route, $allowedRoutes)) {
+        if($route == "clientsignup"){
+            include "modules/clientsignup.php";
+        }else{
+            include "modules/" . $route . ".php";
+        }
+    } else {
+        include "modules/404.php";
+    }
+}else if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok"){
 
-if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") {
-?>
 
-<!-- <div style="display:flex; height:100vh; width:100vw; overflow:hidden;"> changed to this v 51726 for collapse thingy -->
-    <div id="layout" style="display:flex; height:100vh; width:100%; overflow:hidden;">
+// <!-- <div style="display:flex; height:100vh; width:100vw; overflow:hidden;"> changed to this v 51726 for collapse thingy -->
+    echo '<div id="layout" style="display:flex; height:100vh; width:100%; overflow:hidden;">';
 
-    <!-- SIDEBAR -->
-    <!-- <div style="width:250px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
-        <div id="sidebar-container" style="width:250px; flex-shrink:0; transition:0.3s;">
-        <?php include "modules/sidebar.php"; ?>
-    </div>
+    // <!-- SIDEBAR -->
+    // <!-- <div style="width:250px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
+        echo '<div id="sidebar-container" style="width:250px; flex-shrink:0; transition:0.3s">';
+        include "modules/sidebar.php";
+    echo '</div>';
 
-    <!-- MAIN -->
-    <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+    // <!-- MAIN -->
+    echo '<div style="flex:1; display:flex; flex-direction:column; min-width:0">';
 
-        <!-- NAVBAR -->
-        <!-- <div style="height:60px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
-            <div id="navbar-container" style="height:60px; flex-shrink:0; width:100%; transition:0.3s;">
-            <?php include "modules/navbar.php"; ?>
-        </div>
+        // <!-- NAVBAR -->
+        // <!-- <div style="height:60px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
+            echo '<div id="navbar-container" style="height:60px; flex-shrink:0; width:100%; transition:0.3s">';
+            include "modules/navbar.php";
+        echo '</div>';
 
-        <!-- CONTENT -->
-        <div style="flex:1; overflow:auto; padding:20px;">
+        // <!-- CONTENT -->
+        echo '<div style="flex:1; overflow:auto; padding:20px">';
 
-            <?php
+           
             $route = $_GET["route"] ?? "home";
             include "modules/" . $route . ".php";
-            ?>
+         
 
-        </div>
+        echo '</div>';
 
-    </div>
+    echo '</div>';
 
-</div>
+echo '</div>';
 
-<?php
 } else {
     include "modules/clientlogin.php";
 }
