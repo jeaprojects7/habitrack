@@ -4,11 +4,10 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
 $logo_url = '/habitrack/views/assets'; // added 51726
 
 // Define the content for the navlink block
-ob_start();
+
 ?>
 <?php
-$navlink_content = ob_get_clean(); // Capture the navlink content
-ob_start();
+
 
 //session_start();
 
@@ -67,8 +66,5 @@ require_once __DIR__ . "/../../controllers/admin.controller.php"; //added 51626
         </section><!--end section -->
 
 <?php
-$hero_content = ob_get_clean(); // Capture the hero content
 
-// Include the base template
-include "$base_dir/../no-header.php";
 ?>

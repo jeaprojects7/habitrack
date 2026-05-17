@@ -140,7 +140,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
             <!-- Explore Properties -->
             <li>
-                <a href="exploreProperties"
+                <a href="exploreproperty"
                    class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'exploreProperties') ? 'active' : ''; ?>">
                     <i data-feather="home" style="width:18px;height:18px;flex-shrink:0;"></i>
                     <span>Explore Properties</span>
@@ -158,25 +158,14 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
             <!-- Add Properties -->
             <li>
-                <a href="addProperties"
+                <a href="add-property"
                    class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'addProperties') ? 'active' : ''; ?>">
                     <i data-feather="plus-square" style="width:18px;height:18px;flex-shrink:0;"></i>
                     <span>Add Properties</span>
                 </a>
             </li>
 
-            <!-- Apps -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('apps-submenu', this)">
-                    <i data-feather="cpu" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Apps</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="apps-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="#">Chat</a></li>
-                    <li><a href="#">Calendar</a></li>
-                </ul>
-            </li>
+            
 
             <!-- User Profile -->
             <li>
@@ -191,79 +180,8 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                 </ul>
             </li>
 
-            <!-- Blog -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('blog-submenu', this)">
-                    <i data-feather="file-text" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Blog</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="blog-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="#">All Posts</a></li>
-                    <li><a href="#">Add Post</a></li>
-                </ul>
-            </li>
-
-            <!-- Invoice -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('invoice-submenu', this)">
-                    <i data-feather="file" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Invoice</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="invoice-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="#">Invoice List</a></li>
-                    <li><a href="#">Invoice Detail</a></li>
-                </ul>
-            </li>
-
-            <!-- Pages -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('pages-submenu', this)">
-                    <i data-feather="copy" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Pages</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="pages-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="#">Starter</a></li>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Term & Condition</a></li>
-                </ul>
-            </li>
-
-            <!-- Authentication -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('auth-submenu', this)">
-                    <i data-feather="lock" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Authentication</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="auth-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="clientlogin">Login</a></li>
-                    <li><a href="clientsignup">Register</a></li>
-                    <li><a href="logout">Logout</a></li>
-                </ul>
-            </li>
-
-            <!-- Miscellaneous -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('misc-submenu', this)">
-                    <i data-feather="layers" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Miscellaneous</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="misc-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="#">Coming Soon</a></li>
-                    <li><a href="#">Maintenance</a></li>
-                    <li><a href="404">404 Page</a></li>
-                </ul>
-            </li>
-
-        </ul>
-
-    </nav>
+           
+    <!-- </nav> -->
 
 </aside>
 

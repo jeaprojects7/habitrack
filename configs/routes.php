@@ -3,6 +3,9 @@ return [
     'admin' => [
         'adminlogin',
         'adminDashboard',
+        'add-property',
+        'exploreproperty',
+        'property-detail',
         'logout',
     ],
     'agent' => [

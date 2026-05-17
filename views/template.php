@@ -32,8 +32,9 @@ $static_url = '/habitrack/views/Adminassets';
 
     <link rel="stylesheet" href="<?php echo $static_url; ?>/css/output.css">
 
+
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
 
 </head>
@@ -135,6 +136,7 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
 echo '</div>';
 
 } else {
+    $route = "clientlogin";
     include "modules/clientlogin.php";
 }
 ?>
@@ -167,6 +169,8 @@ echo '</div>';
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="<?php echo $static_url; ?>/libs/jsvectormap/jsvectormap.min.js"></script>
 
 <script src="<?php echo $static_url; ?>/libs/shufflejs/shuffle.min.js"></script>
@@ -186,6 +190,16 @@ echo '</div>';
 <script src="<?php echo $static_url; ?>/js/plugins.init.js"></script>
 
 <script src="<?php echo $static_url; ?>/js/app.js"></script>
+
+
+<?php
+    if ($route === 'add-property') {
+        echo '<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>';
+    }
+?>
+
+
+
 
 <!-- ROUTE SCRIPTS -->
 <?php
@@ -208,6 +222,10 @@ if (isset($route)) {
 
         "adminlogin" => [
             "adminlogin.js"
+        ],
+
+        "add-property" => [
+            "add-property.js"
         ]
 
     ];

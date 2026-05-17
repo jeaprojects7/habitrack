@@ -7,6 +7,9 @@ return [
     'agentDashboard'    => 'modules/agent/agentDashboard.php',
     'adminlogin'        => 'modules/adminlogin.php',
     'adminDashboard'    => 'modules/admin/adminDashboard.php',
+    'add-property'      => 'modules/admin/add-property.php',
+    'exploreproperty'   => 'modules/admin/exploreproperty.php',
+    'property-detail'   => 'modules/admin/property-detail.php',
     'logout'            => 'modules/logout.php',
 
 ];
