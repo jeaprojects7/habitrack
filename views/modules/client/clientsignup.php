@@ -3,6 +3,7 @@
 
 $base_dir = __DIR__ . '/modules';
 $static_url = '/habitrack/views/Adminassets';
+$logo_url = '/habitrack/views/assets';
 
 
 ?>
@@ -16,8 +17,8 @@ $static_url = '/habitrack/views/Adminassets';
 
 
                     <div class="max-w-[1000px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-700 rounded-md">
-                        <a href="home.php"><img src="<?php echo $static_url; ?>/images/logo-icon-64.png" class="mx-auto" alt=""></a>
-                        <h5 class="my-6 text-xl font-semibold">CLIENT SIGN-UP</h5>
+                        <a href="home.php"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png"class="mx-auto w-32 h-auto" alt=""></a>
+                        <h5 class="my-6 text-xl font-semibold">SIGN-UP</h5>
                         
 
                         <input type="hidden" name="clientID" id="clientID">
@@ -78,6 +79,10 @@ $static_url = '/habitrack/views/Adminassets';
                                 
                             </div>
                        <!--  </form> -->
+
+                        <div class="fixed bottom-3 end-3 z-10">
+                            <a href="clientlogin" class="back-button btn btn-icon bg-green-600 hover:bg-green-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>

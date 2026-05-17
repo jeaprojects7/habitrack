@@ -48,9 +48,9 @@ ob_start();
         <?php echo $hero_content ?? '<!-- Default hero content here -->'; ?>
     </main>
 
-        <div class="fixed bottom-3 end-3 z-10">
+       <!--  <div class="fixed bottom-3 end-3 z-10">
             <a href="" class="back-button btn btn-icon bg-green-600 hover:bg-green-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
-        </div>
+        </div> -->
         
         <!-- Switcher removed 51626-->
         <!-- <div class="fixed top-1/4 -left-2 z-3">

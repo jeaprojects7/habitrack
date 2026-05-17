@@ -1,6 +1,7 @@
 <?php
 $base_dir = __DIR__ . '/modules';
 $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
+$logo_url = '/habitrack/views/assets'; // // added 51726
 
 // Define the content for the navlink block
 ob_start();
@@ -25,7 +26,7 @@ require_once __DIR__ . "/../../controllers/agent.controller.php"; //added 51626
             <div class="container relative z-3">
                 <div class="flex justify-center">
                     <div class="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-700 rounded-md">
-                        <a href="home.php"><img src="<?php echo $static_url; ?>/images/logo-icon-64.png" class="mx-auto" alt=""></a>
+                        <a href="home.php"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-32 h-auto" alt=""></a>
                         <h5 class="my-6 text-xl font-semibold">Login</h5>
           
                             

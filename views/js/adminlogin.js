@@ -23,12 +23,12 @@ function loginAdmin() {
     }
 
     // LOADING
-    Swal.fire({
+    /* Swal.fire({
         title: "<span style='font-size:30px;'>Logging in...</span>",
         html: "<span style='font-size:22px;'>Please wait</span>",
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading()
-    });
+    }); */
 
     // AJAX REQUEST
     $.ajax({

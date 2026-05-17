@@ -14,6 +14,7 @@ if (!empty($answer) && $answer["adminEmail"] == $email && $answer["adminPass"] =
 
     $_SESSION["loggedIn"] = "ok";
     $_SESSION["adminID"] = $answer["adminID"];
+    $_SESSION["role"] = "admin"; /* added 51726 */
 
     echo "success";
 } else {

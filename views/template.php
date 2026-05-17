@@ -64,12 +64,11 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
         'home',
         'agentDashboard',
         'adminDashboard',
-        'home',
         'logout'
     ];
     if (in_array($route, $allowedRoutes)) {
         if($route == "clientsignup"){
-            include "modules/clientsignup.php";
+            include "modules/client/clientsignup.php";
         }else{
             include "modules/" . $route . ".php";
         }
@@ -77,6 +76,11 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
         include "modules/404.php";
     }
 }else if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok"){
+    $role = $_SESSION["role"] ?? 'client';
+    $routeMap   = include "configs/routes.php";
+    $modulePaths = include "configs/modulePaths.php";
+
+    $allowedRoutes = $routeMap[$role] ?? [];
 
 
 // <!-- <div style="display:flex; height:100vh; width:100vw; overflow:hidden;"> changed to this v 51726 for collapse thingy -->
@@ -93,17 +97,36 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
 
         // <!-- NAVBAR -->
         // <!-- <div style="height:60px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
-            echo '<div id="navbar-container" style="height:60px; flex-shrink:0; width:100%; transition:0.3s">';
+        echo '<div id="navbar-container" style="height:60px; flex-shrink:0; width:100%; transition:0.3s">';
             include "modules/navbar.php";
         echo '</div>';
 
         // <!-- CONTENT -->
         echo '<div style="flex:1; overflow:auto; padding:20px">';
 
-           
+        $route = isset($_GET["route"]) ? basename($_GET["route"]) : 'sample';
+
+        if (isset($_GET["route"])) {
+              $raw = $_GET["route"];
+              // Allow only alphanumeric, hyphens, and ONE slash
+              if (preg_match('/^[a-zA-Z0-9-]+(\/[a-zA-Z0-9-]+)?$/', $raw)) {
+                  $route = $raw;
+              } else {
+                  $route = '404';
+              }
+          }
+
+          if (in_array($route, $allowedRoutes) && isset($modulePaths[$route])) {
+              include $modulePaths[$route];
+          } else {
+              // Distinguish "not found" from "forbidden" for better UX
+              $status = isset($modulePaths[$route]) ? '403' : '404';
+              include "modules/{$status}.php";
+          }
+         /*   
             $route = $_GET["route"] ?? "home";
             include "modules/" . $route . ".php";
-         
+          */
 
         echo '</div>';
 
@@ -119,30 +142,10 @@ echo '</div>';
 
 </main>
 
-<!-- Switcher -->
-<div class="fixed top-[30%] -end-2 z-50">
 
-    <span class="relative inline-block rotate-90">
-
-        <input type="checkbox" class="checkbox opacity-0 absolute" id="chk" />
-
-        <label class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-700 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" for="chk">
-
-            <i data-feather="moon" class="size-[18px] text-yellow-500"></i>
-
-            <i data-feather="sun" class="size-[18px] text-yellow-500"></i>
-
-            <span class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] size-7"></span>
-
-        </label>
-
-    </span>
-
-</div>
-<!-- Switcher -->
 
 <!-- LTR & RTL Mode -->
-<div class="fixed top-[40%] -end-3 z-50">
+<!-- <div class="fixed top-[40%] -end-3 z-50">
 
     <a href="" id="switchRtl">
 
@@ -156,7 +159,7 @@ echo '</div>';
 
     </a>
 
-</div>
+</div> -->
 <!-- LTR & RTL Mode -->
 
 <!-- JAVASCRIPTS -->

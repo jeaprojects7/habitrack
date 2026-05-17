@@ -19,15 +19,15 @@ ob_start();
                     </div>
                     <div class="title-heading text-center my-auto">
                         <img src="<?php echo $static_url; ?>/images/error.png" class="mx-auto" alt="">
-                        <h1 class="mt-3 mb-6 md:text-4xl text-3xl font-bold">Page Not Found?</h1>
-                        <p class="text-slate-400">Whoops, this is embarassing. <br> Looks like the page you were looking for wasn't found.</p>
+                        <h1 class="mt-3 mb-6 md:text-4xl text-3xl font-bold">Access Denied!</h1>
+                        <p class="text-slate-400">Whoops, this is embarassing. <br> Looks like you do not have access to the page you were looking for.</p>
                         
                         <div class="mt-4">
                             <a href="home" class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md">Back to Home</a>
                         </div>
                     </div>
                     <div class="text-center">
-                        <p class="mb-0 text-slate-400">© <script>document.write(new Date().getFullYear())</script> Hously. Design & Develop with <i class="mdi mdi-heart text-red-600"></i> by <a href="https://shreethemes.in/" target="_blank" class="text-reset">Shreethemes</a>.</p>
+                        <p class="mb-0 text-slate-400">© <script>document.write(new Date().getFullYear())</script> Habitrack. Design & Develop with <i class="mdi mdi-heart text-red-600"></i> by <a href="https://shreethemes.in/" target="_blank" class="text-reset">Shreethemes</a>.</p>
                     </div>
                 </div>
             </div><!--end grid-->

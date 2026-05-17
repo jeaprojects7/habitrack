@@ -14,6 +14,7 @@ if (!empty($answer) && $answer["agentEmail"] == $email && $answer["agentPass"] =
 
     $_SESSION["loggedIn"] = "ok";
     $_SESSION["agentID"] = $answer["agentID"];
+    $_SESSION["role"] = "agent"; /* added 51726 */
 
     echo "success";
 } else {

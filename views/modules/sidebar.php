@@ -1,4 +1,5 @@
-<?php $static_url = '/habitrack/views/Adminassets'; ?>
+<?php $static_url = '/habitrack/views/Adminassets';
+      $logo_url = '/habitrack/views/assets'; ?>
 
 <style>
 .sidebar-link {
@@ -104,9 +105,24 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
     <nav style="height: 100%; display: flex; flex-direction: column;"> -->
 
         <!-- Logo -->
-        <div style="padding: 16px 26px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-            <a href="home">
-                <img src="<?php echo $static_url; ?>/images/logo-light.png" alt="Habitrack" style="height: 30px;">
+        <div style="padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <a href="home" style="
+       display:flex;
+       align-items:center;
+       gap:12px;
+       text-decoration:none;
+       ">
+                <img src="<?php echo $logo_url; ?>/images/jeaLogo.png" alt="" style="height: 50px;  width:auto;">
+
+                <span style="
+            color:white;
+            font-size:30px;
+            font-weight:450;
+            margin-top:6px;
+           
+        ">
+            Habitrack
+        </span>
             </a>
         </div>
 

@@ -3,7 +3,7 @@
 <!-- <div id="navbar" class="sticky top-0 z-40 w-full h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"> -->
     <!-- changed this ^ to this v -->
 <div id="navbar"
-class="fixed top-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
+class="fixed top-0 right-0 h-[67px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
 style="left:300px; z-index:30; transition:0.3s;"> <!-- ga work na ni pero wala sa hamburger -->
 <!-- <div id="navbar"
 class="fixed top-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300"
@@ -28,6 +28,30 @@ style="z-index:30;"> -->
 
     <!-- RIGHT -->
     <div class="flex items-center gap-4">
+
+    <!-- Switcher -->
+<!-- <div class="fixed top-[2%] right-60 z-50"> -->
+    <div class="relative flex items-center">
+
+    <span class="relative inline-block rotate-0">
+        
+
+        <input type="checkbox" class="checkbox opacity-0 absolute" id="chk" />
+
+        <label class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-700 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" for="chk">
+
+            <i data-feather="moon" class="size-[18px] text-yellow-500"></i>
+
+            <i data-feather="sun" class="size-[18px] text-yellow-500"></i>
+
+            <span class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] size-7"></span>
+
+        </label>
+
+    </span>
+
+</div>
+<!-- Switcher -->
 
         <!-- NOTIFICATION BELL -->
         <div class="relative" id="notif-wrapper">
