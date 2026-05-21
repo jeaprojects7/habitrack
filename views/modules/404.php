@@ -2,12 +2,8 @@
 $base_dir = __DIR__ . '/modules';
 $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
 
-// Define the content for the navlink block
-ob_start();
-?>
-<?php
-$navlink_content = ob_get_clean(); // Capture the navlink content
-ob_start();
+
+
 ?>
 
     <section class="relative bg-green-600/5">
@@ -35,8 +31,5 @@ ob_start();
     </section><!--end section-->
 
 <?php
-$hero_content = ob_get_clean(); // Capture the hero content
 
-// Include the base template
-include "$base_dir/../no-header.php";
 ?>

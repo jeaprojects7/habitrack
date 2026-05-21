@@ -47,7 +47,7 @@ $static_url = '/habitrack/views/Adminassets';
 
 </head>
 
-<body class="font-body text-base text-black dark:text-white dark:bg-slate-900">
+<body class="font-body text-base text-black dark:text-white light:bg-slate-900">
 
 <script src="https://cdn.tailwindcss.com"></script>
 
