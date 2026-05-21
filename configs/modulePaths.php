@@ -1,5 +1,6 @@
 <?php
 return [
+    'dashboard'      => 'modules/dashboard.php',
     'clientsignup'      => 'modules/client/clientsignup.php',
     'clientlogin'       => 'modules/clientlogin.php',
     'home'              => 'modules/client/home.php',

@@ -32,8 +32,16 @@ $static_url = '/habitrack/views/Adminassets';
 
     <link rel="stylesheet" href="<?php echo $static_url; ?>/css/output.css">
 
+    <!-- Leaflet CSS from dashboard 51826-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Bootstrap -->
+    <!-- SlimSelect CSS from dashboard 51826-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.css" />
+
+    <!-- Map Module CSS from dashboard 51826-->
+    <link rel="stylesheet" href="/habitrack/views/Adminassets/css/map.css" />
+
+    <!-- Bootstrap from dashboard 51826-->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
 
@@ -63,6 +71,7 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
         'adminlogin',
         'clientsignup',
         'home',
+        'dashboard',
         'agentDashboard',
         'adminDashboard',
         'logout'
@@ -70,6 +79,26 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
     if (in_array($route, $allowedRoutes)) {
         if($route == "clientsignup"){
             include "modules/client/clientsignup.php";
+        }else if($route == "dashboard"){
+            // <!-- <div style="display:flex; height:100vh; width:100vw; overflow:hidden;"> changed to this v 51726 for collapse thingy -->
+            echo '<div id="layout" style="display:flex; height:100vh; width:100%; overflow:hidden;">';
+
+            // <!-- SIDEBAR -->
+            // <!-- <div style="width:250px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
+                echo '<div id="sidebar-container" style="width:250px; flex-shrink:0; transition:0.3s">';
+                include "modules/sidebar.php";
+            echo '</div>';
+
+            // <!-- MAIN -->
+            echo '<div style="flex:1; display:flex; flex-direction:column; min-width:0">';
+
+                // <!-- NAVBAR -->
+                // <!-- <div style="height:60px; flex-shrink:0;"> changed to this for collapse thingy v 51726 -->
+                echo '<div id="navbar-container" style="height:60px; flex-shrink:0; width:100%; transition:0.3s">';
+                    include "modules/navbar.php";
+                echo '</div>';
+                include "modules/dashboard.php";
+            
         }else{
             include "modules/" . $route . ".php";
         }
@@ -137,7 +166,8 @@ echo '</div>';
 
 } else {
     $route = "clientlogin";
-    include "modules/clientlogin.php";
+    
+    include "modules/start.php";
 }
 ?>
     </main>
@@ -191,6 +221,12 @@ echo '</div>';
 
 <script src="<?php echo $static_url; ?>/js/app.js"></script>
 
+<!-- Leaflet JS from dashboard 51826-->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/habitrack/views/js/map.js"></script>
+
+<!-- SlimSelect JS from dashboard 51826-->
+<script src="https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.min.js"></script>
 
 <?php
     if ($route === 'add-property') {
@@ -226,6 +262,10 @@ if (isset($route)) {
 
         "add-property" => [
             "add-property.js"
+        ],
+
+        "map" => [
+            "map.js"
         ]
 
     ];

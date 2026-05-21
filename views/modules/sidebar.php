@@ -1,5 +1,70 @@
 <?php $static_url = '/habitrack/views/Adminassets';
-      $logo_url = '/habitrack/views/assets'; ?>
+      $logo_url = '/habitrack/views/assets'; 
+
+$role = $_SESSION['role'] ?? 'client';
+
+$sidebarMenus = [
+
+    'admin' => [
+
+        [
+            'title' => 'Dashboard',
+            'route' => 'adminDashboard',
+            'icon'  => 'grid'
+        ],
+
+        [
+            'title' => 'Explore Properties',
+            'route' => 'exploreproperty',
+            'icon'  => 'home'
+        ],
+
+        [
+            'title' => 'Add Properties',
+            'route' => 'add-property',
+            'icon'  => 'plus-square'
+        ],
+
+    ],
+
+    'agent' => [
+
+        [
+            'title' => 'Dashboard',
+            'route' => 'agentDashboard',
+            'icon'  => 'grid'
+        ],
+
+    ],
+
+    'client' => [
+
+        [
+            'title' => 'Dashboard',
+            'route' => 'home',
+            'icon'  => 'grid'
+        ],
+
+        [
+            'title' => 'Explore Properties',
+            'route' => 'exploreproperty',
+            'icon'  => 'home'
+        ],
+
+        [
+            'title' => 'Favorite Properties',
+            'route' => 'favoriteProperties',
+            'icon'  => 'heart'
+        ],
+
+    ]
+
+];
+
+$currentMenu = $sidebarMenus[$role] ?? [];
+
+?>
+
 
 <style>
 .sidebar-link {
@@ -129,41 +194,23 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
         <!-- Nav Items -->
         <ul style="flex: 1; padding: 20px 12px; list-style: none; margin: 0; display: flex; flex-direction: column; gap: 4px;">
 
-            <!-- Dashboard -->
+            <?php foreach ($currentMenu as $menu): ?>
+
             <li>
-                <a href="home"
-                   class="sidebar-link <?php echo (!isset($_GET['route']) || $_GET['route'] === 'home') ? 'active' : ''; ?> ">
-                    <i data-feather="grid" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Dashboard</span>
+
+                <a href="<?php echo $menu['route']; ?>"
+                class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === $menu['route']) ? 'active' : ''; ?>">
+
+                    <i data-feather="<?php echo $menu['icon']; ?>"
+                    style="width:18px;height:18px;flex-shrink:0;"></i>
+
+                    <span><?php echo $menu['title']; ?></span>
+
                 </a>
+
             </li>
 
-            <!-- Explore Properties -->
-            <li>
-                <a href="exploreproperty"
-                   class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'exploreProperties') ? 'active' : ''; ?>">
-                    <i data-feather="home" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Explore Properties</span>
-                </a>
-            </li>
-
-            <!-- Favorite Properties -->
-            <li>
-                <a href="favoriteProperties"
-                   class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'favoriteProperties') ? 'active' : ''; ?>">
-                    <i data-feather="heart" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Favorite Properties</span>
-                </a>
-            </li>
-
-            <!-- Add Properties -->
-            <li>
-                <a href="add-property"
-                   class="sidebar-link <?php echo (isset($_GET['route']) && $_GET['route'] === 'addProperties') ? 'active' : ''; ?>">
-                    <i data-feather="plus-square" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>Add Properties</span>
-                </a>
-            </li>
+            <?php endforeach; ?>
 
             
 
