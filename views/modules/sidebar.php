@@ -224,7 +224,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     </button>
                     <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
                         <li><a href="userProfile">My Profile</a></li>
-                        <li><a href="#">Settings</a></li>
+                        <li><a href="userSettings">Settings</a></li>
                     </ul>
                 </li>
             <?php endif; ?>
