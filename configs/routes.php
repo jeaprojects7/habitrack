@@ -1,6 +1,6 @@
 <?php
 return [
-    'admin' => [
+    'Admin' => [
         'adminlogin',
         'adminDashboard',
         'add-property',
@@ -8,12 +8,12 @@ return [
         'property-detail',
         'logout',
     ],
-    'agent' => [
+    'Agent' => [
         'agentlogin',
         'agentDashboard',
         'logout'
     ],
-    'client' => [
+    'Client' => [
         'clientsignup',
         'clientlogin',
         'home',

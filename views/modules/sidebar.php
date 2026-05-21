@@ -5,7 +5,7 @@ $role = $_SESSION['role'] ?? 'client';
 
 $sidebarMenus = [
 
-    'admin' => [
+    'Admin' => [
 
         [
             'title' => 'Dashboard',
@@ -27,7 +27,7 @@ $sidebarMenus = [
 
     ],
 
-    'agent' => [
+    'Agent' => [
 
         [
             'title' => 'Dashboard',
@@ -37,7 +37,7 @@ $sidebarMenus = [
 
     ],
 
-    'client' => [
+    'Client' => [
 
         [
             'title' => 'Dashboard',

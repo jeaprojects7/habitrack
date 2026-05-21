@@ -120,10 +120,10 @@ style="z-index:30;"> -->
 
                 <div class="px-4 py-3 border-b border-gray-100 dark:border-slate-700">
                     <p class="text-sm font-semibold text-gray-700 dark:text-white">
-                        <?php echo isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : 'Admin'; ?>
+                        <?php echo isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : ''; ?>
                     </p>
                     <p class="text-xs text-gray-400">
-                        <?php echo isset($_SESSION['email']) ? htmlspecialchars($_SESSION['email']) : 'admin@habitrack.com'; ?>
+                        <?php echo isset($_SESSION['email']) ? htmlspecialchars($_SESSION['email']) : ''; ?>
                     </p>
                 </div>
 

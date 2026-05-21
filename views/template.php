@@ -106,7 +106,7 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
         include "modules/404.php";
     }
 }else if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok"){
-    $role = $_SESSION["role"] ?? 'client';
+    $role = $_SESSION["role"] ?? 'Client';
     $routeMap   = include "configs/routes.php";
     $modulePaths = include "configs/modulePaths.php";
 
