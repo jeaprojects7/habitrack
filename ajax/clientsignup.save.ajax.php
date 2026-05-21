@@ -48,7 +48,8 @@ $save_client -> middlename = $_POST["middlename"];
 $save_client -> suffix = $_POST["suffix"];
 $save_client -> email = $_POST["email"];
 $save_client -> phonenumber = $_POST["phonenumber"];
-$save_client -> password = $_POST["password"];
+// $save_client -> password = $_POST["password"];
+$save_client -> password = password_hash($_POST["password"], PASSWORD_BCRYPT);/* added 52226 */
 
 
 

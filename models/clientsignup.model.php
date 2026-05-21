@@ -64,12 +64,28 @@ class ModelClient{
         }
     }
 
-    static public function mdlGetClientLogin($username, $upassword){
+    /* static public function mdlGetClientLogin($username, $upassword){
 		$encryptpass = $upassword;
 		$stmt = (new Connection)->connect()->prepare("SELECT clientID, clientEmail, clientPass FROM client WHERE (clientEmail = '$username') AND (clientPass = '$encryptpass')");
 		$stmt -> execute();
 		return $stmt -> fetch();
-	}
+	} changed ^ to this v 522261*/
+     // replace mdlGetClientLogin with this:
+
+    /* added 52126 */
+    static public function mdlGetClientLogin($username, $upassword){
+        $stmt = (new Connection)->connect()->prepare(
+            "SELECT clientID, clientEmail, clientPass FROM client WHERE clientEmail = :email"
+        );
+        $stmt->bindParam(":email", $username, PDO::PARAM_STR);
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        if($row && password_verify($upassword, $row["clientPass"])){
+            return $row;
+        }
+        return false;
+    }
 
     static public function mdlGetClientCredentials($tableUsers, $item, $value){
 		$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");
