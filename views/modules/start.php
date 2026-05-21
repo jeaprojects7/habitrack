@@ -8,8 +8,11 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>HABITRACK</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -19,7 +22,7 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
       align-items: center;
       justify-content: center;
       font-family: 'Rajdhani', sans-serif;
-      background: url('/habitrack1/views/Adminassets/images/01.jpg') no-repeat center center / cover;
+      background: url('/habitrack/views/Adminassets/images/01.jpg') no-repeat center center / cover;
     }
 
     body::before {
@@ -57,10 +60,11 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
       letter-spacing: 0.25em;
       color: #f0f4ff;
       margin-bottom: 2rem;
+      padding-left: 0.45em;
     }
 
     .btn {
-      display: inline-block;
+      /* display: inline-block; */
       padding: 0.75rem 3rem;
       background: #2244b0;
       border: 1px solid #5b9aff;
@@ -79,6 +83,7 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
 <body>
 
   <div class="card">
+    
 <img src="views/assets/images/jeaLogo.png"
      style="width:150px; height:150px; display:block; margin:0 auto;">
 

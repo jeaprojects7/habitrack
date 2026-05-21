@@ -1,7 +1,7 @@
 <?php $static_url = '/habitrack/views/Adminassets';
       $logo_url = '/habitrack/views/assets'; 
 
-$role = $_SESSION['role'] ?? 'client';
+$role = $_SESSION['role'] ?? 'Guest';
 
 $sidebarMenus = [
 
@@ -215,17 +215,19 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
             
 
             <!-- User Profile -->
-            <li>
-                <button class="sidebar-btn" onclick="toggleSubmenu('profile-submenu', this)">
-                    <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
-                    <span>User Profile</span>
-                    <i data-feather="chevron-right" class="submenu-arrow"></i>
-                </button>
-                <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                    <li><a href="userProfile">My Profile</a></li>
-                    <li><a href="#">Settings</a></li>
-                </ul>
-            </li>
+            <?php if ($role !== 'Guest'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('profile-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>User Profile</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="userProfile">My Profile</a></li>
+                        <li><a href="#">Settings</a></li>
+                    </ul>
+                </li>
+            <?php endif; ?>
 
            
     <!-- </nav> -->

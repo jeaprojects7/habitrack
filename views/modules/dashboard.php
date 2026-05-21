@@ -236,10 +236,61 @@
     </div>
 </div>
 
-
-
 <script>
-/* ── Init all panel selects with SlimSelect ── */
+window.slimInstances = {};
+
+document.querySelectorAll('.ht-sel').forEach(function(el) {
+    window.slimInstances[el.id] = new SlimSelect({
+        select: el,
+        settings: {
+            allowDeselect: true,
+            placeholderText: el.options[0]?.text || 'Select…',
+            searchPlaceholder: 'Search…',
+            searchText: 'No results',
+            showArrow: true,
+        },
+        events: {
+            afterChange: function(newVal) {
+                if (el.id === 'f-type') {
+                    htSwitchType(newVal[0]?.value || '');
+                }
+            }
+        }
+    });
+});
+
+// Watch for any ss-content becoming visible and fix its width
+document.addEventListener('click', function(e) {
+    const wrap = e.target.closest('.ht-sel-wrap');
+    if (!wrap) return;
+
+    setTimeout(function() {
+        const ssMain = wrap.querySelector('.ss-main');
+        if (!ssMain) return;
+        const mainRect = ssMain.getBoundingClientRect();
+
+        document.querySelectorAll('.ss-content').forEach(function(content) {
+            const cRect = content.getBoundingClientRect();
+            if (Math.abs(cRect.left - mainRect.left) < 5) {
+                content.style.setProperty('width', mainRect.width + 'px', 'important');
+            }
+        });
+    }, 10);
+});
+
+function htSwitchType(type) {
+    document.getElementById('filters-house').style.display = 'none';
+    document.getElementById('filters-lot').style.display   = 'none';
+
+    if (type === 'house') {
+        document.getElementById('filters-house').style.display = 'block';
+    } else if (type === 'lot') {
+        document.getElementById('filters-lot').style.display = 'block';
+    }
+}
+</script>
+
+<!-- /* ── Init all panel selects with SlimSelect ── */
 document.querySelectorAll('.ht-sel').forEach(function(el) {
     new SlimSelect({
         select: el,
@@ -268,5 +319,4 @@ function htSwitchType(type) {
 /* Wire Property Type dropdown to htSwitchType */
 document.querySelector('#f-type').addEventListener('change', function() {
     htSwitchType(this.value);
-});
-</script>
+}); -->

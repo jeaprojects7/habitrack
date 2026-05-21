@@ -1,6 +1,7 @@
 <?php
 $base_dir = __DIR__ . '/modules';
 $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
+$logo_url = '/habitrack/views/assets'; // added 52126
 
 
 ?>
@@ -10,7 +11,7 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
             <div class="grid grid-cols-1">
                 <div class="flex flex-col min-h-screen justify-center md:px-10 py-10 px-4">
                     <div class="text-center">
-                        <a href="home"><img src="<?php echo $static_url; ?>/images/logo-icon-64.png" class="mx-auto" alt=""></a>
+                        <a href="home"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-24 h-auto" alt=""></a>
                     </div>
                     <div class="title-heading text-center my-auto">
                         <img src="<?php echo $static_url; ?>/images/error.png" class="mx-auto" alt="">
@@ -22,7 +23,7 @@ $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
                         </div>
                     </div>
                     <div class="text-center">
-                        <p class="mb-0 text-slate-400">© <script>document.write(new Date().getFullYear())</script> Habitrack. Design & Develop with <i class="mdi mdi-heart text-red-600"></i> by <a href="https://shreethemes.in/" target="_blank" class="text-reset">Shreethemes</a>.</p>
+                        <p class="mb-0 text-slate-400">© <script>document.write(new Date().getFullYear())</script> Habitrack. Design & Develop with <i class="mdi mdi-heart text-red-600"></i> by <a href="https://shreethemes.in/" target="_blank" class="text-reset">Jea</a>.</p>
                     </div>
                 </div>
             </div><!--end grid-->

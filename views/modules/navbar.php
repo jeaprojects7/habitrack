@@ -1,16 +1,12 @@
-<?php $static_url = '/habitrack/views/Adminassets'; ?>
+<?php 
+$static_url = '/habitrack/views/Adminassets';
+$isGuest = !isset($_SESSION['role']) || $_SESSION['role'] === 'Guest';
+?>
 
-<!-- <div id="navbar" class="sticky top-0 z-40 w-full h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"> -->
-    <!-- changed this ^ to this v -->
 <div id="navbar"
-class="fixed top-0 right-0 h-[67px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
-style="left:300px; z-index:30; transition:0.3s;"> <!-- ga work na ni pero wala sa hamburger -->
-<!-- <div id="navbar"
-class="fixed top-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300"
-style="left:300px; z-index:30;"> --> <!-- changed this ^to this v for the collapse thingy 51726 -->
-<!-- <div id="navbar"
-class="fixed top-0 left-0 right-0 h-[64px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
-style="z-index:30;"> -->
+    class="fixed top-0 right-0 h-[67px] bg-white dark:bg-slate-900 flex items-center justify-between px-6 border-b border-gray-200 dark:border-gray-800 shadow-sm"
+    style="left:300px; z-index:30; transition:0.3s;">
+
     <!-- LEFT -->
     <div class="flex items-center gap-4">
 
@@ -29,38 +25,26 @@ style="z-index:30;"> -->
     <!-- RIGHT -->
     <div class="flex items-center gap-4">
 
-    <!-- Switcher -->
-<!-- <div class="fixed top-[2%] right-60 z-50"> -->
-    <div class="relative flex items-center">
+        <!-- Dark mode switcher -->
+        <div class="relative flex items-center">
+            <span class="relative inline-block rotate-0">
+                <input type="checkbox" class="checkbox opacity-0 absolute" id="chk" />
+                <label class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-700 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" for="chk">
+                    <i data-feather="moon" class="size-[18px] text-yellow-500"></i>
+                    <i data-feather="sun" class="size-[18px] text-yellow-500"></i>
+                    <span class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] size-7"></span>
+                </label>
+            </span>
+        </div>
 
-    <span class="relative inline-block rotate-0">
-        
-
-        <input type="checkbox" class="checkbox opacity-0 absolute" id="chk" />
-
-        <label class="label bg-slate-900 dark:bg-white shadow dark:shadow-gray-700 cursor-pointer rounded-full flex justify-between items-center p-1 w-14 h-8" for="chk">
-
-            <i data-feather="moon" class="size-[18px] text-yellow-500"></i>
-
-            <i data-feather="sun" class="size-[18px] text-yellow-500"></i>
-
-            <span class="ball bg-white dark:bg-slate-900 rounded-full absolute top-[2px] left-[2px] size-7"></span>
-
-        </label>
-
-    </span>
-
-</div>
-<!-- Switcher -->
-
-        <!-- NOTIFICATION BELL -->
+        <?php if (!$isGuest): ?>
+        <!-- NOTIFICATION BELL — logged in only -->
         <div class="relative" id="notif-wrapper">
             <button id="notif-btn" class="relative p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors">
                 <i data-feather="bell" class="w-5 h-5"></i>
                 <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
 
-            <!-- Notification Dropdown -->
             <div id="notif-dropdown"
                 class="hidden absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 z-50">
 
@@ -105,6 +89,7 @@ style="z-index:30;"> -->
 
             </div>
         </div>
+        <?php endif; ?>
 
         <!-- PROFILE -->
         <div class="relative" id="profile-wrapper">
@@ -114,19 +99,19 @@ style="z-index:30;"> -->
                 <i data-feather="chevron-down" class="w-4 h-4 text-gray-500"></i>
             </button>
 
-            <!-- Profile Dropdown -->
             <div id="profile-dropdown"
                 class="hidden absolute right-0 mt-2 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 z-50">
 
+                <?php if (!$isGuest): ?>
+                <!-- Logged in -->
                 <div class="px-4 py-3 border-b border-gray-100 dark:border-slate-700">
                     <p class="text-sm font-semibold text-gray-700 dark:text-white">
-                        <?php echo isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : ''; ?>
+                        <?php echo htmlspecialchars($_SESSION['fname']); ?>
                     </p>
                     <p class="text-xs text-gray-400">
-                        <?php echo isset($_SESSION['email']) ? htmlspecialchars($_SESSION['email']) : ''; ?>
+                        <?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>
                     </p>
                 </div>
-
                 <ul class="py-1">
                     <li>
                         <a href="?route=userProfile" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
@@ -145,6 +130,22 @@ style="z-index:30;"> -->
                     </li>
                 </ul>
 
+                <?php else: ?>
+                <!-- Guest -->
+                <ul class="py-1">
+                    <li>
+                        <a href="clientlogin" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <i data-feather="log-in" class="w-4 h-4"></i> Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="clientsignup" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <i data-feather="user-plus" class="w-4 h-4"></i> Sign Up
+                        </a>
+                    </li>
+                </ul>
+                <?php endif; ?>
+
             </div>
         </div>
 
@@ -154,7 +155,7 @@ style="z-index:30;"> -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── SIDEBAR TOGGLE ──────────────────────────────────────────
+// ── SIDEBAR TOGGLE ──────────────────────────────────────────
     const toggleBtn = document.getElementById('toggle-sidebar');
     const sidebar   = document.getElementById('sidebar');
     const spacer    = document.getElementById('sidebar-spacer');
@@ -175,34 +176,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── NOTIFICATION DROPDOWN ───────────────────────────────────
     const notifBtn      = document.getElementById('notif-btn');
     const notifDropdown = document.getElementById('notif-dropdown');
+    const profileBtn      = document.getElementById('profile-btn');
+    const profileDropdown = document.getElementById('profile-dropdown');
 
     if (notifBtn && notifDropdown) {
         notifBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             notifDropdown.classList.toggle('hidden');
-            profileDropdown.classList.add('hidden'); // close other
+            if (profileDropdown) profileDropdown.classList.add('hidden');
         });
     }
 
     // ── PROFILE DROPDOWN ────────────────────────────────────────
-    const profileBtn      = document.getElementById('profile-btn');
-    const profileDropdown = document.getElementById('profile-dropdown');
-
     if (profileBtn && profileDropdown) {
         profileBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             profileDropdown.classList.toggle('hidden');
-            notifDropdown.classList.add('hidden'); // close other
+            if (notifDropdown) notifDropdown.classList.add('hidden');
         });
     }
 
     // ── CLOSE DROPDOWNS ON OUTSIDE CLICK ────────────────────────
     document.addEventListener('click', function () {
-        if (notifDropdown)    notifDropdown.classList.add('hidden');
-        if (profileDropdown)  profileDropdown.classList.add('hidden');
+        if (notifDropdown)   notifDropdown.classList.add('hidden');
+        if (profileDropdown) profileDropdown.classList.add('hidden');
     });
-
-
 
 });
 </script>

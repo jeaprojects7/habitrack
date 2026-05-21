@@ -2,6 +2,8 @@
 session_start();
 
 $static_url = '/habitrack/views/Adminassets';
+$logo_url = '/habitrack/views/assets'; // // added 52126
+
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +19,7 @@ $static_url = '/habitrack/views/Adminassets';
     <meta name="description" content="Tailwind CSS Saas & Software Landing Page Template">
 
     <!-- favicon -->
-    <link rel="shortcut icon" href="<?php echo $static_url; ?>/images/favicon.ico">
+    <link rel="shortcut icon" href="<?php echo $logo_url; ?>/images/jeaLogo.png">
 
     <!-- Css -->
     <link href="<?php echo $static_url; ?>/libs/jsvectormap/jsvectormap.min.css" rel="stylesheet">
@@ -37,6 +39,9 @@ $static_url = '/habitrack/views/Adminassets';
 
     <!-- SlimSelect CSS from dashboard 51826-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.css" />
+  
+<!-- SlimSelect JS from dashboard 51826-->  <!-- moved here 52126-->
+    <script src="https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.min.js"></script>
 
     <!-- Map Module CSS from dashboard 51826-->
     <link rel="stylesheet" href="/habitrack/views/Adminassets/css/map.css" />
@@ -66,6 +71,7 @@ tailwind.config = {
 if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_GET["route"])){
     $route = basename($_GET["route"]);
     $allowedRoutes = [
+        'start',
         'clientlogin',
         'agentlogin',
         'adminlogin',
@@ -106,7 +112,7 @@ if(!(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok") && isset($_G
         include "modules/404.php";
     }
 }else if (isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok"){
-    $role = $_SESSION["role"] ?? 'Client';
+    $role = $_SESSION["role"] ?? '';
     $routeMap   = include "configs/routes.php";
     $modulePaths = include "configs/modulePaths.php";
 
@@ -221,12 +227,15 @@ echo '</div>';
 
 <script src="<?php echo $static_url; ?>/js/app.js"></script>
 
+
+
+<!-- SlimSelect JS from dashboard 51826-->
+<!-- <script src="https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.min.js"></script> moved 52126 -->
+
 <!-- Leaflet JS from dashboard 51826-->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="/habitrack/views/js/map.js"></script>
 
-<!-- SlimSelect JS from dashboard 51826-->
-<script src="https://cdn.jsdelivr.net/npm/slim-select@2.9.0/dist/slimselect.min.js"></script>
 
 <?php
     if ($route === 'add-property') {
@@ -264,7 +273,7 @@ if (isset($route)) {
             "add-property.js"
         ],
 
-        "map" => [
+        "dashboard" => [
             "map.js"
         ]
 
