@@ -5,8 +5,12 @@
             <!-- Start Content -->
             <div class="flex justify-between items-center">
                 <div>
-                    <h5 class="text-xl font-semibold">Hello, Admin</h5>
-                    <h6 class="text-slate-400">Welcome back!</h6>
+                    <h5 class="text-xl font-semibold">
+                        Hello, 
+                        <?php echo isset($_SESSION['fname']) 
+                            ? htmlspecialchars($_SESSION['fname']) 
+                            : 'Guest'; ?>
+                    </h5>
                 </div>
             </div>
 

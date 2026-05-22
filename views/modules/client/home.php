@@ -10,8 +10,12 @@ style="left:300px; z-index:30; transition:0.3s;" id="main-area">
             <!-- Start Content -->
             <div class="flex justify-between items-center">
                 <div>
-                    <h5 class="text-xl font-semibold">Hello, Calvin</h5>
-                    <h6 class="text-slate-400">Welcome back!</h6>
+                    <h5 class="text-xl font-semibold">
+                        Hello, 
+                        <?php echo isset($_SESSION['fname']) 
+                            ? htmlspecialchars($_SESSION['fname']) 
+                            : 'Guest'; ?>
+                    </h5>
                 </div>
             </div>
 

@@ -16,6 +16,7 @@ if (!empty($answer) && $answer["clientEmail"] == $email && $answer["clientPass"]
     $_SESSION["clientID"] = $answer["clientID"];
     $_SESSION["role"] = "Client"; /* added 51726 */
     $_SESSION["email"] = $answer["clientEmail"]; /* added 52126 */
+    $_SESSION["fname"] = $answer["clientFName"]; /* added 52126 */
 
 
     echo "success";
