@@ -9,7 +9,9 @@ return [
     'adminlogin'        => 'modules/adminlogin.php',
     'adminDashboard'    => 'modules/admin/adminDashboard.php',
     'add-property'      => 'modules/admin/add-property.php',
+    'edit-property'      => 'modules/admin/edit-property.php',
     'exploreproperty'   => 'modules/admin/exploreproperty.php',
+    'agentregister'   => 'modules/admin/agentregister.php',
     'property-detail'   => 'modules/admin/property-detail.php',
     'logout'            => 'modules/logout.php',
 

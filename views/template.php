@@ -234,6 +234,12 @@ echo '</div>';
     }
 ?>
 
+<?php
+    if ($route === 'edit-property') {
+        echo '<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>';
+    }
+?>
+
 
 
 
@@ -262,6 +268,12 @@ if (isset($route)) {
 
         "add-property" => [
             "add-property.js"
+        ],
+          "edit-property" => [
+            "edit-property.js"
+        ],
+         "agentregister" => [
+            "agentregister.js"
         ],
 
         "map" => [

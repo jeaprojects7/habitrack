@@ -65,14 +65,14 @@ require_once "../models/add-property.model.php";
     if ($trans_type == 'New'){
       $answer = (new ControllerAddProperty)->ctrAddProperty($data);
       echo $answer;
-   /*  }else{
-      $answer = (new ControllerAddProperty)->ctrEditClinicStaff($data);
+     }else{
+       $answer = (new ControllerAddProperty)->ctrUpdateProperty($data);
       echo $answer;
-    } */
+    } 
 
    }
   }
- }
+ 
 
 $add_property = new addProperty();
 

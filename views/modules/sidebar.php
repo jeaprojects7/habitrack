@@ -14,7 +14,7 @@ $sidebarMenus = [
         ],
 
         [
-            'title' => 'Explore Properties',
+            'title' => 'Edit Properties',
             'route' => 'exploreproperty',
             'icon'  => 'home'
         ],
@@ -22,6 +22,11 @@ $sidebarMenus = [
         [
             'title' => 'Add Properties',
             'route' => 'add-property',
+            'icon'  => 'plus-square'
+        ],
+         [
+            'title' => 'Add Agent',
+            'route' => 'agentregister',
             'icon'  => 'plus-square'
         ],
 

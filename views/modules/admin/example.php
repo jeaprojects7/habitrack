@@ -16,12 +16,12 @@ $properties = PropertyController::ctrGetProperties();
         <img src="/habitrack<?php echo $item['imagePath']; ?>" alt="">
 
         <div class="absolute top-4 end-4">
-            <a href="javascript:void(0)"
+            <!-- <a href="javascript:void(0)"
                class="btn btn-icon bg-white dark:bg-slate-900 shadow rounded-full text-slate-100 dark:text-slate-700">
 
                 <i class="mdi mdi-heart text-[20px]"></i>
 
-            </a>
+            </a> -->
         </div>
 
     </div>
@@ -30,12 +30,14 @@ $properties = PropertyController::ctrGetProperties();
 
         <div class="pb-6">
 
-            <a href="property-detail.php?id=<?php echo $item['propertyID']; ?>"
+            <!-- <a href="edit-property.php?id=<?php echo $item['propertyID']; ?>" -->
+            <!-- <a href="/habitrack/views/modules/admin/edit-property.php?propertyID=<?= $item['propertyID']; ?>" -->
+             <a href="index.php?route=edit-property&propertyID=<?= $item ['propertyID'] ?>"
                class="text-lg hover:text-green-600 font-medium ease-in-out duration-500">
 
                 <?php echo $item['propertyName']; ?>
 
-            </a>
+
 
         </div>
 
@@ -80,9 +82,12 @@ $properties = PropertyController::ctrGetProperties();
             </li>
 
         </ul>
-
+</a>
     </div>
+      
 
 </div>
+
+
 
 <?php endforeach; ?>
