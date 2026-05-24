@@ -42,22 +42,46 @@ class ControllerClient{
 
 	/* added 52126 */
 	static public function ctrClientLogin(){
-    if (isset($_POST["clientLoginEmail"])) {
-        $answer = (new ModelClient)->mdlGetClientLogin(
-            $_POST["clientLoginEmail"],
-            $_POST["clientLoginPass"]
-        );
+		if (isset($_POST["clientLoginEmail"])) {
+			$answer = (new ModelClient)->mdlGetClientLogin(
+				$_POST["clientLoginEmail"],
+				$_POST["clientLoginPass"]
+			);
 
-        if($answer){
-            $_SESSION["loggedIn"] = "ok";
-            $_SESSION["clientID"] = $answer["clientID"];
-            echo "success";
-            exit();
-        } else {
-            echo "error";
-            exit();
-        }
-    }
-}
+			if($answer){
+				$_SESSION["loggedIn"] = "ok";
+				$_SESSION["clientID"] = $answer["clientID"];
+				echo "success";
+				exit();
+			} else {
+				echo "error";
+				exit();
+			}
+		}
+	}
+
+	static public function ctrGetClientInfo($tableUsers, $item, $value){
+		$answer = (new ModelClient)->mdlGetClientInfo($tableUsers, $item, $value);
+		return $answer;
+	}
+
+	static public function ctrSaveClientInfo($data){
+
+		$answer = (new ModelClient)->mdlSaveClientInfo($data);
+
+		return $answer;
+	}
+
+	static public function ctrGetSpouseInfo($tableUsers, $item, $value){
+		$answer = (new ModelClient)->mdlGetSpouseInfo($tableUsers, $item, $value);
+		return $answer;
+	}
+
+	static public function ctrSaveSpouseInfo($data){
+
+		$answer = (new ModelClient)->mdlSaveSpouseInfo($data);
+
+		return $answer;
+	}
 
 }

@@ -49,7 +49,171 @@ $logo_url = '/habitrack/views/assets'; // // added 52126
     <!-- Bootstrap from dashboard 51826-->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 
+    <!-- Flatpickr CSS added 52326-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
+    <!-- Flatpickr Theme (optional but nicer) 52326-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+
+    <!-- Flatpickr Custom Styling added 52326 chat-->
+    <!-- <style>
+    .flatpickr-calendar {
+        transform: scale(0.92);
+        transform-origin: top left;
+    }
+
+    .flatpickr-day {
+        max-width: 34px;
+        height: 34px;
+        line-height: 34px;
+    }
+
+    .flatpickr-months .flatpickr-month {
+        height: 40px;
+    }
+
+    .flatpickr-current-month {
+        font-size: 14px;
+    }
+    </style> -->
+<style>
+.flatpickr-calendar {
+    font-size: 14px !important;
+}
+
+.flatpickr-day {
+    max-width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+}
+
+.flatpickr-months .flatpickr-month {
+    height: 40px !important;
+    background: #354f97 !important;
+}
+
+.flatpickr-current-month {
+    font-size: 14px !important;
+    padding-top: 8px !important;
+}
+
+.flatpickr-weekdays {
+    background: #354f97 !important;
+}
+
+span.flatpickr-weekday {
+    background: #354f97 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: #354f97 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months option {
+    background: #354f97 !important;
+}
+
+span.flatpickr-weekday {
+    color: #ffffffcb !important;
+}
+
+/*  */
+.dark .flatpickr-calendar {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
+}
+
+.dark .flatpickr-months,
+.dark .flatpickr-month,
+.dark .flatpickr-weekdays,
+.dark .flatpickr-days {
+    background: #1e293b !important;
+}
+
+.dark .flatpickr-current-month,
+.dark .flatpickr-current-month .cur-month,
+.dark .flatpickr-current-month input.cur-year {
+    color: #f1f5f9 !important;
+}
+
+.dark span.flatpickr-weekday {
+    color: #94a3b8 !important;
+    background: #1e293b !important;
+}
+
+.dark .flatpickr-day {
+    color: #e2e8f0 !important;
+}
+
+.dark .flatpickr-days,
+.dark .dayContainer {
+    background: #293548 !important;
+}
+
+.dark .flatpickr-innerContainer {
+    border-bottom: none !important;
+    background: #293548 !important;
+}
+
+.dark .flatpickr-day:hover {
+    background: #334155 !important;
+    border-color: #334155 !important;
+    color: #f1f5f9 !important;
+}
+
+.dark .flatpickr-day.today {
+    border-color: #3b82f6 !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .flatpickr-day.selected {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+}
+
+.dark .flatpickr-calendar.arrowTop:before,
+.dark .flatpickr-calendar.arrowTop:after {
+    border-bottom-color: #ffffff !important;
+}
+
+.dark .flatpickr-calendar.arrowBottom:before,
+.dark .flatpickr-calendar.arrowBottom:after {
+    border-top-color: #293548 !important;
+}
+
+.dark .flatpickr-day.flatpickr-disabled,
+.dark .flatpickr-day.prevMonthDay,
+.dark .flatpickr-day.nextMonthDay {
+    color: #475569 !important;
+}
+
+.dark .flatpickr-months .flatpickr-prev-month,
+.dark .flatpickr-months .flatpickr-next-month {
+    color: #94a3b8 !important;
+    fill: #94a3b8 !important;
+}
+
+.dark .flatpickr-months .flatpickr-prev-month:hover,
+.dark .flatpickr-months .flatpickr-next-month:hover {
+    color: #f1f5f9 !important;
+    fill: #f1f5f9 !important;
+}
+
+.dark .flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+.dark .flatpickr-current-month .flatpickr-monthDropdown-months option {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+
+
+</style>
 </head>
 
 <body class="font-body text-base text-black dark:text-white light:bg-slate-900">
@@ -227,6 +391,8 @@ echo '</div>';
 
 <script src="<?php echo $static_url; ?>/js/app.js"></script>
 
+<!-- Flatpickr JS added 52326-->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 
 <!-- SlimSelect JS from dashboard 51826-->
@@ -275,7 +441,16 @@ if (isset($route)) {
 
         "dashboard" => [
             "map.js"
+        ],
+
+        "clientInfoSheet" => [
+            "clientInfoSheet.js"
+        ],
+
+        "spouseInfoSheet" => [
+            "spouseInfoSheet.js"
         ]
+
 
     ];
 

@@ -52,8 +52,14 @@ $sidebarMenus = [
         ],
 
         [
-            'title' => 'Favorite Properties',
-            'route' => 'favoriteProperties',
+            'title' => 'Information Sheet',
+            'route' => 'clientInfoSheet',
+            'icon'  => 'heart'
+        ],
+       
+        [
+            'title' => 'Spouse Information Sheet',
+            'route' => 'spouseInfoSheet',
             'icon'  => 'heart'
         ],
 

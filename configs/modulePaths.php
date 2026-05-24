@@ -1,9 +1,11 @@
 <?php
 return [
-    'dashboard'      => 'modules/dashboard.php',
+    'dashboard'         => 'modules/dashboard.php',
     'clientsignup'      => 'modules/client/clientsignup.php',
     'clientlogin'       => 'modules/clientlogin.php',
     'home'              => 'modules/client/home.php',
+    'clientInfoSheet'   => 'modules/client/clientInfoSheet.php',
+    'spouseInfoSheet'   => 'modules/client/spouseInfoSheet.php',
     'agentlogin'        => 'modules/agentlogin.php',
     'agentDashboard'    => 'modules/agent/agentDashboard.php',
     'adminlogin'        => 'modules/adminlogin.php',
