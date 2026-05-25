@@ -1,0 +1,257 @@
+<?php
+
+/**
+ * OutputTest.php
+ *
+ * @since     2011-05-23
+ * @category  Library
+ * @package   PdfEncrypt
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2011-2026 Nicola Asuni - Tecnick.com LTD
+ * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-pdf-encrypt
+ *
+ * This file is part of tc-lib-pdf-encrypt software library.
+ */
+
+namespace Test;
+
+/**
+ * Output Test
+ *
+ * @since     2011-05-23
+ * @category  Library
+ * @package   PdfEncrypt
+ * @author    Nicola Asuni <info@tecnick.com>
+ * @copyright 2011-2026 Nicola Asuni - Tecnick.com LTD
+ * @license   https://www.gnu.org/copyleft/lesser.html GNU-LGPL v3 (see LICENSE.TXT)
+ * @link      https://github.com/tecnickcom/tc-lib-pdf-encrypt
+ */
+class OutputTest extends TestUtil
+{
+    /** @param array<string,mixed> $data */
+    protected function setRawEncryptData(OutputTestDouble $output, array $data): void
+    {
+        $property = new \ReflectionProperty(\Com\Tecnick\Pdf\Encrypt\Output::class, 'encryptdata');
+        $property->setAccessible(true);
+        $property->setValue($output, $data);
+    }
+
+    /** @return array<string,mixed> */
+    protected function getRawEncryptData(OutputTestDouble $output): array
+    {
+        $property = new \ReflectionProperty(\Com\Tecnick\Pdf\Encrypt\Output::class, 'encryptdata');
+        $property->setAccessible(true);
+        /** @var array<string,mixed> $data */
+        $data = $property->getValue($output);
+        return $data;
+    }
+
+    protected function getOutputTestDouble(): OutputTestDouble
+    {
+        return new OutputTestDouble();
+    }
+
+    public function testGetPdfEncryptionObjZero(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 0, ['print'], 'alpha', 'beta');
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $expected = '3132332030206f626a0a3c3c0a2f46696c746572202f5374616e646172640a2f5620310a2f4c656e6774682034300a2'
+        . 'f5220320a2f4f20280542fa0e15496869a825cd08c633ac10675c5c02167661241f5369895d768278b1290a2f552028550539dc185'
+        . 'e79d4c676f803babbdc50acf8a4427d2de5303d59e7c315b30eba290a2f5020323134373432323030380a2f456e63727970744d657'
+        . '4616461746120747275650a3e3e0a656e646f626a0a';
+        $this->assertEquals($expected, \bin2hex($result));
+    }
+
+    public function testGetPdfEncryptionObjOne(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 1, ['print'], 'alpha', 'beta');
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 150);
+    }
+
+    public function testGetPdfEncryptionObjTwo(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 2, ['print'], 'alpha', 'beta');
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 200);
+    }
+
+    public function testGetPdfEncryptionObjThree(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 3, ['print'], 'alpha', 'beta');
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 300);
+    }
+
+    public function testGetPdfEncryptionObjThreePub(): void
+    {
+        $pubkeys = [[
+            'c' => __DIR__ . '/data/cert.pem',
+            'p' => ['print'],
+        ]];
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 3, ['print'], 'alpha', 'beta', $pubkeys);
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 200);
+    }
+
+    public function testGetPdfEncryptionObjOnePub(): void
+    {
+        $pubkeys = [[
+            'c' => __DIR__ . '/data/cert.pem',
+            'p' => ['print'],
+        ]];
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 1, ['print'], 'alpha', 'beta', $pubkeys);
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 100);
+    }
+
+    public function testGetPdfEncryptionObjFour(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 4, ['print'], 'alpha', 'beta');
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 300);
+        $this->assertStringContainsString('/V 6', $result);
+        $this->assertStringContainsString('/R 6', $result);
+        $this->assertStringContainsString('/Length 256', $result);
+    }
+
+    /** Issue 1: EFF entry must appear for V >= 4 when embedded file encryption is enabled. */
+    public function testGetPdfEncryptionObjEff(): void
+    {
+        // V >= 4 (mode 2 = AES-128, V=4) with embedded file encryption enabled (default)
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(
+            true,
+            \md5('file_id'),
+            2,
+            ['print'],
+            'alpha',
+            'beta',
+            null,
+            true,   // encryptMetadata
+            true    // encryptEmbeddedFiles
+        );
+        $pon = 0;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertStringContainsString('/EFF /StdCF', $result);
+    }
+
+    /** Issue 1: No EFF entry when embedded file encryption is disabled. */
+    public function testGetPdfEncryptionObjNoEff(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(
+            true,
+            \md5('file_id'),
+            2,
+            ['print'],
+            'alpha',
+            'beta',
+            null,
+            true,   // encryptMetadata
+            false   // encryptEmbeddedFiles = false
+        );
+        $pon = 0;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertStringNotContainsString('/EFF', $result);
+    }
+
+    /** Issue 3: EncryptMetadata=false must appear in standard-mode output. */
+    public function testGetPdfEncryptionObjEncryptMetadataFalse(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(
+            true,
+            \md5('file_id'),
+            3,
+            ['print'],
+            'alpha',
+            'beta',
+            null,
+            false   // encryptMetadata = false
+        );
+        $pon = 0;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertStringContainsString('/EncryptMetadata false', $result);
+    }
+
+    /** Issue 3: EncryptMetadata=true (default) must appear as true in output. */
+    public function testGetPdfEncryptionObjEncryptMetadataTrue(): void
+    {
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(
+            true,
+            \md5('file_id'),
+            3,
+            ['print'],
+            'alpha',
+            'beta'
+        );
+        $pon = 0;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertStringContainsString('/EncryptMetadata true', $result);
+    }
+
+    /** Issue 4: mode 4 pubkey output must contain Recipients. */
+    public function testGetPdfEncryptionObjFourPub(): void
+    {
+        $pubkeys = [[
+            'c' => __DIR__ . '/data/cert.pem',
+            'p' => ['print'],
+        ]];
+        $encrypt = new \Com\Tecnick\Pdf\Encrypt\Encrypt(true, \md5('file_id'), 4, ['print'], 'alpha', 'beta', $pubkeys);
+        $pon = 122;
+        $result = $encrypt->getPdfEncryptionObj($pon);
+        $this->assertTrue(\strlen($result) > 200);
+        $this->assertStringContainsString('/V 6', $result);
+    }
+
+    public function testSetMissingValuesSetsDefaultEncryptMetadata(): void
+    {
+        $output = $this->getOutputTestDouble();
+        $data = $this->getRawEncryptData($output);
+        unset($data['EncryptMetadata']);
+        $this->setRawEncryptData($output, $data);
+
+        $output->callSetMissingValues();
+
+        $result = $this->getRawEncryptData($output);
+        $this->assertTrue($result['EncryptMetadata']);
+    }
+
+    public function testSetMissingValuesReturnsWhenCfIsEmpty(): void
+    {
+        $output = $this->getOutputTestDouble();
+        $data = $this->getRawEncryptData($output);
+        $data['CF'] = [];
+        $this->setRawEncryptData($output, $data);
+
+        $output->callSetMissingValues();
+
+        $result = $this->getRawEncryptData($output);
+        $this->assertSame([], $result['CF']);
+    }
+
+    public function testSetMissingValuesReturnsWhenCfEncryptMetadataExists(): void
+    {
+        $output = $this->getOutputTestDouble();
+        $data = $this->getRawEncryptData($output);
+        $data['CF'] = [
+            'EncryptMetadata' => false,
+        ];
+        $this->setRawEncryptData($output, $data);
+
+        $output->callSetMissingValues();
+
+        $result = $this->getRawEncryptData($output);
+        $this->assertIsArray($result['CF']);
+        /** @var array<string,mixed> $cfdata */
+        $cfdata = $result['CF'];
+        $this->assertArrayHasKey('EncryptMetadata', $cfdata);
+        $this->assertFalse((bool) $cfdata['EncryptMetadata']);
+    }
+}
