@@ -40,7 +40,6 @@ ob_start() */;
                 <div class="xl:col-span-3 lg:col-span-4 md:col-span-4">
                     <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
                         <div class="profile-pic text-center">
-                            <input id="pro-img" name="profile-image" type="file" class="hidden" onchange="loadFile(event)" />
                             <div>
                                 <!-- IMAGE UPLOADER (REPLACED ONLY THIS PART) -->
                             <div class="space-y-3">
@@ -55,19 +54,18 @@ ob_start() */;
                                         Upload profile / property images
                                     </p>
 
-                                    <input id="pro-img"
-                                        name="profile-image[]"
+                                    <input id="agentPhoto"
+                                        name="agentPic"
                                         type="file"
                                         class="hidden"
-                                        multiple
                                         accept="image/*"
-                                        onchange="previewImages(event)">
+                                        onchange="previewAgentPhoto(this)">
 
                                     <!--  <label for="pro-img"
                                         class="btn bg-green-600 hover:bg-green-700 text-white rounded-md mt-3 cursor-pointer  block text-center">
                                         Upload Images
                                     </label> -->
-                                    <label class="btn-upload btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="pro-img">Upload Image</label>
+                                    <label class="btn-upload btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="agentPhoto">Upload Image</label>
 
                                 </div>
 
@@ -80,6 +78,23 @@ ob_start() */;
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div id="imageModal"
+                    class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-70 z-[9999] p-6">
+
+                    <div class="relative bg-white p-2 rounded-lg shadow-lg max-w-2xl w-full">
+                        <button id="closeModal"
+                            type="button"
+                            class="absolute -top-3 -right-3 bg-red-500 hover:bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center">
+                            X
+                        </button>
+
+                        <img id="modalImg"
+                            class="w-full max-h-[70vh] object-contain rounded-md"
+                            alt="Agent preview">
+                    </div>
+
                 </div>
 
                 <div class="xl:col-span-9 lg:col-span-8 md:col-span-8">

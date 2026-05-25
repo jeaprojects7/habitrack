@@ -33,6 +33,17 @@ class ControllerAddProperty{
 
     return (new ModelAddProperty)->mdlGetProperties();
 }
+ public static function ctrGetPropertyImages($id)
+{
+    return (new ModelAddProperty)->mdlGetPropertyImages($id);
+}
+
+public static function ctrDeletePropertyImage($id)
+{
+    return (new ModelAddProperty)->mdlDeletePropertyImage($id);
+}
+
+
 
 	/* static public function ctrGetProperty($id){
 		return ModelAddProperty::mdlGetProperty($id);

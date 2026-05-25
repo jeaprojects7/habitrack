@@ -4,6 +4,16 @@ session_start();
 $static_url = '/habitrack/views/Adminassets';
 $logo_url = '/habitrack/views/assets'; // // added 52126
 
+if (($_GET['route'] ?? '') === 'print-properties') {
+    if (($_SESSION['loggedIn'] ?? '') === 'ok' && ($_SESSION['role'] ?? '') === 'Admin') {
+        include __DIR__ . "/../reports/print-properties.php";
+        exit;
+    }
+
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -283,6 +293,9 @@ if (isset($route)) {
         ],
          "agentregister" => [
             "agentregister.js"
+        ],
+        "edit-agentprofile" => [
+            "edit-agentprofile.js"
         ],
 
         "dashboard" => [

@@ -210,7 +210,7 @@ if (!isNaN(lat) && !isNaN(lng)) {
                         //buttonsStyling: false
                 }).then(function (result) {
                         if (result.value) {
-                            window.location = 'exploreproperty.php';//'edit-property.php?propertyID=' + propertyID;
+                            window.location = 'exploreproperty';//'edit-property.php?propertyID=' + propertyID;
                         }
                     });
                 },
@@ -287,6 +287,21 @@ let filesArray = [];
 const input = document.getElementById("propertyPhotos");
 const preview = document.getElementById("preview");
 
+document.querySelectorAll(".preview-image").forEach(img => {
+
+    img.addEventListener("click", function () {
+
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImg");
+
+        modalImg.src = this.src;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    });
+
+});
+
 // ================= MODAL CLOSE =================
 document.getElementById("closeModal").addEventListener("click", function (e) {
     e.preventDefault();
@@ -297,6 +312,63 @@ document.getElementById("closeModal").addEventListener("click", function (e) {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
     modalImg.src = "";
+});
+
+
+document.querySelectorAll(".delete-existing").forEach(btn => {
+
+    btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+ /*        const container = e.this.closest(".existing-image");
+        const imageID = container.dataset.imageid; */
+
+        const container = e.target.closest(".existing-image");
+
+const imageID = container.dataset.imageid;
+
+console.log(imageID);
+
+        if (!imageID) {
+    console.log("Missing image ID");
+    return;
+}
+
+        Swal.fire({
+            title: 'Delete this image?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    url: "/habitrack/ajax/delete-property-image.ajax.php",
+                    method: "POST",
+                    data: { id: imageID },
+                    success: function(res) {
+
+                        console.log(res);
+                        container.remove();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            timer: 1200,
+                            showConfirmButton: false
+                        });
+
+                    }
+                });
+
+            }
+
+        });
+
+    });
+
 });
 
 // ================= FILE CHANGE =================
@@ -324,7 +396,7 @@ function render() {
 
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
-        img.className = "w-full h-full object-cover";
+        img.className = "preview-image w-full h-full object-cover";
 
         // ================= MODAL OPEN =================
         img.addEventListener("click", () => {
@@ -396,5 +468,4 @@ function updateInput() {
     filesArray.forEach(file => dt.items.add(file));
     input.files = dt.files;
 }
-
 });

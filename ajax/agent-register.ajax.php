@@ -17,6 +17,7 @@ require_once "../models/agentregister.model.php";
   public $agentGender;
   public $agentBirthdate;
   public $agentPass;
+  public $agentPic;
 
 
   public function saveAgent(){
@@ -34,6 +35,7 @@ require_once "../models/agentregister.model.php";
     $agentPhoneNum = $this->agentPhoneNum;
     $agentEmail = $this->agentEmail;
     $agentFB = $this->agentFB;
+    $agentPic = $this->agentPic;
    
 
 
@@ -48,19 +50,20 @@ require_once "../models/agentregister.model.php";
                   "agentAddress"=>$agentAddress,
                   "agentPhoneNum"=>$agentPhoneNum,
                   "agentEmail"=>$agentEmail,
-                  "agentFB"=>$agentFB,);
+                  "agentFB"=>$agentFB,
+                  "agentPic"=>$agentPic,);
 
     if ($trans_type == 'New'){
       $answer = (new ControllerAddAgent)->ctrAddAgent($data);
       echo $answer;
-   /*  }else{
-      $answer = (new ControllerAddProperty)->ctrEditClinicStaff($data);
+     }else{
+      $answer = (new ControllerAddAgent)->ctrUpdateAgent($data);
       echo $answer;
-    } */
+    } 
 
    }
   }
- }
+ 
 
 $add_agent = new addAgent();
 
@@ -78,6 +81,27 @@ $add_agent -> agentPhoneNum = $_POST["agentPhoneNum"];
 $add_agent -> agentSoldUnits = $_POST["agentSoldUnits"];
 $add_agent -> agentFB = $_POST["agentFB"];
 $add_agent -> agentAddress = $_POST["agentAddress"];
+$add_agent -> agentPic = null;
+
+if (isset($_FILES["agentPic"]) && $_FILES["agentPic"]["error"] === UPLOAD_ERR_OK) {
+  $allowedTypes = ["image/jpeg" => "jpg", "image/png" => "png", "image/webp" => "webp"];
+  $mimeType = mime_content_type($_FILES["agentPic"]["tmp_name"]);
+
+  if (isset($allowedTypes[$mimeType])) {
+    $uploadDir = __DIR__ . "/../uploads/agents/";
+
+    if (!is_dir($uploadDir)) {
+      mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = "agent_" . date("YmdHis") . "_" . bin2hex(random_bytes(4)) . "." . $allowedTypes[$mimeType];
+    $destination = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES["agentPic"]["tmp_name"], $destination)) {
+      $add_agent -> agentPic = "/uploads/agents/" . $fileName;
+    }
+  }
+}
 
 $add_agent -> saveAgent();
  

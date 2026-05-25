@@ -191,7 +191,7 @@ class ModelAddProperty{
         return "error: " . $e->getMessage();
     }
 }
-    static public function mdlGetProperties(){
+/*     static public function mdlGetProperties(){
 
     $db = new Connection();
     $pdo = $db->connect();
@@ -209,7 +209,45 @@ FROM properties p
     $stmt->execute();
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+} */
+public static function mdlGetPropertyImages($id)
+{
+    $db = new Connection();
+    $pdo = $db->connect();
+    $stmt = $pdo->prepare("
+        SELECT id,imagePath 
+        FROM property_images 
+        WHERE propertyID = :id AND is_deleted=0
+    ");
 
-   
+    
+
+    $stmt->bindParam(":id", $id, PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public static function mdlDeletePropertyImage($id)
+{
+
+      if (empty($id)) {
+        return "invalid id";
+    }
+    $db = new Connection();
+    $pdo = $db->connect();
+
+     $stmt = $pdo->prepare("
+        UPDATE property_images 
+        SET is_deleted = 1 
+        WHERE id = :id
+    ");
+
+    $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+
+    return $stmt->execute() ? "ok" : "error";
+    }
+
+    //return "not found";
+
+
 }

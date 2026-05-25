@@ -29,6 +29,16 @@ $sidebarMenus = [
             'route' => 'agentregister',
             'icon'  => 'plus-square'
         ],
+        [
+            'title' => 'Agent List',
+            'route' => 'agentdisplay',
+            'icon'  => 'user'
+        ],
+        [
+            'title' => 'Edit Agent Profile',
+            'route' => 'agentprofile',
+            'icon'  => 'user'
+        ],
 
     ],
 

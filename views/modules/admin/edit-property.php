@@ -14,6 +14,7 @@ if (!$propertyID) {
 
 //  Fetch property data
 $property = ControllerAddProperty::ctrGetProperty($propertyID);
+$images = ControllerAddProperty::ctrGetPropertyImages($propertyID);
 
 if (!$property) {
     die("Property not found.");
@@ -167,8 +168,34 @@ if (!$property) {
                         <div>
                             <p class="font-medium mb-4">Upload your property image here, Please click "Upload Image" Button.</p>
                              <!-- PREVIEW AREA (ABOVE BUTTON) -->
-                            <div id="preview" class="flex flex-wrap gap-2 mb-4"></div>
+                           <!-- EXISTING DATABASE IMAGES -->
+<div id="existingPreview" class="flex flex-wrap gap-2 mb-4">
 
+ <?php if (!empty($images)): ?>
+    <?php foreach ($images as $img): ?>
+
+        <div class="relative w-24 h-24 group existing-image"
+             data-imageid="<?= htmlspecialchars($img['id'] ?? '') ?>">
+
+            <img 
+                src="/habitrack/<?= htmlspecialchars($img['imagePath'] ?? '') ?>"
+                class="preview-image w-full h-full object-cover rounded-md border cursor-pointer"
+            >
+
+            <button type="button"
+                class="delete-existing absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded">
+                ×
+            </button>
+
+        </div>
+
+    <?php endforeach; ?>
+<?php endif; ?>
+
+</div>
+
+<!-- NEW UPLOAD PREVIEW -->
+<div id="preview" class="flex flex-wrap gap-2 mb-4"></div>
                             <div class="preview-box flex justify-center rounded-md shadow dark:shadow-gray-800 overflow-hidden bg-gray-50 dark:bg-slate-800 text-slate-400 p-2 text-center small w-auto max-h-60">Supports JPG and PNG. Max file size : 10MB.</div>
                             <!-- <input type="file" id="input-file" name="input-file" accept="image/*" onchange={handleChange()} hidden> -->
                              <input type="file" id="propertyPhotos" name="propertyPhotos[]" multiple accept="image/*" hidden>

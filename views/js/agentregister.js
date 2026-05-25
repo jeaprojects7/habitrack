@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#btn-register").click(function(e) {
     e.preventDefault();  // Stop form submission
     Swal.fire({
-        title: 'Register this agent?',
+        title: 'Update this agent?',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes, add it!',
+        confirmButtonText: 'Yes, update it!',
         cancelButtonText: 'Cancel'
         // ... rest of your Swal config
     }).then(function (result) {
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let agentPhoneNum = $("#agentPhoneNum").val();
         let agentEmail = $("#agentEmail").val();
         let agentFB = $("#agentFB").val();
+        let agentPhoto = document.getElementById("agentPhoto");
       
 
       
@@ -58,6 +59,10 @@ document.addEventListener('DOMContentLoaded', function () {
         addagent.append("agentPhoneNum", agentPhoneNum);
         addagent.append("agentEmail", agentEmail);
         addagent.append("agentFB", agentFB);
+
+        if (agentPhoto && agentPhoto.files.length > 0) {
+            addagent.append("agentPic", agentPhoto.files[0]);
+        }
        
 
 
@@ -87,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(filesArray); */
                   Swal.fire({
                     title: 'Success!',
-                    text: 'Property saved successfully.',
+                    text: 'Agent registered successfully.',
                     icon: 'success',
                     confirmButtonText: 'Got it',
                         customClass: {
@@ -96,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         //buttonsStyling: false
                 }).then(function (result) {
                         if (result.value) {
-                            window.location = 'add-property';
+                            window.location = 'agentregister';
                         }
                     });
 /* 
@@ -192,54 +197,29 @@ document.addEventListener('DOMContentLoaded', function () {
     modalImg.src = "";
 });
  */
-let filesArray = [];
-
-const input = document.getElementById("propertyPhotos");
+const input = document.getElementById("agentPhoto");
 const preview = document.getElementById("preview");
 
-// ================= MODAL CLOSE =================
-document.getElementById("closeModal").addEventListener("click", function (e) {
-    e.preventDefault();
+window.previewAgentPhoto = function (fileInput) {
+    if (!fileInput || !preview) return;
 
-    const modal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("modalImg");
+    const file = fileInput.files[0];
+        preview.innerHTML = "";
 
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-    modalImg.src = "";
-});
+        if (!file) return;
 
-// ================= FILE CHANGE =================
-input.addEventListener("change", function () {
-    //filesArray = Array.from(this.files);
-    filesArray = [...filesArray, ...Array.from(this.files)];
-    updateInput();
-    render();
-});
-
-// ================= RENDER =================
-function render() {
-    preview.innerHTML = "";
-
-    filesArray.forEach((file, index) => {
         const item = document.createElement("div");
-
-        item.className =
-            "relative w-24 h-24 border rounded overflow-hidden shadow cursor-grab";
-
-        item.draggable = true;
-
-        // IMPORTANT: always sync real index
-        item.dataset.index = index;
+        item.className = "relative w-24 h-24 border rounded overflow-hidden shadow";
 
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
-        img.className = "w-full h-full object-cover";
+        img.className = "w-full h-full object-cover cursor-pointer";
 
-        // ================= MODAL OPEN =================
-        img.addEventListener("click", () => {
+        img.addEventListener("click", function () {
             const modal = document.getElementById("imageModal");
             const modalImg = document.getElementById("modalImg");
+
+            if (!modal || !modalImg) return;
 
             modalImg.src = img.src;
             modal.classList.remove("hidden");
@@ -258,53 +238,36 @@ function render() {
             e.preventDefault();
             e.stopPropagation();
 
-            filesArray.splice(index, 1);
-            updateInput();
-            render();
-        });
-
-        // ================= DRAG START =================
-        item.addEventListener("dragstart", (e) => {
-            e.dataTransfer.setData("fromIndex", index);
-            item.classList.add("opacity-50");
-        });
-
-        item.addEventListener("dragend", () => {
-            item.classList.remove("opacity-50");
-        });
-
-        // ================= DRAG OVER =================
-        item.addEventListener("dragover", (e) => {
-            e.preventDefault();
-        });
-
-        // ================= DROP (FIXED LOGIC) =================
-        item.addEventListener("drop", (e) => {
-            e.preventDefault();
-
-            const fromIndex = parseInt(e.dataTransfer.getData("fromIndex"));
-            const toIndex = parseInt(item.dataset.index);
-
-            if (fromIndex === toIndex) return;
-
-            const moved = filesArray.splice(fromIndex, 1)[0];
-            filesArray.splice(toIndex, 0, moved);
-
-            updateInput();
-            render();
+            fileInput.value = "";
+            preview.innerHTML = "";
         });
 
         item.appendChild(img);
         item.appendChild(btn);
         preview.appendChild(item);
+};
+
+// ================= FILE CHANGE =================
+if (input && preview) {
+    input.addEventListener("change", function () {
+        window.previewAgentPhoto(this);
     });
 }
 
-// ================= SYNC INPUT =================
-function updateInput() {
-    const dt = new DataTransfer();
-    filesArray.forEach(file => dt.items.add(file));
-    input.files = dt.files;
+const closeModal = document.getElementById("closeModal");
+if (closeModal) {
+    closeModal.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImg");
+
+        if (!modal || !modalImg) return;
+
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        modalImg.src = "";
+    });
 }
 
 });
