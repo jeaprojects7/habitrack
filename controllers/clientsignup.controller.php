@@ -84,4 +84,9 @@ class ControllerClient{
 		return $answer;
 	}
 
+	static public function ctrGetClient($clientID){
+
+        $answer = (new ModelClient)->mdlGetClient($clientID);
+        return $answer;
+    }
 }

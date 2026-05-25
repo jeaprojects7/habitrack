@@ -16,6 +16,10 @@ return [
         'home',
         'clientInfoSheet',
         'spouseInfoSheet',
+        'reservations',
+        'reservation-view',
+        'edit-clientprofile',
+        'clientprofile',
         'logout'
     ],
 ];

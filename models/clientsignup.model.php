@@ -451,4 +451,23 @@ class ModelClient{
             return $e->getMessage();
         }
     }
+
+    static public function mdlGetClient($clientID){
+
+        $db = new Connection();
+        $pdo = $db->connect();
+
+        $stmt = $pdo->prepare("
+            SELECT *
+            FROM client
+            WHERE clientID = :clientID
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

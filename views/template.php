@@ -449,7 +449,15 @@ if (isset($route)) {
 
         "spouseInfoSheet" => [
             "spouseInfoSheet.js"
-        ]
+        ],
+
+        "clientprofile" => [
+            "clientprofile.js"
+        ],
+
+        "reservations" => [
+            "reservations.js"
+        ],
 
 
     ];

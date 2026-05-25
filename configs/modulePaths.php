@@ -13,6 +13,10 @@ return [
     'add-property'      => 'modules/admin/add-property.php',
     'exploreproperty'   => 'modules/admin/exploreproperty.php',
     'property-detail'   => 'modules/admin/property-detail.php',
+    'reservations'      => 'modules/client/reservations.php',
+    'reservation-view'      => 'modules/client/reservation-view.php',
+    'edit-clientprofile'      => 'modules/client/edit-clientprofile.php',
+    'clientprofile' => 'modules/client/clientprofile.php',
     'logout'            => 'modules/logout.php',
 
 ];

@@ -1,6 +1,84 @@
 <?php 
 $static_url = '/habitrack/views/Adminassets';
-$isGuest = !isset($_SESSION['role']) || $_SESSION['role'] === 'Guest';
+
+$role = $_SESSION['role'] ?? 'Guest';
+$isGuest = ($role === 'Guest');
+
+/* NAVBAR PRIVILEGE SYSTEM (same pattern as sidebar) */
+$navbarMenus = [
+
+    'Admin' => [
+        [
+            'title' => 'My Profile',
+            'route' => 'userProfile',
+            'icon'  => 'user'
+        ],
+        [
+            'title' => 'Settings',
+            'route' => 'settings',
+            'icon'  => 'settings'
+        ],
+        [
+            'title' => 'Logout',
+            'route' => 'logout',
+            'icon'  => 'log-out',
+            'danger' => true
+        ]
+    ],
+
+    'Agent' => [
+        [
+            'title' => 'My Profile',
+            'route' => 'agentProfile',
+            'icon'  => 'user'
+        ],
+        [
+            'title' => 'Settings',
+            'route' => 'settings',
+            'icon'  => 'settings'
+        ],
+        [
+            'title' => 'Logout',
+            'route' => 'logout',
+            'icon'  => 'log-out',
+            'danger' => true
+        ]
+    ],
+
+    'Client' => [
+        [
+            'title' => 'My Profile',
+            'route' => 'clientprofile',
+            'icon'  => 'user'
+        ],
+        [
+            'title' => 'Settings',
+            'route' => 'edit-clientprofile',
+            'icon'  => 'settings'
+        ],
+        [
+            'title' => 'Logout',
+            'route' => 'logout',
+            'icon'  => 'log-out',
+            'danger' => true
+        ]
+    ],
+
+    'Guest' => [
+        [
+            'title' => 'Login',
+            'route' => 'clientlogin',
+            'icon'  => 'log-in'
+        ],
+        [
+            'title' => 'Sign Up',
+            'route' => 'clientsignup',
+            'icon'  => 'user-plus'
+        ]
+    ]
+];
+
+$currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
 ?>
 
 <div id="navbar"
@@ -112,23 +190,27 @@ $isGuest = !isset($_SESSION['role']) || $_SESSION['role'] === 'Guest';
                         <?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>
                     </p>
                 </div>
+
                 <ul class="py-1">
+
+                <?php foreach ($currentNavbarMenu as $item): ?>
+
                     <li>
-                        <a href="?route=userProfile" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
-                            <i data-feather="user" class="w-4 h-4"></i> My Profile
+                        <a href="<?= $item['route']; ?>"
+                        class="flex items-center gap-3 px-4 py-2 text-sm
+                        <?= !empty($item['danger']) ? 'text-red-500 hover:bg-red-50 dark:hover:bg-slate-700'
+                                                    : 'text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700' ?>">
+
+                            <i data-feather="<?= $item['icon']; ?>" class="w-4 h-4"></i>
+
+                            <?= $item['title']; ?>
+
                         </a>
                     </li>
-                    <li>
-                        <a href="?route=settings" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
-                            <i data-feather="settings" class="w-4 h-4"></i> Settings
-                        </a>
-                    </li>
-                    <li class="border-t border-gray-100 dark:border-slate-700">
-                        <a href="logout" class="flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-slate-700">
-                            <i data-feather="log-out" class="w-4 h-4"></i> Logout
-                        </a>
-                    </li>
-                </ul>
+
+                <?php endforeach; ?>
+
+            </ul>
 
                 <?php else: ?>
                 <!-- Guest -->
