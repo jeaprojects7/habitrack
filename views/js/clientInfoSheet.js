@@ -6,6 +6,8 @@ function saveClientInfo() {
 
     let client = new FormData();
 
+    const reservationID = sessionStorage.getItem("reservationID");
+    client.append("reservationID", reservationID);  
     // ================= PAGE 1 =================
     // client.append("firstname", $("input[name=firstname]").val());
     // client.append("middlename", $("input[name=middlename]").val());
@@ -350,20 +352,20 @@ function validatePage(page) {
             if (!val || val.trim() === "") errors.push(f.label);
         });
 
-        // EMAIL VALIDATION
-        let email = $("input[name=email]").val().trim();
-        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // // EMAIL VALIDATION
+        // let email = $("input[name=email]").val().trim();
+        // let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (email && !emailRegex.test(email)) {
-            errors.push("Email format is invalid");
-        }
+        // if (email && !emailRegex.test(email)) {
+        //     errors.push("Email format is invalid");
+        // }
 
-        // PHONE VALIDATION
-        let phone = $("input[name=phonenumber]").val().trim();
+        // // PHONE VALIDATION
+        // let phone = $("input[name=phonenumber]").val().trim();
 
-        if (phone && !/^[0-9]{11}$/.test(phone)) {
-            errors.push("Phone Number must be exactly 11 digits");
-        }
+        // if (phone && !/^[0-9]{11}$/.test(phone)) {
+        //     errors.push("Phone Number must be exactly 11 digits");
+        // }
     }
 
     // ================= PAGE 2 =================
@@ -435,23 +437,24 @@ function validatePage(page) {
             "input[name=employeremail]"
         ];
 
+        required.forEach(el => {
+            let val = $(el).val();
+            if (!val || val.trim() === "") {
+                errors.push($(el).closest(".mb-4").find("label").text() || el);
+            }
+        });
+
         let employerEmail = $("input[name=employeremail]").val().trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (employerEmail && !emailRegex.test(employerEmail)) {
-            errors.push("Employer Email format is invalid");
+            errors.push("Invalid Employer Email Format");
         }
 
         let employerPhone = $("input[name=employerphonenumber]").val().trim();
         if (employerPhone && !/^[0-9]{11}$/.test(employerPhone)) {
-            errors.push("Invalid Employer Phone Number");
+            errors.push("Invalid Phone Number Format");
         }
 
-        // required.forEach(el => {
-        //     let val = $(el).val();
-        //     if (!val || val.trim() === "") {
-        //         errors.push($(el).closest(".mb-4").find("label").text() || el);
-        //     }
-        // });
     }
 
     // ================= PAGE 5 =================
@@ -477,7 +480,7 @@ function validatePage(page) {
         let parentPhone = $("input[name=parentsphonenumber]").val().trim();
 
         if (parentPhone && !/^[0-9]{11}$/.test(parentPhone)) {
-            errors.push("Parent Phone Number must be 11 digits");
+            errors.push("Invalid Phone Number Format");
         }
     }
 

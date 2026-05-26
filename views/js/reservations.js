@@ -12,9 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ===== CARD CLICK REDIRECT
-    const cards = document.querySelectorAll(".reservation-card");
+    // const cards = document.querySelectorAll(".reservation-card");
 
-    cards.forEach(card => {
+    // cards.forEach(card => {
+    //     card.style.cursor = "pointer";
+
+    //     card.addEventListener("click", function () {
+    //         const id = this.getAttribute("data-id");
+
+    //         if (id) {
+    //             window.location.href = `index.php?route=reservation-view&id=${id}`;
+    //         }
+    //     });
+    // }); this works
+    document.querySelectorAll(".reservation-card").forEach(card => {
         card.style.cursor = "pointer";
 
         card.addEventListener("click", function () {
@@ -74,33 +85,33 @@ document.addEventListener("DOMContentLoaded", function () {
     //     });
     // });
 
-    document.querySelectorAll(".reservation-card").forEach(card => {
+    // document.querySelectorAll(".reservation-card").forEach(card => {
 
-        card.style.cursor = "pointer";
+    //     card.style.cursor = "pointer";
 
-        card.addEventListener("click", function () {
+    //     card.addEventListener("click", function () {
 
-            const id = this.getAttribute("data-id");
+    //         const id = this.getAttribute("data-id");
 
-            const form = document.createElement("form");
+    //         const form = document.createElement("form");
 
-            form.method = "POST";
-            form.action = "reservation-view";
+    //         form.method = "POST";
+    //         form.action = "reservation-view";
 
-            const input = document.createElement("input");
+    //         const input = document.createElement("input");
 
-            input.type = "hidden";
-            input.name = "reservationID";
-            input.value = id;
+    //         input.type = "hidden";
+    //         input.name = "reservationID";
+    //         input.value = id;
 
-            form.appendChild(input);
+    //         form.appendChild(input);
 
-            document.body.appendChild(form);
+    //         document.body.appendChild(form);
 
-            form.submit();
+    //         form.submit();
 
-        });
+    //     });
 
-    });
+    // }); this works
 
 });

@@ -1,3 +1,23 @@
+<?php
+$reservationID = $_GET['id'] ?? null;
+// $reservationID = $_GET['id'] ?? $_GET['reservationID'] ?? null; /* this works */
+if (!$reservationID) {
+    die("Invalid reservation ID");
+}
+// if (!$reservationID) {
+//     die("No reservation selected");
+// } this works
+?>
+<!-- <?php
+// $reservationID = $_POST['reservationID'] ?? null;
+
+// $reservationID = $_GET['reservationID'] ?? '';
+// $reservationID = $_GET['id'] ?? null;
+// $reservationID = $_GET['reservationID'] ?? null;
+// $reservationID = $_GET['id'] ?? null;
+?> -->
+
+
 <div
     id="main-area"
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
@@ -184,15 +204,34 @@
                     </div>
                     
                     <!-- Next Button -->
-                    <div class="flex justify-end mt-6">
+                    <!-- <div class="flex justify-end mt-6">
                         <button onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
                             Next
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
                         </button>
+                    </div> -->
+                    
+                    <!-- Next Button -->
+                    <div class="flex justify-between items-center mt-6">
+                    
+                    <!-- ths works ang a -->
+                        <!-- <a href="index.php?route=reservation-view&id=<?= $reservationID ?>"  -->
+                         <a href="index.php?route=reservation-view&id=<?= urlencode($reservationID) ?>"
+                            class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Back to Reservation View
+                        </a>
+                        <button id= next-btn onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                            Next
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
                     </div>
-
                 </div>
 
                 <!-- ===== PAGE 2 ===== -->

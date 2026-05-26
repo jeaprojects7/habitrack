@@ -256,17 +256,24 @@ function validatePage(page) {
             "input[name=employeremail]"
         ];
 
+        required.forEach(el => {
+            let val = $(el).val();
+            if (!val || val.trim() === "") {
+                errors.push($(el).closest(".mb-4").find("label").text() || el);
+            }
+        });
+
         let employerEmail = $("input[name=employeremail]").val().trim();
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (employerEmail && !emailRegex.test(employerEmail)) {
-            errors.push("Employer Email format is invalid");
+            errors.push("Invalid Employer Email Format");
         }
 
         let employerPhone = $("input[name=employerphonenumber]").val().trim();
         if (employerPhone && !/^[0-9]{11}$/.test(employerPhone)) {
             errors.push("Invalid Employer Phone Number");
         }
-
+   
     }
 
     // ================= PAGE 5 =================
@@ -292,7 +299,7 @@ function validatePage(page) {
         let parentPhone = $("input[name=parentsphonenumber]").val().trim();
 
         if (parentPhone && !/^[0-9]{11}$/.test(parentPhone)) {
-            errors.push("Parent Phone Number must be 11 digits");
+            errors.push("Invalid Parent Phone Number");
         }
     }
 
