@@ -1,6 +1,6 @@
 <?php
 return [
-    'dashboard'      => 'modules/dashboard.php',
+    'dashboard'         => 'modules/dashboard.php',
     'clientsignup'      => 'modules/client/clientsignup.php',
     'clientlogin'       => 'modules/clientlogin.php',
     'home'              => 'modules/client/home.php',
@@ -21,5 +21,6 @@ return [
     'userprofile'   => 'modules/userprofile.php',
     'agentuserProfile'   => 'modules/agent/agentuserProfile.php',
     'logout'            => 'modules/logout.php',
-
+    'calendar'          => 'modules/calendar.php',
+    'pre-qual'          => 'modules/pre-qual.php'
 ];

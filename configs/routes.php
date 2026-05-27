@@ -25,7 +25,9 @@ return [
     'Client' => [
         'clientsignup',
         'clientlogin',
-        'home',
-        'logout'
+        'dashboard',
+        'logout',
+        'calendar',
+        'pre-qual'
     ],
 ];

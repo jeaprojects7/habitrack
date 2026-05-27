@@ -3,5 +3,5 @@ session_unset();
 session_destroy();
 
 echo '<script>
-	    window.location = "start";
+	    window.location = "dashboard";
      </script>';
