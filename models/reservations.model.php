@@ -36,6 +36,7 @@ class ModelReservation {
         SELECT 
             r.reservationID,
             r.reserveDate,
+            r.reserveTime,
             r.reserveStatus,
 
             p.propertyID,
@@ -43,6 +44,7 @@ class ModelReservation {
             p.propertyType,
             p.propertyPrice,
             p.propertyLotArea,
+            p.houseFloorArea,
             p.propertyCity,
             p.propertyBrgy,
 

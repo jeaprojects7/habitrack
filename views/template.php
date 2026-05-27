@@ -459,6 +459,10 @@ if (isset($route)) {
             "reservations.js"
         ],
 
+        "edit-clientprofile" => [
+            "edit-clientprofile.js"
+        ],
+
 
     ];
 

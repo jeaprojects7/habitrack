@@ -61,119 +61,88 @@ $statusColor = match($resStatus) {
             <div class="grid md:grid-cols-12 gap-6 mt-6">
 
                 <!-- LEFT SIDE -->
-<div class="xl:col-span-4 lg:col-span-4 md:col-span-4">
+                <div class="xl:col-span-4 lg:col-span-4 md:col-span-4">
 
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-5 flex flex-col h-full">
+                    <!-- PROPERTY DETAILS AND SITE VISIT -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 flex flex-col h-auto">
 
-        <!-- PROPERTY IMAGE -->
-        <img
-            src="/habitrack<?= $res['imagePath'] ?>"
-            class="rounded-lg w-full h-56 object-cover"
-        />
+                        <!-- PROPERTY IMAGE -->
+                        <img
+                            src="/habitrack<?= $res['imagePath'] ?>"
+                            class="rounded-lg w-full h-56 object-cover"
+                        />
 
-        <!-- PROPERTY INFO -->
-        <div class="mt-5 text-center">
+                        <!-- PROPERTY INFO -->
+                        <div class="mt-5 text-center">
 
-            <h5 class="text-xl font-semibold text-gray-800 dark:text-white">
-                <?= htmlspecialchars($res['propertyName']) ?>
-            </h5>
+                            <h5 class="text-xl font-semibold text-gray-800 dark:text-white">
+                                <?= htmlspecialchars($res['propertyName']) ?>
+                            </h5>
 
-            <p class="text-slate-400 mt-1">
-                <?= htmlspecialchars($res['propertyType']) ?>
-            </p>
+                            <p class="text-slate-400 mt-1">
+                                <?= htmlspecialchars($res['propertyType']) ?>
+                            </p>
 
-        </div>
+                        </div>
 
-        <!-- TOP SECTION -->
-<div class="mt-6 flex flex-col">
+                        <!-- SITE VISIT -->
+                        <a href="index.php?route=spouseInfoSheet&id=<?= $reservationID ?>">
 
-    <!-- View Prequal -->
-    <a href="index.php?route=spouseInfoSheet&id=<?= $reservationID ?>">
+                            <button
+                                id="btn-sitevisit"
+                                class="w-full mt-5 px-24 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors duration-200"
+                            >
+                                Site Visit
+                            </button>
 
-        <button
-    id="btn-prequal"
-    class="mx-6 px-24 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors duration-200"
->
-    View Prequal
-</button>
+                        </a>
+                    </div>
 
-    </a>
+                    <!-- TOP SECTION -->
+                    <!-- <div class="mt-6 flex flex-col">before -->
+                    <div class="mt-6 flex flex-col gap-6">
 
-    <!-- GAP -->
-    <div class="mt-6"></div>
+                    <!-- PREQUAL FORM -->
+                        <!-- <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6"> before -->
+                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 min-h-[180px] flex flex-col justify-between">
+                            <h5 class="text-xl font-semibold text-gray-800 dark:text-white text-center mt-5 ">
+                                Prequalification Form
+                            </h5>
 
-    <!-- Reservation Requirements (same style as sections) -->
-    <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6">
+                            <!-- View Prequal -->
+                            <a href="index.php?route=spouseInfoSheet&id=<?= $reservationID ?>">
 
-        <h5 class="text-xl font-semibold text-gray-800 dark:text-white text-center mb-4 ">
-            Reservation Requirements
-        </h5>
+                                <button
+                                    id="btn-prequal"
+                                    class="w-full px-24 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors duration-200 mb-4"
+                                >
+                                    View
+                                </button>
 
-        <!-- BOTTOM BUTTONS -->
-        <div class="flex flex-col gap-3">
+                            </a>
+                        </div>
 
-            <!-- Information Sheet -->
-            <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
+                        <!-- GAP -->
+                        <!-- <div class="mt-6"></div> -->
+                        <!-- RESERVATION NA DI -->
+                        
+                        <!-- BACK BUTTON -->
+                        <div class="flex justify-start mt-20 mx-5">
 
-                <button
-                    id="btn-is"
-                    class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
-                >
-                    Information Sheet
-                </button>
+                            <a href="reservations"
+                                class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
 
-            </a>
-<!-- Upload Valid ID -->
-<div class="flex flex-col gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
 
-    <label
-        for="valid-id-upload"
-        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200"
-    >
-        Upload Valid ID
-    </label>
+                                Back to Reservations
+                            </a>
 
-    <span
-        id="file-name"
-        class="text-xs text-center text-gray-500 dark:text-white/70 break-all"
-    >
-        No file chosen
-    </span>
+                        </div>
+                    </div>
 
-    <!-- ✅ NEW BUTTON -->
-    <button
-        type="button"
-        class="w-full mt-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
-    >
-        Submit Reservation Requirements
-    </button>
-
-    <input
-        id="valid-id-upload"
-        name="valid_id"
-        type="file"
-        accept="image/*"
-        class="hidden"
-        onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
-    >
-
-</div>
-
-        </div>
-
-      
-
-    </div>
-
-</div>
-
-        
-
-        
-
-    </div>
-
-</div>
+                </div>
 
                 <!-- RIGHT SIDE -->
                 <div class="xl:col-span-8 lg:col-span-8 md:col-span-8">
@@ -249,6 +218,18 @@ $statusColor = match($resStatus) {
 
                             <div>
                                 <label class="form-label font-medium">
+                                    Floor Area
+                                </label>
+
+                                <input
+                                    value="<?= $res['houseFloorArea'] ?> sqm"
+                                    class="form-input w-full"
+                                    disabled
+                                >
+                            </div>
+
+                            <div>
+                                <label class="form-label font-medium">
                                     Reservation Date
                                 </label>
 
@@ -259,12 +240,24 @@ $statusColor = match($resStatus) {
                                 >
                             </div>
 
+                            <div>
+                                <label class="form-label font-medium">
+                                    Reservation Time
+                                </label>
+
+                                <input
+                                    value="<?= $res['reserveTime'] ?>"
+                                    class="form-input w-full"
+                                    disabled
+                                >
+                            </div>
                         </div>
 
                     </div>
 
                     <!-- STATUS SECTION -->
-                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 mt-6">
+                    <!-- <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 mt-6"> before -->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 mt-6 min-h-[180px]">
 
                         <h5 class="text-xl font-semibold text-gray-800 dark:text-white mb-5">
                             Status
@@ -310,23 +303,173 @@ $statusColor = match($resStatus) {
 
                         </div>
 
-                        <!-- BACK BUTTON -->
+                        
+                        <!-- BACK BUTTON
                         <div class="flex justify-end mt-8">
 
                             <a href="reservations">
 
                                 <button
                                     id="btn-back"
-                                    class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                                    class="px-6 py-2.5 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200"
                                 >
                                     Back to Reservations
                                 </button>
 
                             </a>
 
-                        </div>
+                        </div> -->
 
                     </div>
+
+                    <!-- Reservation Requirements (same style as sections) -->
+                    <!-- <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6"> before-->
+                    <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 mt-6 min-h-[180px]">
+
+
+                        <h5 class="text-xl font-semibold text-gray-800 dark:text-white text-left mb-4 ">
+                            Reservation Requirements
+                        </h5>
+
+                        <!-- BOTTOM BUTTONS -->
+                        <!-- <div class="flex grid-col gap-3">beforeee -->
+                        <div class="grid lg:grid-cols-3 gap-5 items-start">
+
+                            <!-- Information Sheet
+                            <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
+
+                                <button
+                                    id="btn-is"
+                                    class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                                >
+                                    Information Sheet
+                                </button>
+
+                            </a> -->
+                            <!-- Information Sheet -->
+                            <div class="flex flex-col">
+
+                                <label class="form-label font-medium">
+                                    Information Sheet
+                                </label>
+
+                                <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
+
+                                    <button
+                                        id="btn-is"
+                                        class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                                    >
+                                        Fill-up
+                                    </button>
+
+                                </a>
+
+                            </div>
+                            <!-- Upload Valid ID -->
+                            <div class="flex flex-col">
+
+                                <label class="form-label font-medium">
+                                    Valid ID
+                                </label>
+
+                                <label
+                                    for="valid-id-upload"
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200"
+                                >
+                                    Upload
+                                </label>
+
+                                <span
+                                    id="file-name"
+                                    class="text-xs text-center text-gray-500 dark:text-white/70 break-all mt-2"
+                                >
+                                    No file chosen
+                                </span>
+
+                                <input
+                                    id="valid-id-upload"
+                                    name="valid_id"
+                                    type="file"
+                                    accept="image/*"
+                                    class="hidden"
+                                    onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
+                                >
+
+                            </div>
+                            <!-- Submit -->
+                            <div class="flex flex-col">
+
+                                <label class="form-label font-medium invisible">
+                                    Hidden
+                                </label>
+
+                                <button
+                                    type="button"
+                                    class="w-full px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
+                                >
+                                    Submit
+                                </button>
+
+                            </div>
+                            <!-- Upload Valid ID beforeee-->
+                            <!-- <div class="flex flex-col gap-2">
+
+                            
+
+                                <label
+                                    for="valid-id-upload"
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200"
+                                >
+                                    Upload Valid ID
+                                </label>
+
+                                <span
+                                    id="file-name"
+                                    class="text-xs text-center text-gray-500 dark:text-white/70 break-all"
+                                >
+                                    No file chosen
+                                </span> -->
+
+                                <!-- ✅ NEW BUTTON -->
+                                <!-- <button
+                                    type="button"
+                                    class="w-full mt-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
+                                >
+                                    Submit
+                                </button>
+
+                                <input
+                                    id="valid-id-upload"
+                                    name="valid_id"
+                                    type="file"
+                                    accept="image/*"
+                                    class="hidden"
+                                    onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
+                                >
+
+                            </div>
+                                -->
+                        </div> 
+
+                    
+
+                    </div>
+
+                    <!-- BACK BUTTON beforeee-->
+                    <!-- <div class="flex justify-end mt-8">
+
+                        <a href="reservations"
+
+                            class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                            Back to Reservations
+                        </a>
+
+                        
+
+                    </div> -->
 
                 </div>
 

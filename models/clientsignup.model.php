@@ -470,4 +470,47 @@ class ModelClient{
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    static public function mdlClientChangePassword($oldpassword, $newpassword){
+
+    $clientID = $_SESSION["clientID"];
+
+    // CHECK OLD PASSWORD
+    $stmt = (new Connection)->connect()->prepare("
+        SELECT * 
+        FROM client 
+        WHERE clientID = :clientID 
+        AND clientPass = :oldpassword
+    ");
+
+    $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+    $stmt->bindParam(":oldpassword", $oldpassword, PDO::PARAM_STR);
+
+    $stmt->execute();
+
+    $answer = $stmt->fetch();
+
+    // IF OLD PASSWORD IS CORRECT
+    if(!empty($answer)){
+
+        $stmt = (new Connection)->connect()->prepare("
+            UPDATE client 
+            SET clientPass = :newpassword 
+            WHERE clientID = :clientID
+        ");
+
+        $stmt->bindParam(":newpassword", $newpassword, PDO::PARAM_STR);
+        $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return "success";
+
+    }else{
+
+        return "incorrect";
+
+    }
+
+}
 }

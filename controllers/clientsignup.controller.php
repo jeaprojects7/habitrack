@@ -89,4 +89,12 @@ class ControllerClient{
         $answer = (new ModelClient)->mdlGetClient($clientID);
         return $answer;
     }
+
+	static public function ctrClientChangePassword($oldpassword, $newpassword){
+
+		$answer = (new ModelClient)->mdlClientChangePassword($oldpassword, $newpassword);
+
+		return $answer;
+
+	}
 }

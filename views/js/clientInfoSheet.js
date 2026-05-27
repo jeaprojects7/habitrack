@@ -6,8 +6,8 @@ function saveClientInfo() {
 
     let client = new FormData();
 
-    const reservationID = sessionStorage.getItem("reservationID");
-    client.append("reservationID", reservationID);  
+    // const reservationID = sessionStorage.getItem("reservationID");
+    // client.append("reservationID", reservationID);  
     // ================= PAGE 1 =================
     // client.append("firstname", $("input[name=firstname]").val());
     // client.append("middlename", $("input[name=middlename]").val());
