@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
        // let propertyType = $("#property_type").val();
         let agentID = $("#agentID").val();
         //let agentPass = $("#agentPass").val();
+        let agentStatus = $("#agentStatus").val();
         let agentFName = $("#agentFName").val();
         let agentMName = $("#agentMName").val();
         let agentLName = $("#agentLName").val();
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let addagent = new FormData();
         addagent.append("trans_type", trans_type);
         addagent.append("agentID", agentID);
+        addagent.append("agentStatus", agentStatus);
         //addagent.append("agentPass", agentPass);
         addagent.append("agentFName", agentFName);
         addagent.append("agentMName", agentMName);

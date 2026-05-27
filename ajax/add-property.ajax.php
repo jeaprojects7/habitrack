@@ -7,6 +7,7 @@ require_once "../models/add-property.model.php";
   public $propertyID;
   public $propertyName;
   public $propertyType;
+  public $propertyStatus;
   public $propertyLat;
   public $propertyLng;
   public $propertyCity;
@@ -25,6 +26,7 @@ require_once "../models/add-property.model.php";
     $propertyID = $this->propertyID;
   	$propertyName = $this->propertyName;
   	$propertyType = $this->propertyType;
+    $propertyStatus = $this->propertyStatus;
     $propertyLat = $this->propertyLat;
   	$propertyLng = $this->propertyLng;
     $propertyCity = $this->propertyCity;
@@ -40,6 +42,7 @@ require_once "../models/add-property.model.php";
     $data = array("propertyID"=>$propertyID,
                   "propertyName"=>$propertyName,
                   "propertyType"=>$propertyType,
+                  "propertyStatus"=>$propertyStatus,
                   "propertyLat"=>$propertyLat,
                   "propertyLng"=>$propertyLng,
                   "propertyCity"=>$propertyCity,
@@ -81,6 +84,7 @@ $add_property -> trans_type = $_POST["trans_type"];
 $add_property -> propertyID = $_POST["propertyID"];
 $add_property -> propertyName = $_POST["propertyName"];
 $add_property -> propertyType = $_POST["propertyType"];
+$add_property -> propertyStatus = $_POST["propertyStatus"]?? "Available";
 $add_property -> propertyLat = $_POST["propertyLat"];
 $add_property -> propertyLng = $_POST["propertyLng"];
 $add_property -> propertyCity = $_POST["propertyCity"];

@@ -7,6 +7,7 @@ return [
         'edit-property',
         'exploreproperty',
         'print-properties',
+        'print-agents',
         'agentregister',
         'edit-agentprofile',
         'agentprofile',
@@ -16,7 +17,9 @@ return [
     ],
     'Agent' => [
         'agentlogin',
+        'agentuserProfile',
         'agentDashboard',
+        'userprofile',
         'logout'
     ],
     'Client' => [

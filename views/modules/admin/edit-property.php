@@ -32,6 +32,7 @@ if (!$property) {
     "
     >
 
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
 <div class="container-fluid relative px-3 main-content">
@@ -43,9 +44,9 @@ if (!$property) {
                 <h5 class="text-lg font-semibold">Edit Properties</h5>
 
                 <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
-                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="index.php">Habitrack</a></li>
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="exploreproperty">Explore Properties</a></li>
                     <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180"><i class="mdi mdi-chevron-right"></i></li>
-                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">Add Properties</li>
+                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">Edit Properties</li>
                 </ul>
             </div>
 
@@ -81,6 +82,30 @@ if (!$property) {
                                         </option>
                                     </select>
                             </div>
+
+                             <div class="md:col-span-6 col-span-12 bg-white dark:bg-slate-900 h-fit">
+                                    <label for="propertyStatus" class="form-label text-gray-900 dark:text-gray-200">Property Status</label>
+                                    <select id="propertyStatus" name="propertyStatus" class="select2 form-select 
+                       bg-white dark:bg-slate-800 
+                       text-gray-800 dark:text-gray-200 
+                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Select Property Type"  value="<?= htmlspecialchars($property['propertyStatus']) ?>">
+                                         <option value="">Select Property Status</option>
+
+                                        <option value="Available" <?= $property['propertyStatus'] == 'Available' ? 'selected' : '' ?>>
+                                            Available
+                                        </option>
+
+                                        <option value="Reserved" <?= $property['propertyStatus'] == 'Reserved' ? 'selected' : '' ?>>
+                                            Reserved
+                                        </option>
+
+                                        <option value="Archived" <?= $property['propertyStatus'] == 'Archived' ? 'selected' : '' ?>>
+                                            Archived
+                                        </option>
+                                    </select>
+                            </div>
+
+
                         <div class="col-span-12">
                             <label class="font-medium">Property Name:</label>
                             <input type="text" id="propertyName" name="propertyName" class="form-input mt-2" placeholder="Property Name :" 
@@ -107,6 +132,10 @@ if (!$property) {
                             <input type="number" id="propertyPrice" name="propertyPrice" class="form-input mt-2" placeholder="Price"
                             value="<?= htmlspecialchars($property['propertyPrice']) ?>">
                         </div>
+
+
+                        
+                        
                         <!-- <br> -->
 <!-- 
                         <div id="lotFields" style="display:none;">

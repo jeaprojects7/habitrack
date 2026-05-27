@@ -5,6 +5,7 @@ require_once "../models/agentregister.model.php";
  class addAgent{
   public $trans_type; 
   public $agentID;
+  public $agentStatus;
   public $agentFName;
   public $agentMName;
   public $agentLName;
@@ -24,6 +25,7 @@ require_once "../models/agentregister.model.php";
     $trans_type = $this->trans_type;
     $agentID = $this->agentID;
     //$agentPass = $this->agentPass;
+    $agentStatus = $this->agentStatus;
   	$agentFName = $this->agentFName;
   	$agentMName = $this->agentMName;
     $agentLName = $this->agentLName;
@@ -40,6 +42,7 @@ require_once "../models/agentregister.model.php";
 
 
     $data = array("agentID"=>$agentID,
+                  "agentStatus"=>$agentStatus,
                   "agentFName"=>$agentFName,
                   "agentMName"=>$agentMName,
                   "agentLName"=>$agentLName,
@@ -70,6 +73,7 @@ $add_agent = new addAgent();
 $add_agent -> trans_type = $_POST["trans_type"];
 //$save_clinicstaff -> encodedby = !empty($_POST["encodedby"]) ? $_POST["encodedby"] : 'SYSTEM';
 $add_agent -> agentID = $_POST["agentID"];
+$add_agent -> agentStatus = $_POST["agentStatus"] ?? 'Active';
 $add_agent -> agentFName = $_POST["agentFName"];
 $add_agent -> agentMName = $_POST["agentMName"];
 $add_agent -> agentLName = $_POST["agentLName"];

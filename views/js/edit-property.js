@@ -113,6 +113,7 @@ if (!isNaN(lat) && !isNaN(lng)) {
         //let trans_type = $("#trans_type").val();
         let trans_type = "Update";
         let propertyType = $("#property_type").val();
+        let propertyStatus = $("#propertyStatus").val();
 
         let propertyName = $("#propertyName").val();
         let propertyLat = $("#propertyLat").val();
@@ -142,6 +143,7 @@ if (!isNaN(lat) && !isNaN(lng)) {
         addproperty.append("trans_type", trans_type);
         addproperty.append("propertyID", propertyID);
         addproperty.append("propertyType", propertyType);
+        addproperty.append("propertyStatus", propertyStatus);
         addproperty.append("propertyName", propertyName);
         addproperty.append("propertyLat", propertyLat);
         addproperty.append("propertyLng", propertyLng);
@@ -201,7 +203,7 @@ if (!isNaN(lat) && !isNaN(lng)) {
                     
                 Swal.fire({
                     title: 'Success!',
-                    text: 'Property saved successfully.',
+                    text: 'Property Updated successfully.',
                     icon: 'success',
                     confirmButtonText: 'Got it',
                         customClass: {

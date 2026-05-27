@@ -14,6 +14,16 @@ if (($_GET['route'] ?? '') === 'print-properties') {
     exit('Forbidden');
 }
 
+if (($_GET['route'] ?? '') === 'print-agents') {
+    if (($_SESSION['loggedIn'] ?? '') === 'ok' && ($_SESSION['role'] ?? '') === 'Admin') {
+        include __DIR__ . "/../reports/print-agents.php";
+        exit;
+    }
+
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 ?>
 
 <!DOCTYPE html>

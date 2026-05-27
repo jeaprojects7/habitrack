@@ -49,6 +49,10 @@ public function mdlGetPropertiesFiltered($filters) {
         $sql .= " AND LOWER(TRIM(p.propertyType)) = LOWER(TRIM(:type))";
         $params[':type'] = $filters['type'];
     }
+    if (!empty($filters['status'])) {
+        $sql .= " AND LOWER(TRIM(p.propertyStatus)) = LOWER(TRIM(:status))";
+        $params[':status'] = $filters['status'];
+    }
 
     // City uses a partial match, so searching "Bac" can still find "Bacolod".
     if (!empty($filters['city'])) {

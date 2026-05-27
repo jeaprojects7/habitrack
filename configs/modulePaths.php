@@ -12,11 +12,14 @@ return [
     'edit-property'      => 'modules/admin/edit-property.php',
     'exploreproperty'   => 'modules/admin/exploreproperty.php',
     'print-properties'  => '../reports/print-properties.php',
+    'print-agents'  => '../reports/print-agents.php',
     'agentregister'   => 'modules/admin/agentregister.php',
     'edit-agentprofile'   => 'modules/admin/edit-agentprofile.php',
     'agentprofile'   => 'modules/admin/agentprofile.php',
     'agentdisplay'   => 'modules/admin/agentdisplay.php',
     'property-detail'   => 'modules/admin/property-detail.php',
+    'userprofile'   => 'modules/userprofile.php',
+    'agentuserProfile'   => 'modules/agent/agentuserProfile.php',
     'logout'            => 'modules/logout.php',
 
 ];

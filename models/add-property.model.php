@@ -40,12 +40,12 @@ class ModelAddProperty{
             // Insert
             $stmt = $pdo->prepare("
                 INSERT INTO properties(
-                    propertyID, propertyName, propertyType,propertyLat, propertyLng,housePowderRoom,propertyCity, 
+                    propertyID, propertyName, propertyType, propertyStatus, propertyLat, propertyLng,housePowderRoom,propertyCity, 
                     propertyBrgy, propertyPrice, houseFloorArea, houseStorey, houseBedroom, houseTandB, propertyLotArea,
                     houseGarage, houseGarden, houseBalcony, housePool, houseMaidRoom, houseLaundryArea, houseTerrace,
                     houseCabinets, houseBilliardRoom
                 ) VALUES (
-                    :propertyID, :propertyName, :propertyType, :propertyLat, :propertyLng, :housePowderRoom, :propertyCity, 
+                    :propertyID, :propertyName, :propertyType, :propertyStatus, :propertyLat, :propertyLng, :housePowderRoom, :propertyCity, 
                     :propertyBrgy, :propertyPrice, :houseFloorArea, :houseStorey, :houseBedroom, :houseTandB, :propertyLotArea,
                     :houseGarage, :houseGarden, :houseBalcony, :housePool, :houseMaidRoom, :houseLaundryArea, :houseTerrace,
                     :houseCabinets, :houseBilliardRoom
@@ -55,6 +55,7 @@ class ModelAddProperty{
             $stmt->bindParam(":propertyID", $propertycode, PDO::PARAM_STR);
             $stmt->bindParam(":propertyName", $data["propertyName"], PDO::PARAM_STR);
             $stmt->bindParam(":propertyType", $data["propertyType"], PDO::PARAM_STR);
+            $stmt->bindParam(":propertyStatus", $data["propertyStatus"], PDO::PARAM_STR);
             $stmt->bindParam(":propertyLat", $data["propertyLat"], PDO::PARAM_STR);
             $stmt->bindParam(":propertyLng", $data["propertyLng"], PDO::PARAM_STR);
             $stmt->bindParam(":propertyCity", $data["propertyCity"], PDO::PARAM_STR);
@@ -126,6 +127,7 @@ class ModelAddProperty{
 
                 propertyName = :propertyName,
                 propertyType = :propertyType,
+                propertyStatus = :propertyStatus,
                 propertyLat = :propertyLat,
                 propertyLng = :propertyLng,
                 propertyCity = :propertyCity,
@@ -162,6 +164,7 @@ class ModelAddProperty{
         $stmt->bindParam(":propertyID", $data["propertyID"], PDO::PARAM_STR);
         $stmt->bindParam(":propertyName", $data["propertyName"], PDO::PARAM_STR);
         $stmt->bindParam(":propertyType", $data["propertyType"], PDO::PARAM_STR);
+        $stmt->bindParam(":propertyStatus", $data["propertyStatus"], PDO::PARAM_STR);
         $stmt->bindParam(":propertyLat", $data["propertyLat"], PDO::PARAM_STR);
         $stmt->bindParam(":propertyLng", $data["propertyLng"], PDO::PARAM_STR);
         $stmt->bindParam(":propertyCity", $data["propertyCity"], PDO::PARAM_STR);

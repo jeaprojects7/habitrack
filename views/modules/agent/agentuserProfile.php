@@ -8,11 +8,12 @@ require_once __DIR__ . '/../../controllers/add-property.controller.php';
 
 require_once __DIR__ . '/../../../controllers/agentregister.controller.php'; 
 
-//  Get ID from URL
-$agentID = $_GET['agentID'] ?? null;
+
+$agentID = $_SESSION['agentID'] ?? null;
 
 if (!$agentID) {
-    die("No property ID provided.");
+    header("Location: login");
+    exit;
 }
 
 //  Fetch property data
@@ -40,12 +41,12 @@ ob_start();  */
     >
 
      <div class="md:flex justify-between items-center">
-                <h5 class="text-lg font-semibold">Edit Agent</h5>
+                <h5 class="text-lg font-semibold">My Profile</h5>
 
                 <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
-                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="agentdisplay">Agents</a></li>
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="agentDashboard">Dashboard</a></li>
                     <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180"><i class="mdi mdi-chevron-right"></i></li>
-                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">Edit Agent</li>
+                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">My Profile</li>
                 </ul>
             </div>
 
@@ -67,7 +68,7 @@ ob_start();  */
                 <div class="xl:col-span-3 lg:col-span-4 md:col-span-4">
                     <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
                         <div class="profile-pic text-center">
-                            <input id="pro-img" name="profile-image" type="file" class="hidden" onchange="loadFile(event)" />
+                            <input id="pro-img" name="profile-image" class="hidden" onchange="loadFile(event)"  />
                             <input type="hidden" id="agentID" value="<?= htmlspecialchars($agent['agentID']) ?>">
                             <div>
                                 <?php
@@ -121,7 +122,7 @@ ob_start();  */
                                     <select id="agentStatus" name="agentStatus" class="select2 form-select w-40 rounded 
                        bg-white dark:bg-slate-800 
                        text-gray-800 dark:text-gray-200 
-                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Agent Status"  value="<?= htmlspecialchars($agent['agentStatus']) ?>">
+                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Agent Status"  value="<?= htmlspecialchars($agent['agentStatus']) ?>"disabled>
                                          <option value="">Agent Status</option>
 
                                         <option value="Active" <?= $agent['agentStatus'] == 'Active' ? 'selected' : '' ?>>
@@ -152,7 +153,7 @@ ob_start();  */
                                         <label class="form-label font-medium">First Name : <span class="text-red-600">*</span></label>
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
-                                            <input type="text" id="agentFName" name="agentFName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="First Name:" id="firstname" name="name" required=""
+                                            <input type="text" readonly id="agentFName" name="agentFName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="First Name:" id="firstname" name="name" required=""
                                             value="<?= htmlspecialchars($agent['agentFName']) ?>">
                                         </div>
                                     </div>
@@ -161,7 +162,7 @@ ob_start();  */
                                         <label class="form-label font-medium">Middle Name : <span class="text-red-600">*</span></label>
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
-                                            <input type="text" id="agentMName" name="agentMName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-white dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Middle Name:" id="middlename" name="name" required=""
+                                            <input type="text" readonly id="agentMName" name="agentMName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-white dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Middle Name:" id="middlename" name="name" required=""
                                             value="<?= htmlspecialchars($agent['agentMName']) ?>">
                                         </div>
                                     </div>
@@ -171,7 +172,7 @@ ob_start();  */
                                         <label class="form-label font-medium">Last Name : <span class="text-red-600">*</span></label>
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
-                                            <input type="text" id="agentLName" name="agentLName" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Last Name:" id="lastname" name="name" required=""
+                                            <input type="text" readonly id="agentLName" name="agentLName" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Last Name:" id="lastname" name="name" required=""
                                             value="<?= htmlspecialchars($agent['agentLName']) ?>">
                                         </div>
                                     </div>
@@ -180,7 +181,7 @@ ob_start();  */
                                         <label class="form-label font-medium">Suffix : </label>
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
-                                            <input type="text" id="agentSuffix" name="agentSuffix" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Suffix:" id="suffixname" name="name"
+                                            <input type="text" readonly id="agentSuffix" name="agentSuffix" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Suffix:" id="suffixname" name="name"
                                             value="<?= htmlspecialchars($agent['agentSuffix']) ?>">
                                         </div>
                                     </div>
@@ -190,7 +191,7 @@ ob_start();  */
                                             <!-- Gender -->
                                             <div>
                                                 <label class="form-label font-medium">Gender : <span class="text-red-600">*</span></label>
-                                                <select id="agentGender" name="agentGender" class="form-input w-full mt-2 bg-white dark:bg-slate-800 text-gray-800 white:text-gray-200 border-gray-300 dark:border-slate-700" value="<?= htmlspecialchars($agent['agentGender']) ?>">
+                                                <select id="agentGender" disabled name="agentGender" class="form-input w-full mt-2 bg-white dark:bg-slate-800 text-gray-800 white:text-gray-200 border-gray-300 dark:border-slate-700" value="<?= htmlspecialchars($agent['agentGender']) ?>">
                                                     <option value="">Select Gender</option>
                                                     <option value="Male" <?= $agent['agentGender'] == 'Male' ? 'selected' : '' ?>>Male</option>
                                                     <option value="Female" <?= $agent['agentGender'] == 'Female' ? 'selected' : '' ?>>Female</option>
@@ -200,7 +201,7 @@ ob_start();  */
                                             <!-- Birthdate -->
                                             <div>
                                                 <label class="form-label font-medium">Birthdate : <span class="text-red-600">*</span></label>
-                                                <input type="date" id="agentBirthdate" name="agentBirthdate" value="<?= htmlspecialchars($agent['agentBirthdate']) ?>"
+                                                <input type="date" readonly id="agentBirthdate" name="agentBirthdate" value="<?= htmlspecialchars($agent['agentBirthdate']) ?>"
                                                     class="form-input w-full mt-2 bg-transparent dark:bg-slate-900 text-gray-800 white:text-gray-200 border border-gray-200 dark:border-slate-700 rounded">
                                             </div>
 
@@ -220,7 +221,7 @@ ob_start();  */
                                         <label class="form-label font-medium">Sold Units : </label>
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="bookmark" class="size-4 absolute top-3 start-4"></i>
-                                            <input name="agentSoldUnits" id="agentSoldUnits" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Sold Units :"
+                                            <input name="agentSoldUnits" readonly id="agentSoldUnits" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Sold Units :"
                                             value="<?= htmlspecialchars($agent['agentSoldUnits']) ?>">
                                         </div>
                                     </div>
@@ -239,7 +240,7 @@ ob_start();  */
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="message-circle" class="size-4 absolute top-3 start-4"></i>
                                             <textarea
-                                            name="agentAddress"
+                                            name="agentAddress" readonly
                                             id="agentAddress"
                                             class="form-input ps-11 w-full py-2 px-3 h-28 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0"
                                             placeholder="Address :"
@@ -263,7 +264,7 @@ ob_start();  */
                                                 <label class="form-label font-medium">Agent Phone No. :</label>
                                                 <div class="form-icon relative mt-2">
                                                     <i data-feather="phone" class="size-4 absolute top-3 start-4"></i>
-                                                    <input name="agentPhoneNum" id="agentPhoneNum" type="number" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Phone :"
+                                                    <input name="agentPhoneNum" readonly id="agentPhoneNum" type="number" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Phone :"
                                                     value="<?= htmlspecialchars($agent['agentPhoneNum']) ?>">
                                                 </div>
                                             </div>
@@ -272,7 +273,7 @@ ob_start();  */
                                                 <label class="form-label font-medium">Agent Email :</label>
                                                 <div class="form-icon relative mt-2">
                                                     <i data-feather="globe" class="size-4 absolute top-3 start-4"></i>
-                                                    <input name="agentEmail" id="agentEmail" type="url" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Email :"
+                                                    <input name="agentEmail" readonly id="agentEmail" type="url" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Email :"
                                                     value="<?= htmlspecialchars($agent['agentEmail']) ?>">
                                                 </div>
                                             </div>
@@ -281,7 +282,7 @@ ob_start();  */
                                         <label class="form-label font-medium">Agent Facebook Account : </label>
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="bookmark" class="size-4 absolute top-3 start-4"></i>
-                                            <input name="agentFB" id="agentFB" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="FB Name :"
+                                            <input name="agentFB" readonly id="agentFB" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="FB Name :"
                                             value="<?= htmlspecialchars($agent['agentFB']) ?>">
                                         </div>
                                     </div>
@@ -289,7 +290,7 @@ ob_start();  */
 
                                         </div><!--end grid-->
 
-                                        <button type="submit" id="btn-register" class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-5">Update Agent Profile</button>
+                                        
                                         <a 
     href="/habitrack/reports/generate-agent-profile.php?agentID=<?= $agent['agentID'] ?>" 
     target="_blank"
