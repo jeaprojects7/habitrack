@@ -3,7 +3,15 @@ $base_dir = __DIR__ . '/modules';
 $static_url = '/habitrack/views/Adminassets'; // Ensure this is the correct path
 $logo_url = '/habitrack/views/assets'; // added 52126
 
+// Role-based dashboard routing 52226
+$role = isset($_SESSION['role']) ? strtolower($_SESSION['role']) : null;
 
+$dashboard_url = match($role) {
+    'admin'  => 'adminDashboard',
+    'agent'  => 'agentDashboard',
+    'client' => 'home',
+    default  => 'start', // fallback if no session
+};
 ?>
 
     <section class="relative bg-green-600/5">
@@ -11,7 +19,7 @@ $logo_url = '/habitrack/views/assets'; // added 52126
             <div class="grid grid-cols-1">
                 <div class="flex flex-col min-h-screen justify-center md:px-10 py-10 px-4">
                     <div class="text-center">
-                        <a href="home"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-24 h-auto" alt=""></a>
+                        <a href="<?php echo $dashboard_url; ?>"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-24 h-auto" alt=""></a>
                     </div>
                     <div class="title-heading text-center my-auto">
                         <img src="<?php echo $static_url; ?>/images/error.png" class="mx-auto" alt="">
@@ -19,7 +27,7 @@ $logo_url = '/habitrack/views/assets'; // added 52126
                         <p class="text-slate-400">Whoops, this is embarassing. <br> Looks like you do not have access to the page you were looking for.</p>
                         
                         <div class="mt-4">
-                            <a href="home" class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md">Back to Home</a>
+                            <a href="<?php echo $dashboard_url; ?>" class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md">Back to Dashboard</a>
                         </div>
                     </div>
                     <div class="text-center">

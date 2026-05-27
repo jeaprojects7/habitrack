@@ -1,0 +1,44 @@
+/* ==============================================
+   Calendar Dark Mode Fix
+   /habitrack/views/Adminassets/css/calendar.css
+   ============================================== */
+
+/* Blank filler cells */
+.calendar-blank-cell {
+    background-color: #f8fafc;
+}
+.dark .calendar-blank-cell {
+    background-color: #1e293b !important;
+}
+
+/* Day cards */
+.dark .calendar-day-card {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+.dark .calendar-day-card:hover {
+    background-color: #334155 !important;
+    border-color: #64748b !important;
+}
+.dark .calendar-day-card .text-sm {
+    color: #f1f5f9 !important;
+}
+.dark .calendar-day-card .text-xs {
+    color: #cbd5e1 !important;
+}
+
+/* Outer calendar wrapper */
+.dark .calendar-wrapper {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+/* Sidebar wrapper */
+.dark .calendar-sidebar {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+}
+/* Site Visit Details — dark mode gradient */
+.dark .calendar-sidebar .rounded-3xl.bg-gradient-to-br {
+    background-image: linear-gradient(to bottom right, #0369a1, #0e7490, #3730a3) !important;
+}

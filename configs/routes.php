@@ -20,12 +20,15 @@ return [
         'agentuserProfile',
         'agentDashboard',
         'userprofile',
+        'clientPreQual',
         'logout'
     ],
     'Client' => [
         'clientsignup',
         'clientlogin',
-        'home',
-        'logout'
+        'dashboard',
+        'logout',
+        'calendar',
+        'pre-qual'
     ],
 ];

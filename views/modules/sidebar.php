@@ -56,7 +56,7 @@ $sidebarMenus = [
 
         [
             'title' => 'Dashboard',
-            'route' => 'home',
+            'route' => 'dashboard',
             'icon'  => 'grid'
         ],
 
@@ -71,6 +71,13 @@ $sidebarMenus = [
             'route' => 'favoriteProperties',
             'icon'  => 'heart'
         ],
+
+        [
+            'title' => 'Site Visit',
+            'route' => 'calendar',
+            'icon'  => 'calendar'
+        ],
+        
 
     ]
 
@@ -239,7 +246,24 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     </button>
                     <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
                         <li><a href="userprofile">My Profile</a></li>
-                        <li><a href="#">Settings</a></li>
+                        <li><a href="userSettings">Settings</a></li>
+                    </ul>
+                </li>
+            <?php endif; ?>
+
+
+            
+            <!-- Pre-Qual Stuff -->
+            <?php if ($role === 'Agent'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('prequal-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>Pre-Qualification</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="prequal-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="clientPreQual">Pending</a></li>
+                        <li><a href="userSettings">Settings</a></li>
                     </ul>
                 </li>
             <?php endif; ?>
