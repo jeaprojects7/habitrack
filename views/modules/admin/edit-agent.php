@@ -1,5 +1,6 @@
 
 <?php
+
 /* $base_dir = views/ ;  */ 
 $static_url = '/habitrack/views/Adminassets';
 /* $route = 'add-property';
@@ -9,11 +10,13 @@ require_once __DIR__ . '/../../controllers/add-property.controller.php';
 require_once __DIR__ . '/../../../controllers/agentregister.controller.php'; 
 
 //  Get ID from URL
-$agentID = $_GET['agentID'] ?? null;
+/* $agentID = $_GET['agentID'] ?? null; */
+$agentID = $_SESSION['agentID'] ?? null;
 
 if (!$agentID) {
-    die("No property ID provided.");
+    die("No agent selected.");
 }
+
 
 //  Fetch property data
 $agent = ControllerAddAgent::ctrGetAgent($agentID);

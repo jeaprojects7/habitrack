@@ -1,59 +1,61 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    /* var map = L.map('map').setView([9.7392, 118.7353], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-     let marker;
-
-    map.on('click', function (e) {
-        const lat = e.latlng.lat;
-        const lng = e.latlng.lng;
-
-        // remove old marker
-        if (marker) {
-            map.removeLayer(marker);
-        }
-
-        // add new marker
-        marker = L.marker([lat, lng]).addTo(map);
-
-        // store values in form
-        document.getElementById('propertyLat').value = lat;
-        document.getElementById('propertyLng').value = lng;
-
-        console.log("Selected location:", lat, lng);
-    }); 
-    const lat = parseFloat("<?= $property['propertyLat'] ?>");
-    const lng = parseFloat("<?= $property['propertyLng'] ?>");
-
-    if (lat && lng) {
-        map.setView([lat, lng], 15);
-
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup("Property Location")
-            .openPopup();
-    } */
-   var map = L.map('map').setView([9.7392, 118.7353], 13);
+var map = L.map('map').setView([9.7392, 118.7353], 13);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
+
+let marker; // global marker reference
+
 const lat = parseFloat(window.propertyData.lat);
 const lng = parseFloat(window.propertyData.lng);
 
 console.log("Coords:", lat, lng);
 
+// ================= SHOW EXISTING MARKER =================
 if (!isNaN(lat) && !isNaN(lng)) {
     map.setView([lat, lng], 15);
 
-    L.marker([lat, lng])
-        .addTo(map)
-        //.bindPopup('propertyID')
-        .openPopup();
+    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+    // IMPORTANT: update inputs when dragging existing marker
+    marker.on('dragend', function () {
+        const pos = marker.getLatLng();
+
+        document.getElementById('propertyLat').value = pos.lat;
+        document.getElementById('propertyLng').value = pos.lng;
+    });
 }
+
+// ================= CLICK TO MOVE MARKER =================
+map.on('click', function (e) {
+
+    const newLat = e.latlng.lat;
+    const newLng = e.latlng.lng;
+
+    // reuse marker instead of recreating (smoother UX)
+    if (!marker) {
+        marker = L.marker([newLat, newLng], { draggable: true }).addTo(map);
+    } else {
+        marker.setLatLng([newLat, newLng]);
+    }
+
+    // update hidden inputs
+    document.getElementById('propertyLat').value = newLat;
+    document.getElementById('propertyLng').value = newLng;
+
+    // ensure drag updates still work
+    marker.off('dragend'); // prevent duplicate listeners
+    marker.on('dragend', function () {
+        const pos = marker.getLatLng();
+
+        document.getElementById('propertyLat').value = pos.lat;
+        document.getElementById('propertyLng').value = pos.lng;
+    });
+
+    console.log("Updated location:", newLat, newLng);
+});
 
     // Property type toggle (your existing logic is fine)
     const propertyType = document.getElementById('property_type');

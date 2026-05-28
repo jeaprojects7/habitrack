@@ -34,11 +34,7 @@ $sidebarMenus = [
             'route' => 'agentdisplay',
             'icon'  => 'user'
         ],
-        [
-            'title' => 'Edit Agent Profile',
-            'route' => 'agentprofile',
-            'icon'  => 'user'
-        ],
+        
 
     ],
 
@@ -47,6 +43,11 @@ $sidebarMenus = [
         [
             'title' => 'Dashboard',
             'route' => 'agentDashboard',
+            'icon'  => 'grid'
+        ],
+         [
+            'title' => 'Explore Properties',
+            'route' => 'exploreproperty',
             'icon'  => 'grid'
         ],
 
@@ -250,6 +251,23 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     </ul>
                 </li>
             <?php endif; ?>
+
+              <!-- Pre-Qual Studd -->
+            <?php if ($role === 'Agent'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('prequal-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>Client Pre-Qualification</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="prequal-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="index.php?route=clientPreQual&status=Pending">Pending</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Approved">Approved</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Archived">Archived</a></li>
+                                            </ul>
+                </li>
+            <?php endif; ?>
+
 
            
     <!-- </nav> -->

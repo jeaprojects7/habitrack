@@ -305,7 +305,7 @@ if (($_GET['route'] ?? '') === 'print-agents') {
          "agentregister" => [
             "agentregister.js"
         ],
-        "edit-agentprofile" => [
+        "edit-agent" => [
             "edit-agentprofile.js"
         ],
 

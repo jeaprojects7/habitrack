@@ -174,8 +174,7 @@ $printQuery = http_build_query([
 
                 
                 <?php foreach ($agents as $agent): ?>
-                     <a
-                            href="index.php?route=edit-agentprofile&agentID=<?= $agent['agentID'] ?>"
+                     <a href="set-edit-session.php?type=agent&id=<?= $agent['agentID'] ?>"
                             class="text-lg hover:text-green-600 font-medium ease-in-out duration-500"
                         >
                     <?php
