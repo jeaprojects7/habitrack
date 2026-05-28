@@ -41,7 +41,7 @@ $sidebarMenus = [
 
         [
             'title' => 'Dashboard',
-            'route' => 'home',
+            'route' => 'dashboard',
             'icon'  => 'grid'
         ],
 
@@ -56,6 +56,13 @@ $sidebarMenus = [
             'route' => 'favoriteProperties',
             'icon'  => 'heart'
         ],
+
+        [
+            'title' => 'Site Visit',
+            'route' => 'calendar',
+            'icon'  => 'calendar'
+        ],
+        
 
     ]
 
