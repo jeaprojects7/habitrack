@@ -28,6 +28,11 @@ class ControllerAddAgent{
         return $answer;
     }
 
+     public static function ctrGetAgentFiltered($filters){
+
+    return (new ModelAddAgent)->mdlGetAgentFiltered($filters);
+}
+
 
 	
 }

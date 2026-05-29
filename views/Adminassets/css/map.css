@@ -196,14 +196,45 @@ body { overflow-x: hidden; }
 .ht-panel .ss-main.ss-open-below,
 .ht-panel .ss-main.ss-open-above,
 .ht-panel .ss-main:focus {
-    border-color: #22c55e !important;
-    background: #ffffff !important;
-    box-shadow: 0 0 0 3px rgba(34,197,94,0.12) !important;
+    border-color: #d1d5db !important;
+    background: #f3f4f6 !important;
+    box-shadow: 0 0 0 3px rgba(209,213,219,0.12) !important;
     outline: none !important;
 }
 
 .ht-panel .ss-deselect { color: #9ca3af !important; transition: color .15s; }
 .ht-panel .ss-deselect:hover { color: #ef4444 !important; }
+
+/* Multi-select pills/badges in the trigger */
+.ht-panel .ss-main .ss-content {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    width: 100% !important;
+}
+
+.ht-panel .ss-main .ss-single {
+    display: flex !important;
+    width: 100% !important;
+}
+
+.ht-panel .ss-main .ss-values {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+    width: 100% !important;
+}
+
+.ht-panel .ss-main .ss-value {
+    background: #6b7280 !important;
+    color: #ffffff !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-size: .75rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
 
 /* ═══════════════════════════════════
    SLIM SELECT — DROPDOWN (appended to <body>)
@@ -258,12 +289,12 @@ body { overflow-x: hidden; }
 }
 .ss-content.ht-sel .ss-option:hover,
 .ss-content.ht-sel .ss-option.ss-highlighted {
-    background: #f0fdf4 !important;
-    color: #16a34a !important;
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
 }
 .ss-content.ht-sel .ss-option.ss-selected {
-    background: #dcfce7 !important;
-    color: #15803d !important;
+    background: #e5e7eb !important;
+    color: #374151 !important;
     font-weight: 600 !important;
 }
 
@@ -352,3 +383,36 @@ body { overflow-x: hidden; }
     background: #14532d !important;
     color: #86efac !important;
 }
+.ht-price-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    min-height: 36px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 7px;
+    color: #374151;
+    font-size: .82rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+}
+.ht-price-input:focus {
+    border-color: #d1d5db;
+    background: #f3f4f6;
+    box-shadow: 0 0 0 3px rgba(209,213,219,0.12);
+}
+.ht-price-input::placeholder { color: #9ca3af; }
+
+/* dark mode */
+.dark .ht-price-input {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+.dark .ht-price-input:focus {
+    border-color: #22c55e;
+    background: #1e293b;
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
+}
+.dark .ht-price-input::placeholder { color: #475569; }

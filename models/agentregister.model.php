@@ -62,16 +62,17 @@ class ModelAddAgent{
             // Insert
             $stmt = $pdo->prepare("
                 INSERT INTO agent(
-                    agentID, agentPass, agentFName, agentLName,agentMName, agentSuffix,agentEmail,agentPhoneNum, 
+                    agentID, agentStatus, agentPass, agentFName, agentLName,agentMName, agentSuffix,agentEmail,agentPhoneNum, 
                     agentAddress, agentSoldUnits, agentFB, agentGender, agentBirthdate, agentPic
                 ) VALUES (
-                    :agentID, :agentPass, :agentFName, :agentLName, :agentMName, :agentSuffix, :agentEmail, :agentPhoneNum, 
+                    :agentID, :agentStatus, :agentPass, :agentFName, :agentLName, :agentMName, :agentSuffix, :agentEmail, :agentPhoneNum, 
                     :agentAddress, :agentSoldUnits, :agentFB, :agentGender, :agentBirthdate, :agentPic
                 )
             ");
 
             $stmt->bindParam(":agentID", $agentcode, PDO::PARAM_STR);
             $stmt->bindParam(":agentPass", $agentpasswordcode, PDO::PARAM_STR);
+            $stmt->bindParam(":agentStatus", $data["agentStatus"], PDO::PARAM_STR);
             $stmt->bindParam(":agentFName", $data["agentFName"], PDO::PARAM_STR);
             $stmt->bindParam(":agentMName", $data["agentMName"], PDO::PARAM_STR);
             $stmt->bindParam(":agentLName", $data["agentLName"], PDO::PARAM_STR);
@@ -149,6 +150,7 @@ class ModelAddAgent{
 
         $stmt = $pdo->prepare("
             UPDATE agent SET
+                agentStatus = :agentStatus,
 
                 agentFName = :agentFName,
                 agentMName = :agentMName,
@@ -183,6 +185,7 @@ class ModelAddAgent{
 
         // bindings
         $stmt->bindParam(":agentID", $data["agentID"], PDO::PARAM_STR);
+        $stmt->bindParam(":agentStatus", $data["agentStatus"], PDO::PARAM_STR);
         $stmt->bindParam(":agentFName", $data["agentFName"], PDO::PARAM_STR);
         $stmt->bindParam(":agentMName", $data["agentMName"], PDO::PARAM_STR);
         $stmt->bindParam(":agentLName", $data["agentLName"], PDO::PARAM_STR);
@@ -206,5 +209,72 @@ class ModelAddAgent{
 }
 
 
+public function mdlGetAgentFiltered($filters) {
+
+    $db = new Connection();
+    $pdo = $db->connect();
+
+    $sql = "
+        SELECT *
+        FROM agent
+        WHERE 1=1
+    ";
+
+    $params = [];
+
+    // ONE SEARCH FIELD FOR NAME OR ID
+    if (!empty($filters['agent'])) {
+
+        $search = trim($filters['agent']);
+
+        $sql .= "
+            AND (
+                
+                LOWER(CONCAT_WS(
+                    ' ',
+                    agentFName,
+                    agentMName,
+                    agentLName
+                )) LIKE LOWER(:agent)
+
+                OR
+
+                LOWER(agentID) LIKE LOWER(:agentID)
+
+                OR
+
+                REPLACE(LOWER(agentID), 'ag', '') LIKE :numericID
+            )
+        ";
+
+        $params[':agent']    = '%' . $search . '%';
+        $params[':agentID']  = '%' . $search . '%';
+        $params[':numericID'] = '%' . $search . '%';
+    }
+    if (!empty($filters['status'])) {
+        $sql .= " AND LOWER(TRIM(agentStatus)) = LOWER(TRIM(:status))";
+        $params[':status'] = $filters['status'];
+    }
+    // Sold Units range filters can be used together or separately.
+    if (isset($filters['minSoldUnits']) && $filters['minSoldUnits'] !== '' && is_numeric($filters['minSoldUnits'])) {
+        $sql .= " AND agentSoldUnits >= :minSoldUnits";
+        $params[':minSoldUnits'] = $filters['minSoldUnits'];
+    }
+
+    if (isset($filters['maxSoldUnits']) && $filters['maxSoldUnits'] !== '' && is_numeric($filters['maxSoldUnits'])) {
+        $sql .= " AND agentSoldUnits <= :maxSoldUnits";
+        $params[':maxSoldUnits'] = $filters['maxSoldUnits'];
+    }
+
+    $stmt = $pdo->prepare($sql);
+
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
    
 }

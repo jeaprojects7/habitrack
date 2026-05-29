@@ -3,12 +3,25 @@ return [
     'Admin' => [
         'adminDashboard',
         'add-property',
+        'edit-property',
         'exploreproperty',
+        'print-properties',
+        'print-agents',
+        'agentregister',
+        'edit-agent',
+        'agentprofile',
+        'agentdisplay',
         'property-detail',
         'logout',
     ],
     'Agent' => [
+        'agentlogin',
+        'agentuserProfile',
         'agentDashboard',
+        'userprofile',
+        'clientPreQual',
+        'exploreproperty',
+        'print-properties',
         'logout'
     ],
     'Client' => [
@@ -20,6 +33,10 @@ return [
         'reservation-view',
         'edit-clientprofile',
         'clientprofile',
-        'logout'
+        'logout',
+        'clientlogin',
+        'dashboard',
+        'calendar',
+        'pre-qual'
     ],
 ];
