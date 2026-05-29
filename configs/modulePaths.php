@@ -12,6 +12,6 @@ return [
     'exploreproperty'   => 'modules/admin/exploreproperty.php',
     'property-detail'   => 'modules/admin/property-detail.php',
     'logout'            => 'modules/logout.php',
-    'calendar'          => 'modules/calendar.php',
-    'pre-qual'          => 'modules/pre-qual.php'
+    'calendar'          => 'modules/client/calendar.php',
+    'pre-qual'          => 'modules/client/pre-qual.php'
 ];

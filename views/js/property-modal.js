@@ -365,7 +365,7 @@ function _htConnectAgent(email, name, agentId) {
 
     // Redirect to the Pre-Qual form (route-based navigation)
     // Uses the same route parameter format as the app: ?route=pre-qual
-    window.location.href = '/habitrack/?route=pre-qual';
+    window.location = 'pre-qual';
 }
 
 /** Format a date string (YYYY-MM-DD) to readable form. */
@@ -460,4 +460,119 @@ function htClosePrequalModal() {
     document.body.style.overflow = '';
     // Close agent modal as well
     htCloseAgentModal();
+}
+
+// ═════════════════════════════════════════════
+//  PICTURES CAROUSEL MODAL
+// ═════════════════════════════════════════════
+
+var _htPicsImages  = [];
+var _htPicsIndex   = 0;
+var _htPicsProperty = '';
+
+function htOpenPicturesModal(propertyId) {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (!modal) return;
+
+    _htPicsProperty = propertyId;
+    _htPicsImages   = [];
+    _htPicsIndex    = 0;
+
+    modal.style.display    = 'flex';
+    document.body.style.overflow = 'hidden';
+    _htPicsBindBackdrop();
+
+    document.getElementById('pics-main-img').style.display  = 'none';
+    document.getElementById('pics-loading').style.display   = 'block';
+    document.getElementById('pics-empty').style.display     = 'none';
+    document.getElementById('pics-thumbs').innerHTML        = '';
+    document.getElementById('pics-modal-subtitle').textContent = '';
+    document.getElementById('pics-modal-counter').textContent  = '';
+    document.getElementById('pics-prev-btn').style.display  = 'none';
+    document.getElementById('pics-next-btn').style.display  = 'none';
+
+    fetch('/habitrack/controllers/dashboard.controller.php?action=getImages&id=' + encodeURIComponent(propertyId))
+        .then(function(res) { return res.json(); })
+        .then(function(json) {
+            document.getElementById('pics-loading').style.display = 'none';
+            if (!json.success || !json.data || json.data.length === 0) {
+                document.getElementById('pics-empty').style.display = 'block';
+                return;
+            }
+            _htPicsImages = json.data;
+            _htPicsRender(0);
+        })
+        .catch(function() {
+            document.getElementById('pics-loading').style.display = 'none';
+            document.getElementById('pics-empty').style.display   = 'block';
+        });
+}
+
+function _htPicsRender(index) {
+    _htPicsIndex = index;
+    var images   = _htPicsImages;
+    var total    = images.length;
+    var img      = images[index];
+
+    document.getElementById('pics-modal-subtitle').textContent = _htPicsProperty + ' · photos';
+    document.getElementById('pics-modal-counter').textContent  = 'Image ' + (index + 1) + ' of ' + total;
+
+    var mainImg = document.getElementById('pics-main-img');
+    mainImg.style.display = 'none';
+    mainImg.onerror = function() {
+        this.style.display = 'none';
+        document.getElementById('pics-empty').style.display = 'block';
+        document.getElementById('pics-empty').textContent = 'Image could not be loaded.';
+    };
+    mainImg.onload = function() {
+        this.style.display = 'block';
+        document.getElementById('pics-empty').style.display = 'none';
+    };
+    mainImg.src = '/habitrack' + img.imagePath;
+
+    document.getElementById('pics-prev-btn').style.display = total > 1 ? 'flex' : 'none';
+    document.getElementById('pics-next-btn').style.display = total > 1 ? 'flex' : 'none';
+
+    var thumbs = document.getElementById('pics-thumbs');
+    thumbs.innerHTML = '';
+    images.forEach(function(im, i) {
+        var t = document.createElement('img');
+        t.src   = '/habitrack' + im.imagePath;
+        t.alt   = 'Thumbnail ' + (i + 1);
+        t.style.cssText = 'width:56px;height:42px;object-fit:cover;border-radius:5px;cursor:pointer;opacity:' + (i === index ? '1' : '0.45') + ';border:' + (i === index ? '2px solid #fff' : '2px solid transparent') + ';transition:opacity .15s;';
+        t.onclick = (function(idx) { return function() { _htPicsRender(idx); }; })(i);
+        thumbs.appendChild(t);
+    });
+}
+
+function htPicsNav(dir) {
+    var total = _htPicsImages.length;
+    if (total === 0) return;
+    var next = (_htPicsIndex + dir + total) % total;
+    _htPicsRender(next);
+}
+
+function htClosePicturesModal() {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (!modal || modal.style.display === 'none') return;
+    if (e.key === 'ArrowLeft')  htPicsNav(-1);
+    if (e.key === 'ArrowRight') htPicsNav(1);
+    if (e.key === 'Escape')     htClosePicturesModal();
+});
+
+// Close on backdrop click — bind on first open to ensure DOM is ready
+function _htPicsBindBackdrop() {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (modal && !modal._backdropBound) {
+        modal._backdropBound = true;
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) htClosePicturesModal();
+        });
+    }
 }

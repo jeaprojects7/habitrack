@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pre-qualification Form</title>
-  <!-- color-scheme follows navbar dark toggle via JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
-    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── Design tokens ── */
     :root {
       --color-background-primary:   #ffffff;
       --color-background-secondary: #f8f9fb;
@@ -25,7 +22,6 @@
       --border-radius-md:           8px;
     }
 
-    /* ── Dark mode (mirrors navbar #chk toggle → <html class="dark">) ── */
     .dark {
       --color-background-primary:   #111827;
       --color-background-secondary: #1f2937;
@@ -44,7 +40,6 @@
 
     body { font-family: var(--font-sans); background: var(--color-background-secondary); }
 
-    /* ── Page wrapper ── */
     .page {
       background: var(--color-background-primary);
       min-height: 100vh;
@@ -55,7 +50,6 @@
       box-shadow: 0 0 0 0.5px var(--color-border-tertiary);
     }
 
-    /* ── Top bar ── */
     .top-bar {
       padding: 14px 24px;
       font-size: 16px;
@@ -65,19 +59,14 @@
       flex-shrink: 0;
     }
 
-    /* ── Form body ── */
     .form-body { padding: 20px 24px 24px; flex: 1; }
 
-    /* ── Grid rows ── */
     .row { display: grid; gap: 12px; margin-bottom: 14px; }
     .row-2 { grid-template-columns: 1fr 1fr; }
     .row-3 { grid-template-columns: 1fr 1fr 1fr; }
     .row-4 { grid-template-columns: 2fr 2fr 1fr 1fr; }
 
-    /* ── Field ── */
-    .field label {
-      font-size: 13px;
-    }
+    .field label { font-size: 13px; }
     .field input,
     .field select {
       width: 100%;
@@ -106,18 +95,14 @@
     }
     .field input[type="date"] { padding: 0 8px; }
 
-    /* ── Section box ── */
     .section-box {
       background: var(--color-background-secondary);
       border-radius: var(--border-radius-md);
       padding: 14px 16px;
       margin-bottom: 14px;
     }
-    .section-title {
-      font-size: 14px;
-    }
+    .section-title { font-size: 14px; }
 
-    /* ── Radio groups ── */
     .three-col {
       display: grid;
       grid-template-columns: 160px 1fr 1fr;
@@ -125,19 +110,14 @@
       align-items: start;
     }
     .yn-group { display: flex; flex-direction: column; }
-    .yn-group .yn-label {
-      font-size: 13px;
-    }
+    .yn-group .yn-label { font-size: 13px; }
     .radio-row {
       display: flex;
       gap: 8px;
       align-items: center;
       margin-top: 6px;
     }
-    .radio-row label {
-      font-size: 14px;
-      cursor: pointer;
-    }
+    .radio-row label { font-size: 14px; cursor: pointer; }
     .radio-row input[type="radio"] {
       accent-color: var(--color-accent);
       width: 14px;
@@ -145,7 +125,6 @@
       cursor: pointer;
     }
 
-    /* ── Footer ── */
     .footer {
       display: flex;
       justify-content: space-between;
@@ -188,7 +167,6 @@
     .btn-next:hover  { background: var(--color-accent-hover); }
     .btn-next:active { background: var(--color-accent-active); transform: scale(0.98); }
 
-    /* ── Utility ── */
     .hidden { display: none !important; }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
   </style>
@@ -198,7 +176,6 @@
 <div class="page">
   <div class="top-bar">Pre-qualification Form</div>
 
-  <!-- Notification shown when redirected from Connect-to-Agent -->
   <div id="prequal-notification" style="display:none;padding:28px;text-align:center;">
     <div style="max-width:640px;margin:0 auto;background:linear-gradient(135deg,#16a34a 0%,#10b981 100%);color:#fff;padding:22px;border-radius:10px;box-shadow:0 8px 20px rgba(16,185,129,.12);">
       <div style="font-size:18px;font-weight:700;margin-bottom:8px;">You're connected to <span class="prequal-agent-name">Agent</span>.</div>
@@ -213,7 +190,7 @@
     <div class="row row-3">
       <div class="field">
         <label for="civil-status">Civil status</label>
-        <select id="civil-status" name="civil_status" onchange="toggleSpouse()">
+        <select id="civil-status" name="civil_status">
           <option value="">— select —</option>
           <option value="married">Married</option>
           <option value="widow">Widow</option>
@@ -235,56 +212,69 @@
       </div>
     </div>
 
-    <div id="ownership-section" class="section-box hidden">
-      <span class="yn-label">Will the spouse be a co-owner?</span>
+    <!-- Principal buyer Co-Owner? — always visible -->
+    <div id="ownership-section" class="section-box">
+      <span class="yn-label">Principal buyer Co-Owner?</span>
       <div class="radio-row">
-        <label><input type="radio" name="co_owner" value="yes" onchange="toggleSpouseDetails()" /> YES</label>
-        <label><input type="radio" name="co_owner" value="no"  onchange="toggleSpouseDetails()" /> No</label>
+        <label><input type="radio" name="co_owner" value="yes" onchange="toggleCoOwnerDetails()" /> co-owner</label>
+        <label><input type="radio" name="co_owner" value="no"  onchange="toggleCoOwnerDetails()" /> Principal buyer</label>
       </div>
     </div>
-    <!-- Spouse Details (shown only when co-owner = yes) -->
-    <div id="spouse-section" class="section-box hidden">
-      <div class="section-title">Spouse details</div>
-      <div class="row row-4">
+
+    <!-- Co-Owner details — shown only when YES is selected -->
+    <div id="coOwner-section" class="section-box hidden">
+      <div class="section-title">Co-Owner details</div>
+      <div class="row" style="grid-template-columns: 2fr 2fr 2fr 1fr 1fr;">
         <div class="field">
-          <label for="spouse-firstname">First name</label>
-          <input type="text" id="spouse-firstname" name="spouse_firstname" />
+          <label for="relationship">Relationship with Co-owner</label>
+          <select id="relationship" name="co-owner_relationship">
+            <option value="">— select —</option>
+            <option value="Mother">Mother</option>
+            <option value="Father">Father</option>
+            <option value="Sister">Sister</option>
+            <option value="Brother">Brother</option>
+            <option value="Spouse">Spouse</option>
+          </select>
         </div>
         <div class="field">
-          <label for="spouse-lastname">Last name</label>
-          <input type="text" id="spouse-lastname" name="spouse_lastname" />
+          <label for="co-owner-firstname">First name</label>
+          <input type="text" id="co-owner-firstname" name="co-owner_firstname" />
         </div>
         <div class="field">
-          <label for="spouse-mi">M.I.</label>
-          <input type="text" id="spouse-mi" name="spouse_mi" maxlength="3" />
+          <label for="co-owner-lastname">Last name</label>
+          <input type="text" id="co-owner-lastname" name="co-owner_lastname" />
         </div>
         <div class="field">
-          <label for="spouse-suffix">Suffix</label>
-          <input type="text" id="spouse-suffix" name="spouse_suffix" />
+          <label for="co-owner-mi">M.I.</label>
+          <input type="text" id="co-owner-mi" name="co-owner_mi" maxlength="3" />
+        </div>
+        <div class="field">
+          <label for="co-owner-suffix">Suffix</label>
+          <input type="text" id="co-owner-suffix" name="co-owner_suffix" />
         </div>
       </div>
       <div class="row row-2">
         <div class="field">
-          <label for="spouse-email">Email</label>
-          <input type="email" id="spouse-email" name="spouse_email" />
+          <label for="co-owner-email">Email</label>
+          <input type="email" id="co-owner-email" name="co-owner_email" />
         </div>
         <div class="field">
-          <label for="spouse-phone">Phone number</label>
-          <input type="tel" id="spouse-phone" name="spouse_phone" />
+          <label for="co-owner-phone">Phone number</label>
+          <input type="tel" id="co-owner-phone" name="co-owner_phone" />
         </div>
       </div>
       <div class="row row-2">
         <div class="field">
-          <label for="spouse-employment">Employment status</label>
-          <select id="spouse-employment" name="spouse_employment_status">
+          <label for="co-owner-employment">Employment status</label>
+          <select id="co-owner-employment" name="co-owner_employment_status">
             <option value="">— select —</option>
             <option value="local">Local</option>
             <option value="ofw">OFW</option>
           </select>
         </div>
         <div class="field">
-          <label for="spouse-income">Monthly income</label>
-          <input type="number" id="spouse-income" name="spouse_monthly_income" placeholder="0.00" min="0" step="0.01" />
+          <label for="co-owner-income">Monthly income</label>
+          <input type="number" id="co-owner-income" name="co-owner_monthly_income" placeholder="0.00" min="0" step="0.01" />
         </div>
       </div>
     </div>
@@ -356,7 +346,6 @@
 
 <script src="pre-qual.js"></script>
 <script>
-// ── Sync dark mode with navbar #chk toggle ──────────────────────────────────
 (function () {
   const html = document.documentElement;
 
@@ -364,7 +353,6 @@
     html.classList.toggle('dark', on);
   }
 
-  // Apply immediately on load based on current state of #chk
   function init() {
     const chk = document.getElementById('chk');
     if (chk) {
@@ -375,14 +363,12 @@
     }
   }
 
-  // #chk may live in a separately included navbar; wait for DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
 
-  // Also watch for class changes on <html> in case another script drives it
   new MutationObserver(function (mutations) {
     mutations.forEach(function (m) {
       if (m.attributeName === 'class') {

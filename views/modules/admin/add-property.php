@@ -222,7 +222,7 @@ $static_url = '/habitrack/views/Adminassets';
     </div>
 </div>
 <div id="imageModal"
-     class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-70 z-[9999] p-6">
+     class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-70 z-[9999] p-6">
 
     <div class="relative bg-white p-2 rounded-lg shadow-lg max-w-2xl w-full">
         

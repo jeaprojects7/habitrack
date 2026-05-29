@@ -330,9 +330,22 @@
                 padding: 14px 24px;
                 border-top: 1px solid #f3f4f6;
                 display: flex;
-                justify-content: flex-end;
+                justify-content: space-between;
                 gap: 8px;
             ">
+                <button onclick="htOpenPicturesModal(window._htSelectedPropertyID)" style="
+                    background: linear-gradient(135deg, #166534 0%, #16a34a 100%);
+                    border: none;
+                    border-radius: 8px;
+                    padding: 9px 20px;
+                    cursor: pointer;
+                    font-size: .85rem;
+                    color: #fff;
+                    font-weight: 500;
+                    transition: opacity .15s;
+                " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    📷 View Pictures
+                </button>
                 <button onclick="htCloseModal()" style="
                     background: #f3f4f6; border: none; border-radius: 8px;
                     padding: 9px 20px; cursor: pointer; font-size: .85rem; color: #374151;
@@ -525,8 +538,46 @@
     </div>
 </div>
 
+<div id="ht-pictures-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;flex-direction:column;">
+
+    <!-- Top bar -->
+    <div style="width:100%;max-width:860px;display:flex;justify-content:space-between;align-items:center;padding:14px 20px 10px;box-sizing:border-box;">
+        <div>
+            <div id="pics-modal-subtitle" style="color:rgba(255,255,255,0.55);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;"></div>
+            <div id="pics-modal-counter" style="color:#fff;font-size:.85rem;font-weight:600;margin-top:2px;">Image 1 of 1</div>
+        </div>
+        <button onclick="htClosePicturesModal()" style="background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:34px;height:34px;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>
+    </div>
+
+    <!-- Main image area -->
+    <div style="position:relative;width:100%;max-width:860px;flex:1;display:flex;align-items:center;justify-content:center;padding:0 20px;box-sizing:border-box;min-height:0;">
+
+        <!-- Prev -->
+        <button id="pics-prev-btn" onclick="htPicsNav(-1)"
+            style="position:absolute;left:24px;z-index:2;background:rgba(255,255,255,0.18);border:none;border-radius:50%;width:42px;height:42px;color:#fff;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#8249;</button>
+
+        <!-- Image -->
+        <img id="pics-main-img"
+            src=""
+            alt="Property image"
+            style="max-width:100%;max-height:calc(100vh - 220px);border-radius:10px;object-fit:contain;display:none;">
+
+        <!-- Loading / no images state -->
+        <div id="pics-loading" style="display:none;color:rgba(255,255,255,0.5);font-size:.95rem;text-align:center;">Loading images…</div>
+        <div id="pics-empty" style="display:none;color:rgba(255,255,255,0.5);font-size:.95rem;text-align:center;">No images available for this property.</div>
+
+        <!-- Next -->
+        <button id="pics-next-btn" onclick="htPicsNav(1)"
+            style="position:absolute;right:24px;z-index:2;background:rgba(255,255,255,0.18);border:none;border-radius:50%;width:42px;height:42px;color:#fff;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#8250;</button>
+
+    </div>
+
+    <!-- Thumbnail strip -->
+    <div id="pics-thumbs" style="display:flex;gap:8px;justify-content:center;padding:14px 20px 18px;flex-wrap:wrap;max-width:860px;box-sizing:border-box;"></div>
+
+</div>
+
 <script>
-    // Injected by PHP — true only when a client session is active
     var HT_CLIENT_LOGGED_IN = <?= isset($_SESSION['clientID']) ? 'true' : 'false'; ?>;
 </script>
 <!-- Property modal logic (includes agent modal logic) -->

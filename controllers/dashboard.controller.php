@@ -150,6 +150,31 @@ try {
             echo json_encode(['success' => false, 'error' => 'Property not found']);
         }
     }
+    // ────────────────────────────────────────────────
+    //  GET-IMAGES: Get all images for a property by ID
+    // ────────────────────────────────────────────────
+    else if ($action === 'getImages') {
+        $propertyID = isset($_GET['id']) ? trim($_GET['id']) : '';
+
+        if (empty($propertyID)) {
+            echo json_encode(['success' => false, 'error' => 'Invalid property ID']);
+            exit;
+        }
+
+        $stmt = $db->prepare(
+            "SELECT imagePath, imageOrder
+             FROM property_images
+             WHERE propertyID = :id
+             ORDER BY imageOrder ASC"
+        );
+        $stmt->execute([':id' => $propertyID]);
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'data'    => $images
+        ]);
+    }
     else if ($action === 'getAgents') {
         $stmt = $db->query("SELECT * FROM agent ORDER BY agentFName");
         $agents = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -439,8 +439,9 @@ async function loadPropertiesByType(propertyType, selectId) {
                     houseBilliardRoom:'Billiard Room', houseClubhouse:'Clubhouse',
                     houseGarden:'Garden'
                 };
-                const amenities = Object.entries(amenityMap)
-                    .filter(([col]) => p[col] == 1)
+                const amenityList = Object.entries(amenityMap)
+                    .filter(([col]) => p[col] == 1 || p[col] === '1');
+                const amenities = amenityList
                     .map(([, label]) => `<span style="display:inline-block;background:#eff6ff;color:#2151cc;border-radius:6px;padding:2px 9px;font-size:.75rem;margin:2px 2px 2px 0;">${label}</span>`)
                     .join('');
 
@@ -455,19 +456,25 @@ async function loadPropertiesByType(propertyType, selectId) {
                         <img src="/habitrack${p.imagePath}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.7;" alt="${p.propertyName || 'Property'}">` : ''}
                         
                         <!-- Overlay Text -->
-                        <div style="position:relative;padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:${p.imagePath ? 'flex-start' : 'center'};height:100%;z-index:2;">
-                            <div>
-                                <div style="color:${p.imagePath ? '#fff' : '#bfdbfe'};font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;text-shadow:${p.imagePath ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'};">
-                                    ${type}
-                                    ${p.propertyID ? '· #' + p.propertyID : ''}
+                        <div style="position:relative;padding:14px 16px 12px;display:flex;justify-content:space-between;align-items:flex-start;height:100%;z-index:2;flex-direction:column;">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;width:100%;">
+                                <div>
+                                    <div style="color:${p.imagePath ? '#fff' : '#bfdbfe'};font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;text-shadow:${p.imagePath ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'};">
+                                        ${type}
+                                        ${p.propertyID ? '· #' + p.propertyID : ''}
+                                    </div>
+                                    <div style="color:#fff;font-weight:700;font-size:1rem;margin-top:2px;line-height:1.25;text-shadow:0 1px 3px rgba(0,0,0,0.3);">
+                                        ${p.propertyName || 'Unnamed Property'}
+                                    </div>
                                 </div>
-                                <div style="color:#fff;font-weight:700;font-size:1rem;margin-top:2px;line-height:1.25;text-shadow:0 1px 3px rgba(0,0,0,0.3);">
-                                    ${p.propertyName || 'Unnamed Property'}
-                                </div>
+                                <button onclick="window._htClosePropModal()"
+                                    style="background:rgba(255,255,255,.25);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1.1rem;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:8px;backdrop-filter:blur(2px);">
+                                    ✕
+                                </button>
                             </div>
-                            <button onclick="window._htClosePropModal()"
-                                style="background:rgba(255,255,255,.25);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:1.1rem;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:8px;backdrop-filter:blur(2px);">
-                                ✕
+                            <button onclick="htOpenPicturesModal('${p.propertyID}')"
+                                style="align-self:center;margin-top:10px;margin-bottom:10px;background:rgba(255,255,255,0.92);color:#2151cc;border:none;border-radius:20px;padding:5px 16px;font-size:.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+                                🖼️ View pictures
                             </button>
                         </div>
                     </div>
@@ -525,7 +532,7 @@ async function loadPropertiesByType(propertyType, selectId) {
                         </div>
 
                         <!-- Amenities -->
-                        ${amenities ? `
+                        ${amenityList.length > 0 ? `
                         <div style="margin-bottom:14px;">
                             <div style="font-size:.68rem;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Amenities</div>
                             <div>${amenities}</div>
