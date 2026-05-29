@@ -544,16 +544,8 @@ async function loadPropertiesByType(propertyType, selectId) {
                             style="width:100%;padding:11px;background:#2151cc;color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-top:4px;"
                             onmouseover="this.style.background='#1a42a8'"
                             onmouseout="this.style.background='#2151cc'"
-                            onclick="alert('Reserve feature coming soon!')">
-                            Reserve
-                        </button>
-
-                        <button
-                            style="width:100%;padding:11px;background:#2151cc;color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-top:4px;"
-                            onmouseover="this.style.background='#1a42a8'"
-                            onmouseout="this.style.background='#2151cc'"
                             onclick="htOpenAgentModal()">
-                            Agent
+                            Reserve
                         </button>
                         ` : `
                         <div style="margin-top:8px;padding:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px;text-align:center;font-size:.82rem;color:#6b7280;">

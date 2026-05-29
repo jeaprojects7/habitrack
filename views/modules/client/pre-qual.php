@@ -177,10 +177,10 @@
   <div class="top-bar">Pre-qualification Form</div>
 
   <div id="prequal-notification" style="display:none;padding:28px;text-align:center;">
-    <div style="max-width:640px;margin:0 auto;background:linear-gradient(135deg,#16a34a 0%,#10b981 100%);color:#fff;padding:22px;border-radius:10px;box-shadow:0 8px 20px rgba(16,185,129,.12);">
+    <div style="max-width:640px;margin:0 auto;background:linear-gradient(135deg,#2563eb 0%,#3b82f6 100%);color:#fff;padding:22px;border-radius:10px;box-shadow:0 8px 20px rgba(59,130,246,.12);">
       <div style="font-size:18px;font-weight:700;margin-bottom:8px;">You're connected to <span class="prequal-agent-name">Agent</span>.</div>
       <div style="font-size:13px;opacity:.95;margin-bottom:12px;">Please continue to fill out the pre-qualification form so the agent can contact you.</div>
-      <button onclick="htShowPrequalForm()" style="padding:10px 18px;background:#fff;color:#065f46;border-radius:8px;border:none;font-weight:600;cursor:pointer;">Continue</button>
+      <button onclick="htShowPrequalForm()" style="padding:10px 18px;background:#fff;color:#1e40af;border-radius:8px;border:none;font-weight:600;cursor:pointer;">Continue</button>
     </div>
   </div>
 

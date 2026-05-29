@@ -126,13 +126,13 @@ body { overflow-x: hidden; }
 .ht-btn:active { transform: scale(.98); }
 
 .ht-btn-primary {
-    background: #22c55e;
+    background: #3b82f6;
     color: #ffffff;
-    box-shadow: 0 2px 8px rgba(34,197,94,0.3);
+    box-shadow: 0 2px 8px rgba(59,130,246,0.3);
 }
 .ht-btn-primary:hover {
-    background: #16a34a;
-    box-shadow: 0 4px 12px rgba(34,197,94,0.4);
+    background: #2563eb;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.4);
 }
 
 .ht-btn-outline {
@@ -275,7 +275,7 @@ body { overflow-x: hidden; }
     outline: none !important;
     transition: border-color .2s !important;
 }
-.ss-content.ht-sel .ss-search input:focus { border-color: #22c55e !important; background: #ffffff !important; }
+.ss-content.ht-sel .ss-search input:focus { border-color: #3b82f6 !important; background: #ffffff !important; }
 .ss-content.ht-sel .ss-search input::placeholder { color: #9ca3af !important; }
 
 /* Options */
@@ -352,9 +352,9 @@ body { overflow-x: hidden; }
 .dark .ht-panel .ss-main.ss-open-below,
 .dark .ht-panel .ss-main.ss-open-above,
 .dark .ht-panel .ss-main:focus {
-    border-color: #22c55e !important;
+    border-color: #3b82f6 !important;
     background: #1e293b !important;
-    box-shadow: 0 0 0 3px rgba(34,197,94,0.15) !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
 }
 .dark .ht-panel .ss-deselect { color: #475569 !important; }
 .dark .ht-panel .ss-deselect:hover { color: #ef4444 !important; }
@@ -370,7 +370,7 @@ body { overflow-x: hidden; }
     border-color: #334155 !important;
     color: #e2e8f0 !important;
 }
-.dark .ss-content.ht-sel .ss-search input:focus { border-color: #22c55e !important; background: #1e293b !important; }
+.dark .ss-content.ht-sel .ss-search input:focus { border-color: #3b82f6 !important; background: #1e293b !important; }
 .dark .ss-content.ht-sel .ss-search input::placeholder { color: #475569 !important; }
 
 .dark .ss-content.ht-sel .ss-option { color: #e2e8f0 !important; }
@@ -411,8 +411,8 @@ body { overflow-x: hidden; }
     color: #e2e8f0;
 }
 .dark .ht-price-input:focus {
-    border-color: #22c55e;
+    border-color: #3b82f6;
     background: #1e293b;
-    box-shadow: 0 0 0 3px rgba(34,197,94,0.15);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
 }
 .dark .ht-price-input::placeholder { color: #475569; }

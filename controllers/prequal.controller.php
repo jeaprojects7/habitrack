@@ -89,6 +89,8 @@ class PrequalController {
         $employmentStatus = trim($data['employment_status'] ?? '');
         $monthlyIncome    = trim($data['monthly_income']    ?? '');
         $financingType    = trim($data['financing_type']    ?? '');
+        $financingID      = trim($data['financing_id']      ?? ''); // From copy mode
+        $coOwnerID        = trim($data['co_owner_id']       ?? ''); // From copy mode
 
         if (!$agentID || !$propertyID || !$civilStatus || !$employmentStatus || $monthlyIncome === '' || !$financingType) {
             $this->jsonResponse(['success' => false, 'message' => 'Missing required fields.'], 400);
@@ -122,7 +124,6 @@ class PrequalController {
         // ── Co-owner ─────────────────────────────────────────────────────────
         // JS sends co_owner = 'yes'|'no' and coOwner object when yes
         $coOwner    = strtolower(trim($data['co_owner'] ?? 'no'));
-        $coOwnerID   = null;
         $coOwnerData = null;
 
         if ($coOwner === 'yes') {
@@ -139,11 +140,6 @@ class PrequalController {
                 'employment_status' => trim($coOwnerData['employment_status'] ?? ''),
                 'monthly_income'    => trim($coOwnerData['monthly_income']    ?? '')
             ];
-
-           /*  if (!$coOwnerData['firstname'] || !$coOwnerData['lastname'] || !$coOwnerData['email'] || !$coOwnerData['phone'] || !$coOwnerData['employment_status']) {
-                $this->jsonResponse(['success' => false, 'message' => 'Missing co-owner information.'], 400);
-                return;
-            } */
         }
 
         // ── Save ─────────────────────────────────────────────────────────────
@@ -153,20 +149,42 @@ class PrequalController {
                 return;
             }
 
-            $prequalID   = $this->prequalModel->generateId('PQ');
-            $financingID = $this->prequalModel->saveFinancing($prequalID, $financingData);
-            if (!$financingID) {
-                $this->db->rollBack();
-                $this->jsonResponse(['success' => false, 'message' => 'Unable to save financing.'], 500);
-                return;
+            $prequalID = $this->prequalModel->generateId('PQ');
+
+            // If financingID provided (copy mode), reuse it; otherwise create new
+            if (empty($financingID)) {
+                $financingID = $this->prequalModel->saveFinancing($prequalID, $financingData);
+                if (!$financingID) {
+                    $this->db->rollBack();
+                    $this->jsonResponse(['success' => false, 'message' => 'Unable to save financing.'], 500);
+                    return;
+                }
+            } else {
+                // In copy mode, just use the provided financingID (don't create new)
+                // But we still need to update it if data changed
+                if (!$this->prequalModel->updateFinancing($financingID, $financingData)) {
+                    $this->db->rollBack();
+                    $this->jsonResponse(['success' => false, 'message' => 'Unable to update financing.'], 500);
+                    return;
+                }
             }
 
+            // If coOwnerID provided (copy mode), reuse it; otherwise create if needed
             if ($coOwnerData !== null) {
-                $coOwnerID = $this->prequalModel->savecoOwner($prequalID, $financingID, $coOwnerData);
-                if (!$coOwnerID) {
-                    $this->db->rollBack();
-                    $this->jsonResponse(['success' => false, 'message' => 'Unable to save co-owner details.'], 500);
-                    return;
+                if (empty($coOwnerID)) {
+                    $coOwnerID = $this->prequalModel->savecoOwner($prequalID, $financingID, $coOwnerData);
+                    if (!$coOwnerID) {
+                        $this->db->rollBack();
+                        $this->jsonResponse(['success' => false, 'message' => 'Unable to save co-owner details.'], 500);
+                        return;
+                    }
+                } else {
+                    // In copy mode, just use the provided coOwnerID and update if needed
+                    if (!$this->prequalModel->updateCoOwner($coOwnerID, $coOwnerData)) {
+                        $this->db->rollBack();
+                        $this->jsonResponse(['success' => false, 'message' => 'Unable to update co-owner details.'], 500);
+                        return;
+                    }
                 }
             }
 
@@ -203,7 +221,7 @@ class PrequalController {
 
     private function getPrequal(): void {
         if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+                session_start();
         }
 
         $clientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
@@ -223,8 +241,19 @@ class PrequalController {
         }
 
         try {
+            // Step 1: Try exact match (same client + same property + same agent)
             $prequalRecord = $this->prequalModel->getPrequalByClientPropertyAgent($clientID, $propertyID, $agentID);
             
+            // Step 2: If no exact match, try same client + same agent (different property)
+            if (!$prequalRecord) {
+                $prequalRecord = $this->prequalModel->getLatestPrequalByClientAgent($clientID, $agentID);
+            }
+
+            // Step 3: If still no match, try same client only (different agent and/or property)
+            if (!$prequalRecord) {
+                $prequalRecord = $this->prequalModel->getLatestPrequalByClient($clientID);
+            }
+
             if (!$prequalRecord) {
                 $this->jsonResponse(['success' => false, 'message' => 'No pre-qualification record found.'], 404);
                 return;
@@ -234,6 +263,12 @@ class PrequalController {
                 'success' => true,
                 'data' => [
                     'prequalID' => $prequalRecord['prequalID'],
+                    'financingID' => $prequalRecord['financingID'],
+                    'coOwnerID' => $prequalRecord['coOwnerID'],
+                    'sourcePropertyID' => $prequalRecord['propertyID'],
+                    'sourceAgentID' => $prequalRecord['agentID'],
+                    'isSameProperty' => ($prequalRecord['propertyID'] === $propertyID),
+                    'isSameAgent' => ($prequalRecord['agentID'] === $agentID),
                     'civil_status' => $prequalRecord['clientCivilStatus'],
                     'employment_status' => $prequalRecord['clientEmpStatus'],
                     'monthly_income' => $prequalRecord['clientMonthlyIncome'],
@@ -245,13 +280,13 @@ class PrequalController {
             if ($prequalRecord['financingType'] === 'bank') {
                 $response['data']['bank'] = [
                     'bank_name' => $prequalRecord['bankName'] ?? '',
-                    'existing_house_loan' => $prequalRecord['existingHouseLoan'] ?? '',
-                    'cancelled_house_loan' => $prequalRecord['cancelledHouseLoan'] ?? ''
+                    'existing_house_loan' => strtolower($prequalRecord['existingHouseLoan'] ?? ''),
+                    'cancelled_house_loan' => strtolower($prequalRecord['cancelledHouseLoan'] ?? '')
                 ];
             } elseif ($prequalRecord['financingType'] === 'pagibig') {
                 $response['data']['pagibig'] = [
                     'contribution_start_date' => $prequalRecord['contributionStartDate'] ?? '',
-                    'current_loan' => $prequalRecord['currentLoan'] ?? ''
+                    'current_loan' => strtolower($prequalRecord['currentLoan'] ?? '')
                 ];
             }
 

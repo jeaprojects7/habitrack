@@ -223,7 +223,7 @@
             <div style="
                 width: 40px; height: 40px;
                 border: 3px solid #e5e7eb;
-                border-top-color: #16a34a;
+                border-top-color: #3b82f6;
                 border-radius: 50%;
                 animation: htSpin .7s linear infinite;
                 margin: 0 auto 12px;
@@ -246,7 +246,7 @@
 
             <!-- Header / Hero -->
             <div id="modal-header" style="
-                background: linear-gradient(135deg, #166534 0%, #16a34a 100%);
+                background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
                 padding: 24px 24px 20px;
                 color: #fff;
                 position: relative;
@@ -320,7 +320,7 @@
                     color: #374151;
                 ">
                     <span style="font-size: 1rem;">🏷️</span>
-                    Status: <strong id="modal-status" style="color: #16a34a;"></strong>
+                    Status: <strong id="modal-status" style="color: #3b82f6;"></strong>
                 </div>
 
             </div>
@@ -334,7 +334,7 @@
                 gap: 8px;
             ">
                 <button onclick="htOpenPicturesModal(window._htSelectedPropertyID)" style="
-                    background: linear-gradient(135deg, #166534 0%, #16a34a 100%);
+                    background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
                     border: none;
                     border-radius: 8px;
                     padding: 9px 20px;
@@ -405,7 +405,7 @@
             <div style="
                 width: 40px; height: 40px;
                 border: 3px solid #e5e7eb;
-                border-top-color: #16a34a;
+                border-top-color: #3b82f6;
                 border-radius: 50%;
                 animation: htSpin .7s linear infinite;
                 margin: 0 auto 12px;
@@ -427,7 +427,7 @@
         <div id="agent-modal-list" style="display: none; flex-direction: column; overflow: hidden; flex: 1;">
             <!-- Header -->
             <div style="
-                background: linear-gradient(135deg, #166534 0%, #16a34a 100%);
+                background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
                 padding: 18px 20px 16px;
                 display: flex;
                 align-items: center;
@@ -490,7 +490,7 @@
         flex-direction: column;
     ">
         <!-- Notification Card (shown before form) -->
-        <div id="prequal-notification" style="display: none; padding: 16px; background: linear-gradient(135deg, #166534 0%, #16a34a 100%); text-align: center; border-radius: 12px; max-width: 400px; margin: auto;">
+        <div id="prequal-notification" style="display: none; padding: 16px; background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); text-align: center; border-radius: 12px; max-width: 400px; margin: auto;">
             <div style="color: #fff;">
                 <div style="font-size: 1.5rem; margin-bottom: 8px;">✓</div>
                 <h3 style="margin: 0 0 6px; font-size: 1rem; font-weight: 600;">Connected to Agent</h3>
