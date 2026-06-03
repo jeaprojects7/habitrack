@@ -142,7 +142,7 @@ $static_url = '/habitrack/views/Adminassets';
 </div>
 
                     <button type="submit" id="btn-add"
-                        class="btn bg-green-600 hover:bg-green-700 text-white rounded-md mt-5 w-full">
+                        class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md mt-5 w-full">
                         Add Property
                     </button>
                 </form>
@@ -222,7 +222,7 @@ $static_url = '/habitrack/views/Adminassets';
     </div>
 </div>
 <div id="imageModal"
-     class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-70 z-[9999] p-6">
+     class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-70 z-[9999] p-6">
 
     <div class="relative bg-white p-2 rounded-lg shadow-lg max-w-2xl w-full">
         

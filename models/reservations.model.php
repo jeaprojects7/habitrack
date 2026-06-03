@@ -4,27 +4,42 @@ require_once "connection.php";
 
 class ModelReservation {
 
+    ///Cards
     static public function mdlGetReservations() {
         $stmt = (new Connection)->connect()->prepare("
-            SELECT 
-                r.reservationID,
-                r.reserveDate,
-                r.reserveTime,
-                r.reserveStatus,
-                c.clientID,
-                c.clientFName,
-                c.clientLName,
-                p.propertyID,
-                p.propertyName,
-                p.propertyType,
-                p.propertyCity,
-                p.propertyBrgy,
-                p.propertyPrice,
-                p.propertyLotArea
-            FROM reservations r
-            JOIN client c ON r.clientID = c.clientID
-            JOIN properties p ON r.propertyID = p.propertyID
-            ORDER BY r.reserveDate DESC
+            SELECT
+            r.reservationID,
+            r.reserveDate,
+            r.reserveTime,
+            r.reserveStatus,
+
+            pq.prequalID,
+            pq.prequalStatus,
+
+            c.clientID,
+            c.clientFName,
+            c.clientLName,
+
+            p.propertyID,
+            p.propertyName,
+            p.propertyType,
+            p.propertyCity,
+            p.propertyBrgy,
+            p.propertyPrice,
+            p.propertyLotArea
+
+        FROM reservations r
+
+        JOIN prequal pq
+            ON r.prequalID = pq.prequalID
+
+        JOIN client c
+            ON pq.clientID = c.clientID
+
+        JOIN properties p
+            ON pq.propertyID = p.propertyID
+
+        ORDER BY r.reserveDate DESC;
         ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -34,35 +49,48 @@ class ModelReservation {
 
         $stmt = (new Connection)->connect()->prepare("
         SELECT 
-            r.reservationID,
-            r.reserveDate,
-            r.reserveTime,
-            r.reserveStatus,
+        r.reservationID,
+        r.reserveDate,
+        r.reserveTime,
+        r.reserveStatus,
 
-            p.propertyID,
-            p.propertyName,
-            p.propertyType,
-            p.propertyPrice,
-            p.propertyLotArea,
-            p.houseFloorArea,
-            p.propertyCity,
-            p.propertyBrgy,
+        pq.prequalID,
+        pq.prequalStatus,
 
-            pi.imagePath
+        p.propertyID,
+        p.propertyName,
+        p.propertyType,
+        p.propertyPrice,
+        p.propertyLotArea,
+        p.houseFloorArea,
+        p.propertyCity,
+        p.propertyBrgy,
 
-        FROM reservations r
+        c.clientID,
+        c.clientFName,
+        c.clientLName,
 
-        JOIN properties p 
-            ON r.propertyID = p.propertyID
+        pi.imagePath
 
-        LEFT JOIN property_images pi
-            ON p.propertyID = pi.propertyID
-            AND pi.imageOrder = 0
-            AND pi.is_deleted = 0
+    FROM reservations r
 
-        WHERE r.reservationID = :id
+    JOIN prequal pq
+        ON r.prequalID = pq.prequalID
 
-        LIMIT 1
+    JOIN client c
+        ON pq.clientID = c.clientID
+
+    JOIN properties p
+        ON pq.propertyID = p.propertyID
+
+    LEFT JOIN property_images pi
+        ON p.propertyID = pi.propertyID
+        AND pi.imageOrder = 0
+        AND pi.is_deleted = 0
+
+    WHERE r.reservationID = :id
+
+    LIMIT 1;
     ");
 
         $stmt->bindParam(":id", $id, PDO::PARAM_STR);

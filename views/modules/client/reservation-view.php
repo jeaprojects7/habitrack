@@ -19,6 +19,15 @@ $statusColor = match($resStatus) {
     'pending'   => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
     default     => 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
 };
+
+$prequalStatus = strtolower($res['prequalStatus'] ?? 'pending');
+
+$prequalColor = match($prequalStatus) {
+    'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
+    'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+    'in review' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+    default => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
+};
 ?>
 
 <div
@@ -293,11 +302,19 @@ $statusColor = match($resStatus) {
                                     Prequal Status
                                 </label>
 
-                                <input
+                                <div class="mt-2">
+                                    <span
+                                        class="inline-block px-5 py-2 text-md font-semibold rounded-full <?= $prequalColor ?>"
+                                    >
+                                        <?= ucfirst($prequalStatus) ?>
+                                    </span>
+                                </div>
+
+                                <!-- <input
                                     value="Pending"
                                     class="form-input w-full"
                                     disabled
-                                >
+                                > -->
 
                             </div>
 

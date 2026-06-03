@@ -56,11 +56,11 @@ $reservations = ReservationController::ctrGetReservations();
                         $price       = number_format($res['propertyPrice'] ?? 0);
                         $address     = htmlspecialchars(($res['propertyBrgy'] ?? '') . ', ' . ($res['propertyCity'] ?? ''));
                         $lotArea     = htmlspecialchars($res['propertyLotArea'] ?? '');
-                        $prequal     = htmlspecialchars($res['prequalStatus'] ?? 'Pending');
+                        $prequalStatus     = htmlspecialchars($res['prequalStatus'] ?? 'Pending');
                         $resDate     = htmlspecialchars($res['reserveDate'] ?? '');
                         $resStatus   = htmlspecialchars($res['reserveStatus'] ?? 'Pending');
 
-                        $prequalColor = match(strtolower($prequal)) {
+                        $prequalColor = match(strtolower($prequalStatus)) {
                             'approved' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
                             'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
                             default    => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
@@ -158,6 +158,14 @@ $reservations = ReservationController::ctrGetReservations();
                                     </li>
 
                                     <!-- prequal na di -->
+                                     <li>
+                                        <span class="text-slate-400 text-sm">Prequal</span>
+                                        <p>
+                                            <span class="px-2 py-1 rounded-full text-xs font-medium <?= $prequalColor ?>">
+                                                <?= ucfirst($prequalStatus) ?>
+                                            </span>
+                                        </p>
+                                    </li>
                                     
                                 </ul>
 

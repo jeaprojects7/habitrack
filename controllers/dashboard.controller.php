@@ -5,8 +5,10 @@
  * All AJAX actions are processed here and return JSON.
  */
 
+session_start();
 require_once($_SERVER["DOCUMENT_ROOT"]."/habitrack/models/connection.php");
 require_once($_SERVER["DOCUMENT_ROOT"]."/habitrack/models/dashboard.model.php");
+require_once($_SERVER["DOCUMENT_ROOT"]."/habitrack/models/prequal.model.php");
 
 header('Content-Type: application/json');
 
@@ -86,6 +88,7 @@ try {
                 FROM properties
                 WHERE propertyLat IS NOT NULL 
                   AND propertyLng IS NOT NULL
+                  AND propertyStatus = 'Available'
                 ORDER BY propertyName";
         
         $stmt = $db->prepare($sql);
@@ -147,7 +150,32 @@ try {
             echo json_encode(['success' => false, 'error' => 'Property not found']);
         }
     }
-        else if ($action === 'getAgents') {
+    // ────────────────────────────────────────────────
+    //  GET-IMAGES: Get all images for a property by ID
+    // ────────────────────────────────────────────────
+    else if ($action === 'getImages') {
+        $propertyID = isset($_GET['id']) ? trim($_GET['id']) : '';
+
+        if (empty($propertyID)) {
+            echo json_encode(['success' => false, 'error' => 'Invalid property ID']);
+            exit;
+        }
+
+        $stmt = $db->prepare(
+            "SELECT imagePath, imageOrder
+             FROM property_images
+             WHERE propertyID = :id
+             ORDER BY imageOrder ASC"
+        );
+        $stmt->execute([':id' => $propertyID]);
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'data'    => $images
+        ]);
+    }
+    else if ($action === 'getAgents') {
         $stmt = $db->query("SELECT * FROM agent ORDER BY agentFName");
         $agents = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode(['success' => true, 'data' => $agents]);

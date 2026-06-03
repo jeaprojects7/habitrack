@@ -28,6 +28,6 @@ return [
     'agentuserProfile'   => 'modules/agent/agentuserProfile.php',
     'clientPreQual'   => 'modules/agent/clientPreQual.php',
     'logout'            => 'modules/logout.php',
-    'calendar'          => 'modules/calendar.php',
-    'pre-qual'          => 'modules/pre-qual.php'
+    'calendar'          => 'modules/client/calendar.php',
+    'pre-qual'          => 'modules/client/pre-qual.php'
 ];

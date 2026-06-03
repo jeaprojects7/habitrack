@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HabiTrack - Database Schema Fixer</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .card { background: #f5f5f5; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .button { background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .button:hover { background: #15803d; }
+        .success { background: #dcfce7; border-left: 4px solid #16a34a; padding: 15px; margin: 10px 0; }
+        .error { background: #fee2e2; border-left: 4px solid #dc2626; padding: 15px; margin: 10px 0; }
+        .info { background: #dbeafe; border-left: 4px solid #2563eb; padding: 15px; margin: 10px 0; }
+        code { background: #f3f4f6; padding: 2px 6px; border-radius: 3px; }
+        h1 { color: #111827; }
+        h2 { color: #374151; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 HabiTrack Database Schema Fixer</h1>
+    
+    <div class="card">
+        <h2>Problem: Financing Fields NOT NULL</h2>
+        <p>The database table <code>financing</code> has fields that should allow NULL values:</p>
+        <ul>
+            <li><code>contributionStartDate</code> - Only for Pag-Ibig financing</li>
+            <li><code>currentLoan</code> - Only for Pag-Ibig financing</li>
+            <li><code>bankName</code> - Only for Bank financing</li>
+            <li><code>existingHouseLoan</code> - Only for Bank financing</li>
+            <li><code>cancelledHouseLoan</code> - Only for Bank financing</li>
+        </ul>
+        <p><strong>Error:</strong> SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contributionStartDate' cannot be null</p>
+    </div>
+
+    <div class="card">
+        <h2>Solution: Run Database Migration</h2>
+        <button class="button" onclick="runMigration()">🚀 Fix Database Schema Now</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="card">
+        <h2>What This Does</h2>
+        <p>Makes these columns nullable so that:</p>
+        <ul>
+            <li>Bank financing entries can have NULL for Pag-Ibig fields</li>
+            <li>Pag-Ibig financing entries can have NULL for Bank fields</li>
+            <li>Pre-qualification form submissions will succeed</li>
+        </ul>
+    </div>
+
+    <script>
+    function runMigration() {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '<div class="info">Running migration...</div>';
+        
+        fetch('/habitrack/fix_schema.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    let html = '<div class="success"><strong>✓ Migration Successful!</strong><br>';
+                    html += data.migrations.map(m => 
+                        m.status === 'success' 
+                            ? `✓ ${m.sql.substring(0, 50)}...`
+                            : `✗ ${m.sql} (${m.error})`
+                    ).join('<br>');
+                    html += '</div>';
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = `<div class="error"><strong>✗ Error:</strong> ${data.error}</div>`;
+                }
+            })
+            .catch(err => {
+                resultDiv.innerHTML = `<div class="error"><strong>✗ Error:</strong> ${err.message}</div>`;
+            });
+    }
+    </script>
+</body>
+</html>
