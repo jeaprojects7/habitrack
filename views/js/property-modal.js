@@ -8,6 +8,9 @@
 //  PUBLIC API
 // ─────────────────────────────────────────────
 
+// Store the currently selected property ID for Reserve button
+window._htSelectedPropertyID = null;
+
 /**
  * Open the modal and fetch property details by ID.
  * Called from map.js marker click handler.
@@ -19,6 +22,7 @@ function htOpenPropertyModal(propertyId) {
     document.body.style.overflow = 'hidden';
 
     _htModalShow('loading');
+    window._htSelectedPropertyID = propertyId;
 
     fetch('/habitrack/controllers/dashboard.controller.php?action=getDetail&id=' + encodeURIComponent(propertyId))
         .then(function(res) {
@@ -131,6 +135,148 @@ function _htRenderModal(p) {
                           : '#3b82f6';
 
     _htModalShow('content');
+}
+
+// ─────────────────────────────────────────────
+//  RESERVE BUTTON HANDLER
+// ─────────────────────────────────────────────
+
+function htHandleReserveClick() {
+    const propertyID = window._htSelectedPropertyID;
+    
+    if (!propertyID) {
+        _htShowPendingModal('Error', 'Property ID not found.');
+        return;
+    }
+
+    /* // Show loading state
+    _htShowPendingModal('Checking', 'Checking reservation status...'); */
+
+    // Check for existing prequal record
+    fetch('/habitrack/ajax/check-pending-reservation.ajax.php?propertyID=' + encodeURIComponent(propertyID))
+        .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        })
+        .then(function(json) {
+            if (!json.success) {
+                _htShowPendingModal('Error', json.message || 'Failed to check reservation status.');
+                return;
+            }
+
+            if (json.hasExisting) {
+                // Show pending message
+                _htShowPendingModal('Pending Request', 'Your request for this property is currently pending.');
+            } else {
+                // No existing prequal record, open agent modal to connect with agent
+                htCloseModal();
+                htOpenAgentModal();
+            }
+        })
+        .catch(function(err) {
+            _htShowPendingModal('Error', 'Failed to check reservation status. ' + (err.message || ''));
+        });
+}
+
+function _htShowPendingModal(title, message) {
+    // Remove existing pending modal if any
+    const existing = document.getElementById('ht-pending-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'ht-pending-modal';
+    modal.style.position = 'fixed';
+    modal.style.inset = '0';
+    modal.style.zIndex = '10002';
+    modal.style.background = 'rgba(0,0,0,0.55)';
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.backdropFilter = 'blur(2px)';
+
+    const card = document.createElement('div');
+    card.style.background = '#fff';
+    card.style.borderRadius = '16px';
+    card.style.width = '100%';
+    card.style.maxWidth = '400px';
+    card.style.margin = '16px';
+    card.style.boxShadow = '0 24px 60px rgba(0,0,0,0.25)';
+    card.style.overflow = 'hidden';
+    card.style.animation = 'htModalIn .2s ease';
+
+    const header = document.createElement('div');
+    header.style.background = 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)';
+    header.style.padding = '24px';
+    header.style.color = '#fff';
+    header.style.position = 'relative';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '12px';
+    closeBtn.style.right = '12px';
+    closeBtn.style.background = 'rgba(255,255,255,0.2)';
+    closeBtn.style.border = 'none';
+    closeBtn.style.borderRadius = '50%';
+    closeBtn.style.width = '32px';
+    closeBtn.style.height = '32px';
+    closeBtn.style.color = '#fff';
+    closeBtn.style.fontSize = '1.5rem';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.display = 'flex';
+    closeBtn.style.alignItems = 'center';
+    closeBtn.style.justifyContent = 'center';
+    closeBtn.onclick = function() { modal.remove(); };
+
+    const titleEl = document.createElement('h2');
+    titleEl.textContent = title;
+    titleEl.style.margin = '0';
+    titleEl.style.fontSize = '1.25rem';
+    titleEl.style.fontWeight = '700';
+
+    header.appendChild(titleEl);
+    header.appendChild(closeBtn);
+
+    const body = document.createElement('div');
+    body.style.padding = '24px';
+    body.style.textAlign = 'center';
+
+    const messageEl = document.createElement('p');
+    messageEl.textContent = message;
+    messageEl.style.margin = '0 0 24px';
+    messageEl.style.fontSize = '.95rem';
+    messageEl.style.color = '#374151';
+    messageEl.style.lineHeight = '1.6';
+
+    body.appendChild(messageEl);
+
+    const buttonContainer = document.createElement('div');
+    buttonContainer.style.display = 'flex';
+    buttonContainer.style.gap = '12px';
+    buttonContainer.style.justifyContent = 'center';
+
+    const okBtn = document.createElement('button');
+    okBtn.textContent = 'OK';
+    okBtn.style.background = '#3b82f6';
+    okBtn.style.color = '#fff';
+    okBtn.style.border = 'none';
+    okBtn.style.borderRadius = '8px';
+    okBtn.style.padding = '10px 24px';
+    okBtn.style.cursor = 'pointer';
+    okBtn.style.fontSize = '.9rem';
+    okBtn.style.fontWeight = '500';
+    okBtn.style.transition = 'opacity .15s';
+    okBtn.onmouseover = function() { this.style.opacity = '0.85'; };
+    okBtn.onmouseout = function() { this.style.opacity = '1'; };
+    okBtn.onclick = function() { modal.remove(); };
+
+    buttonContainer.appendChild(okBtn);
+    body.appendChild(buttonContainer);
+
+    card.appendChild(header);
+    card.appendChild(body);
+    modal.appendChild(card);
+    document.body.appendChild(modal);
 }
 
 // ─────────────────────────────────────────────

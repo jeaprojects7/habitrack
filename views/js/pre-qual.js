@@ -30,10 +30,13 @@
 
 // ─── Show/hide notification and form on page load ─────────────────────────────
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   try {
     var notif = document.getElementById('prequal-notification');
     var form  = document.getElementById('prequal-form-container');
+
+    // Load existing data first so fields are populated before the user sees the form
+    await loadPrequalData();
 
     if (window._htPrequalAgentName && notif) {
       var nameEl = notif.querySelector('.prequal-agent-name');
@@ -44,8 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (notif) notif.style.display = 'none';
       if (form)  form.style.display  = 'block';
     }
-
-    loadPrequalData();
   } catch (e) {
     console.warn('pre-qual UI init failed', e);
   }
@@ -142,7 +143,7 @@ function validateForm() {
   const employmentStatus = document.getElementById('employment-status').value;
   const monthlyIncome  = document.getElementById('monthly-income').value;
   const financingType  = document.getElementById('financing-type').value;
-   const coOwner  = document.getElementById('coOwner-section').value;
+  const coOwner        = document.querySelector('input[name="co_owner"]:checked')?.value || 'no';
 
   if (!civilStatus) {
     alert('Please select a civil status.');
@@ -171,6 +172,7 @@ function validateForm() {
     const coOwnerEmail      = document.getElementById('co-owner-email').value.trim();
     const coOwnerPhone      = document.getElementById('co-owner-phone').value.trim();
     const coOwnerEmployment = document.getElementById('co-owner-employment').value;
+    const coOwnerIncome     = document.getElementById('co-owner-income').value;
 
     if (!coOwnerFirst || !coOwnerLast) {
       alert('Please enter co-owner first and last name.');
@@ -187,7 +189,11 @@ function validateForm() {
     if (!coOwnerEmployment) {
       alert('Please select co-owner employment status.');
       return false;
-    } 
+    }
+    if (!coOwnerIncome || parseFloat(coOwnerIncome) <= 0) {
+      alert('Please enter a valid co-owner monthly income.');
+      return false;
+    }
   }
 
   // Validate bank fields
@@ -444,13 +450,13 @@ async function submitForm() {
 
   if (window._htIsEditMode && window._htPrequalData) {
     formData.prequal_id = window._htPrequalData.prequalID;
-    endpoint = '/habitrack/ajax/prequal.ajax.php?action=updatePrequal';
-    successMsg = 'Pre-qualification updated successfully.';
-  } else if (window._htIsCopyMode && window._htPrequalData) {
-    // In copy mode, reuse financing and co-owner IDs from source
     formData.financing_id = window._htPrequalData.financingID || '';
     formData.co_owner_id = window._htPrequalData.coOwnerID || '';
+    endpoint = '/habitrack/ajax/prequal.ajax.php?action=updatePrequal';
+    successMsg = 'Pre-qualification updated successfully.';
   }
+  // In copy mode, always create NEW co-owner record
+  // But reuse financing_id if provided (to update existing financing)
 
   try {
     var response = await fetch(endpoint, {

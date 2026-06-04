@@ -544,7 +544,7 @@ async function loadPropertiesByType(propertyType, selectId) {
                             style="width:100%;padding:11px;background:#2151cc;color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-top:4px;"
                             onmouseover="this.style.background='#1a42a8'"
                             onmouseout="this.style.background='#2151cc'"
-                            onclick="htOpenAgentModal()">
+                            onclick="htHandleReserveClick()">
                             Reserve
                         </button>
                         ` : `

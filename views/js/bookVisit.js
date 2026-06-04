@@ -11,10 +11,10 @@
     // ── Config ──────────────────────────────────────────────────────────────
     const BOOKING_ENDPOINT = '/habitrack/ajax/calendar_getrecord.ajax.php?action=saveSiteVisit';
 
-    // ── Get selected data from dropdowns and time picker ─────────────────────
+    // ── Get selected data from inputs and time picker ─────────────────────
     function getFormData() {
-        const propertyDropdown = document.querySelector('[data-type="property"]');
-        const agentDropdown = document.querySelector('[data-type="agent"]');
+        const propertyInput = document.getElementById('property-input');
+        const agentInput = document.getElementById('agent-input');
         const hourEl = document.getElementById('time-hr');
         const minuteEl = document.getElementById('time-mn');
 
@@ -35,11 +35,11 @@
 
         // Validate required fields and return all missing selections.
         const missing = [];
-        if (!propertyDropdown || !propertyDropdown.dataset.selectedId) {
+        if (!propertyInput || !propertyInput.dataset.selectedCode) {
             missing.push('property');
         }
 
-        if (!agentDropdown || !agentDropdown.dataset.selectedId) {
+        if (!agentInput || !agentInput.dataset.selectedCode) {
             missing.push('agent');
         }
 
@@ -97,8 +97,8 @@
         }
 
         return {
-            propertyID: propertyDropdown.dataset.selectedCode || propertyDropdown.dataset.selectedId,
-            agentID: agentDropdown.dataset.selectedCode || agentDropdown.dataset.selectedId,
+            propertyID: propertyInput.dataset.selectedCode || propertyInput.dataset.selectedId,
+            agentID: agentInput.dataset.selectedCode || agentInput.dataset.selectedId,
             siteVisitDate: selectedDate,
             siteVisitTime: siteVisitTime
         };
@@ -181,33 +181,13 @@
         document.body.appendChild(panel);
     }
 
-    function resetDropdownSelection(type, defaultLabel) {
-        const dropdown = document.querySelector(`[data-type="${type}"]`);
-        if (!dropdown) return;
+    function resetInputSelection(id, defaultLabel) {
+        const input = document.getElementById(id);
+        if (!input) return;
 
-        const valueSpan = dropdown.querySelector('.dropdown-value');
-        if (valueSpan) {
-            valueSpan.textContent = defaultLabel;
-        }
-
-        delete dropdown.dataset.selectedId;
-        delete dropdown.dataset.selectedCode;
-        delete dropdown.dataset.selectedName;
-
-        const searchInput = dropdown.querySelector('.dropdown-search');
-        if (searchInput) {
-            searchInput.value = '';
-        }
-
-        const menu = dropdown.querySelector('.dropdown-menu');
-        const closeBtn = dropdown.querySelector('.dropdown-close');
-        if (menu) {
-            menu.classList.remove('block');
-            menu.classList.add('hidden');
-        }
-        if (closeBtn) {
-            closeBtn.classList.add('hidden');
-        }
+        input.value = defaultLabel;
+        input.dataset.selectedId = '';
+        input.dataset.selectedCode = '';
     }
 
     function clearSelectedCalendarDay() {
@@ -221,8 +201,8 @@
     }
 
     function resetBookingForm() {
-        resetDropdownSelection('property', 'Select property');
-        resetDropdownSelection('agent', 'Agent name');
+        resetInputSelection('property-input', '');
+        resetInputSelection('agent-input', '');
         clearSelectedCalendarDay();
 
         if (window.CalendarBooking && typeof window.CalendarBooking.refreshCalendar === 'function') {
@@ -371,6 +351,50 @@
         });
     }
 
+    // ── Populate input fields from reservation ───────────────────────────────
+    async function populateInputsFromReservation() {
+        const RESERVATION_ENDPOINT = '/habitrack/ajax/calendar_getrecord.ajax.php?action=getReservationDetails';
+        const reservationID = window.RESERVATION_ID;
+
+        try {
+            const res = await fetch(RESERVATION_ENDPOINT + '&reservationID=' + encodeURIComponent(reservationID), {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (!res.ok) {
+                throw new Error('Server returned ' + res.status);
+            }
+
+            const data = await res.json();
+
+            if (!data.success) {
+                throw new Error(data.message || 'Failed to load reservation details.');
+            }
+
+            // Populate property input
+            const propertyInput = document.getElementById('property-input');
+            if (propertyInput && data.propertyID) {
+                propertyInput.value = data.propertyName;
+                propertyInput.dataset.selectedCode = data.propertyID;
+                propertyInput.dataset.selectedId = data.propertyID;
+            }
+
+            // Populate agent input
+            const agentInput = document.getElementById('agent-input');
+            if (agentInput && data.agentID) {
+                agentInput.value = data.agentName;
+                agentInput.dataset.selectedCode = data.agentCode || data.agentID;
+                agentInput.dataset.selectedId = data.agentID;
+            }
+        } catch (err) {
+            console.error('[bookVisit] Error populating reservation details:', err);
+        }
+    }
+
     // ── Disable button during submission ─────────────────────────────────────
     function setButtonLoading(isLoading) {
         const btn = document.getElementById('book-visit-btn');
@@ -424,8 +448,13 @@
         }
     }
 
-    // ── Init - attach click handler ──────────────────────────────────────────
+    // ── Init - attach click handler and populate inputs ─────────────────────
     function init() {
+        // First, try to populate input fields from reservation if available
+        if (window.RESERVATION_ID) {
+            populateInputsFromReservation();
+        }
+
         const btn = document.getElementById('book-visit-btn');
         if (!btn) {
             console.warn('[bookVisit] Book visit button not found.');

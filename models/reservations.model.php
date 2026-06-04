@@ -56,6 +56,7 @@ class ModelReservation {
 
         pq.prequalID,
         pq.prequalStatus,
+        pq.agentID,
 
         p.propertyID,
         p.propertyName,

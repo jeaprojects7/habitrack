@@ -85,18 +85,6 @@ $sidebarMenus = [
             'icon'  => 'heart'
         ],
         
-
-
-        [
-            'title' => 'Site Visit',
-            'route' => 'calendar',
-            'icon'  => 'calendar'
-        ],[
-            'title' => 'Pre-Qualification',
-            'route' => 'pre-qual',
-            'icon'  => 'calendar'
-        ],
-        
         
         
 

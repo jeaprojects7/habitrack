@@ -89,8 +89,8 @@ class PrequalController {
         $employmentStatus = trim($data['employment_status'] ?? '');
         $monthlyIncome    = trim($data['monthly_income']    ?? '');
         $financingType    = trim($data['financing_type']    ?? '');
-        $financingID      = trim($data['financing_id']      ?? ''); // From copy mode
-        $coOwnerID        = trim($data['co_owner_id']       ?? ''); // From copy mode
+        $financingID      = trim($data['financing_id']      ?? ''); // From edit mode
+        $coOwnerID        = trim($data['co_owner_id']       ?? ''); // From edit mode
 
         if (!$agentID || !$propertyID || !$civilStatus || !$employmentStatus || $monthlyIncome === '' || !$financingType) {
             $this->jsonResponse(['success' => false, 'message' => 'Missing required fields.'], 400);
@@ -151,8 +151,9 @@ class PrequalController {
 
             $prequalID = $this->prequalModel->generateId('PQ');
 
-            // If financingID provided (copy mode), reuse it; otherwise create new
+            // If financingID provided (edit mode), update it; otherwise create new (copy mode)
             if (empty($financingID)) {
+                // Copy mode: Create NEW financing record
                 $financingID = $this->prequalModel->saveFinancing($prequalID, $financingData);
                 if (!$financingID) {
                     $this->db->rollBack();
@@ -160,8 +161,7 @@ class PrequalController {
                     return;
                 }
             } else {
-                // In copy mode, just use the provided financingID (don't create new)
-                // But we still need to update it if data changed
+                // Edit mode: Update existing financing record
                 if (!$this->prequalModel->updateFinancing($financingID, $financingData)) {
                     $this->db->rollBack();
                     $this->jsonResponse(['success' => false, 'message' => 'Unable to update financing.'], 500);
@@ -169,24 +169,31 @@ class PrequalController {
                 }
             }
 
-            // If coOwnerID provided (copy mode), reuse it; otherwise create if needed
-            if ($coOwnerData !== null) {
-                if (empty($coOwnerID)) {
-                    $coOwnerID = $this->prequalModel->savecoOwner($prequalID, $financingID, $coOwnerData);
-                    if (!$coOwnerID) {
-                        $this->db->rollBack();
-                        $this->jsonResponse(['success' => false, 'message' => 'Unable to save co-owner details.'], 500);
-                        return;
-                    }
-                } else {
-                    // In copy mode, just use the provided coOwnerID and update if needed
+            // Handle co-owner: Only update if user selected 'yes' for co-owner
+            // Do NOT modify co-owner if user selected 'principal buyer' (no)
+            // Reuse existing co-owner for same client; do NOT create new ones
+            if ($coOwner === 'yes') {
+                if (!empty($coOwnerID) && $coOwnerData !== null) {
+                    // Edit mode: Update existing co-owner record only if user wants co-owner
                     if (!$this->prequalModel->updateCoOwner($coOwnerID, $coOwnerData)) {
                         $this->db->rollBack();
                         $this->jsonResponse(['success' => false, 'message' => 'Unable to update co-owner details.'], 500);
                         return;
                     }
+                } elseif ($coOwnerData !== null) {
+                    // Copy mode: Try to find existing co-owner for this client
+                    $existingCoOwner = $this->prequalModel->getCoOwnerByClient($clientID);
+                    if ($existingCoOwner) {
+                        // Reuse existing co-owner for this client
+                        $coOwnerID = $existingCoOwner['coOwnerID'];
+                    } else {
+                        // If no co-owner exists for this client, do NOT create a new one
+                        // Keep coOwnerID as null/empty to prevent duplicate records
+                        $coOwnerID = null;
+                    }
                 }
             }
+            // If user selected 'principal buyer', keep existing coOwnerID (don't change it)
 
             $submissionDate  = date('Y-m-d');
             $savedPrequalID  = $this->prequalModel->savePrequal(
@@ -425,9 +432,10 @@ class PrequalController {
                 return;
             }
 
-            // Update or create co-owner
+            // Update or reuse existing co-owner (do NOT create new ones)
             if ($coOwner === 'yes') {
                 if ($oldCoOwnerID) {
+                    // Keep existing co-owner and update it
                     if (!$this->prequalModel->updateCoOwner($oldCoOwnerID, $coOwnerData)) {
                         $this->db->rollBack();
                         $this->jsonResponse(['success' => false, 'message' => 'Unable to update co-owner details.'], 500);
@@ -435,12 +443,14 @@ class PrequalController {
                     }
                     $coOwnerID = $oldCoOwnerID;
                 } else {
-                    $coOwnerID = $this->prequalModel->savecoOwner($prequalID, $financingID, $coOwnerData);
-                    if (!$coOwnerID) {
+                    // No existing co-owner; create a new one
+                    $newCoOwnerID = $this->prequalModel->savecoOwner($prequalID, $financingID, $coOwnerData);
+                    if (!$newCoOwnerID) {
                         $this->db->rollBack();
                         $this->jsonResponse(['success' => false, 'message' => 'Unable to save co-owner details.'], 500);
                         return;
                     }
+                    $coOwnerID = $newCoOwnerID;
                 }
             } else {
                 $coOwnerID = null;

@@ -1,3 +1,19 @@
+<?php
+require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+
+$reservationID = $_GET['id'] ?? null;
+$agentID = $_GET['agent_id'] ?? null;
+$propertyID = $_GET['property_id'] ?? null;
+
+// If accessed from reservation, fetch the details
+if ($reservationID && !$agentID) {
+    $res = ReservationController::ctrGetReservationById($reservationID);
+    if ($res) {
+        $agentID = $res['agentID'] ?? null;
+        $propertyID = $res['propertyID'] ?? null;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -345,6 +361,13 @@
 </div>
 
 <script src="pre-qual.js"></script>
+<script>
+// Initialize agent and property data for prequalification loading
+<?php if ($agentID && $propertyID): ?>
+  window._htPrequalAgentId = <?php echo json_encode($agentID); ?>;
+  window._htSelectedPropertyID = <?php echo json_encode($propertyID); ?>;
+<?php endif; ?>
+</script>
 <script>
 (function () {
   const html = document.documentElement;
