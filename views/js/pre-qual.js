@@ -282,7 +282,7 @@ function collectFormData() {
 }
 
 
-// ─── Load Prequal Data (Edit Mode) ────────────────────────────────────────
+// ─── Load Prequal Data (Edit Mode or Copy from Another Property) ──────────
 
 async function loadPrequalData() {
   if (!window._htPrequalAgentId || !window._htSelectedPropertyID) {
@@ -307,7 +307,15 @@ async function loadPrequalData() {
     if (json.success && json.data) {
       populateFormWithData(json.data);
       window._htPrequalData = json.data;
-      window._htIsEditMode = true;
+      
+      // Determine mode based on property and agent match
+      if (json.data.isSameProperty && json.data.isSameAgent) {
+        window._htIsEditMode = true;      // Edit mode: update existing record
+        window._htIsCopyMode = false;
+      } else {
+        window._htIsEditMode = false;     // Copy mode: create new record
+        window._htIsCopyMode = true;      // (different property and/or agent)
+      }
     }
   } catch (err) {
     console.error('Failed to load pre-qual data', err);
@@ -438,6 +446,10 @@ async function submitForm() {
     formData.prequal_id = window._htPrequalData.prequalID;
     endpoint = '/habitrack/ajax/prequal.ajax.php?action=updatePrequal';
     successMsg = 'Pre-qualification updated successfully.';
+  } else if (window._htIsCopyMode && window._htPrequalData) {
+    // In copy mode, reuse financing and co-owner IDs from source
+    formData.financing_id = window._htPrequalData.financingID || '';
+    formData.co_owner_id = window._htPrequalData.coOwnerID || '';
   }
 
   try {

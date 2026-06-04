@@ -142,7 +142,7 @@ $static_url = '/habitrack/views/Adminassets';
 </div>
 
                     <button type="submit" id="btn-add"
-                        class="btn bg-green-600 hover:bg-green-700 text-white rounded-md mt-5 w-full">
+                        class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md mt-5 w-full">
                         Add Property
                     </button>
                 </form>

@@ -128,7 +128,7 @@ function _htRenderModal(p) {
     statusEl.textContent  = status;
     statusEl.style.color  = status.toLowerCase().includes('sold')     ? '#dc2626'
                           : status.toLowerCase().includes('reserved') ? '#d97706'
-                          : '#16a34a';
+                          : '#3b82f6';
 
     _htModalShow('content');
 }
@@ -300,7 +300,7 @@ function _htOpenAgentDetail(agentId, agents) {
 
     var detail = document.getElementById('agent-modal-detail');
     detail.innerHTML =
-        '<div style="background:linear-gradient(135deg,#166534 0%,#16a34a 100%);padding:18px 18px 16px;position:relative;text-align:center;">'
+        '<div style="background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);padding:18px 18px 16px;position:relative;text-align:center;">'
         + '<button onclick="_htAgentGoBack()" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">‹</button>'
         + picHtml
         + '<p style="margin:0 0 3px;font-size:1rem;font-weight:700;color:#fff;">' + _htEsc(fullName) + '</p>'
@@ -314,7 +314,7 @@ function _htOpenAgentDetail(agentId, agents) {
         + rowsHtml
         // Connect button
         + '<button onclick="_htConnectAgent(\'' + _htEsc(agent.agentEmail) + '\',\'' + _htEsc(fullName) + '\',\'' + _htEsc(agent.agentID) + '\')" '
-        + 'style="display:block;width:calc(100% - 36px);margin:14px 18px;padding:11px;background:linear-gradient(135deg,#166534 0%,#16a34a 100%);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;">'
+        + 'style="display:block;width:calc(100% - 36px);margin:14px 18px;padding:11px;background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;">'
         + 'Connect to agent'
         + '</button>'
 

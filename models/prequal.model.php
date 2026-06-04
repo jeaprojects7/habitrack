@@ -282,6 +282,98 @@ class PrequalModel {
         return false;
     }
 
+    public function getLatestPrequalByClientAgent($clientID, $agentID) {
+        $sql = "SELECT 
+                    p.prequalID,
+                    p.clientID,
+                    p.agentID,
+                    p.propertyID,
+                    p.financingID,
+                    p.coOwnerID,
+                    p.clientCivilStatus,
+                    p.clientEmpStatus,
+                    p.clientMonthlyIncome,
+                    p.prequalStatus,
+                    p.submissionDate,
+                    f.financingType,
+                    f.contributionStartDate,
+                    f.currentLoan,
+                    f.bankName,
+                    f.existingHouseLoan,
+                    f.cancelledHouseLoan,
+                    c.coOwnerRelationship,
+                    c.coOwnerFName,
+                    c.coOwnerMName,
+                    c.coOwnerLName,
+                    c.coOwnerSuffix,
+                    c.coOwnerEmail,
+                    c.coOwnerPhoneNum,
+                    c.coOwnerEmpStatus,
+                    c.coOwnerMonthlyIncome
+                FROM prequal p
+                LEFT JOIN financing f ON p.financingID = f.financingID
+                LEFT JOIN clientcoprequal c ON p.coOwnerID = c.coOwnerID
+                WHERE p.clientID = :clientID 
+                AND p.agentID = :agentID
+                ORDER BY p.submissionDate DESC
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':clientID', $clientID, PDO::PARAM_STR);
+        $stmt->bindValue(':agentID', $agentID, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return false;
+    }
+
+    public function getLatestPrequalByClient($clientID) {
+        $sql = "SELECT 
+                    p.prequalID,
+                    p.clientID,
+                    p.agentID,
+                    p.propertyID,
+                    p.financingID,
+                    p.coOwnerID,
+                    p.clientCivilStatus,
+                    p.clientEmpStatus,
+                    p.clientMonthlyIncome,
+                    p.prequalStatus,
+                    p.submissionDate,
+                    f.financingType,
+                    f.contributionStartDate,
+                    f.currentLoan,
+                    f.bankName,
+                    f.existingHouseLoan,
+                    f.cancelledHouseLoan,
+                    c.coOwnerRelationship,
+                    c.coOwnerFName,
+                    c.coOwnerMName,
+                    c.coOwnerLName,
+                    c.coOwnerSuffix,
+                    c.coOwnerEmail,
+                    c.coOwnerPhoneNum,
+                    c.coOwnerEmpStatus,
+                    c.coOwnerMonthlyIncome
+                FROM prequal p
+                LEFT JOIN financing f ON p.financingID = f.financingID
+                LEFT JOIN clientcoprequal c ON p.coOwnerID = c.coOwnerID
+                WHERE p.clientID = :clientID
+                ORDER BY p.submissionDate DESC
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':clientID', $clientID, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        return false;
+    }
+
     public function updateFinancing($financingID, $data) {
         $sql = "UPDATE financing SET
                     financingType = :financingType,
