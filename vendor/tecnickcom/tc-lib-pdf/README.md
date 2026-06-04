@@ -1,0 +1,707 @@
+# tc-lib-pdf
+
+> **The next generation of [TCPDF](https://tcpdf.org)** - a modern, modular PHP library for programmatically generating PDF documents.
+
+[![Latest Stable Version](https://poser.pugx.org/tecnickcom/tc-lib-pdf/version)](https://packagist.org/packages/tecnickcom/tc-lib-pdf)
+[![Build](https://github.com/tecnickcom/tc-lib-pdf/actions/workflows/check.yml/badge.svg)](https://github.com/tecnickcom/tc-lib-pdf/actions/workflows/check.yml)
+[![Coverage](https://codecov.io/gh/tecnickcom/tc-lib-pdf/graph/badge.svg?token=rmAqNKVG1c)](https://codecov.io/gh/tecnickcom/tc-lib-pdf)
+[![License](https://poser.pugx.org/tecnickcom/tc-lib-pdf/license)](https://packagist.org/packages/tecnickcom/tc-lib-pdf)
+[![Downloads](https://poser.pugx.org/tecnickcom/tc-lib-pdf/downloads)](https://packagist.org/packages/tecnickcom/tc-lib-pdf)
+
+[![Sponsor on GitHub](https://img.shields.io/badge/sponsor-github-EA4AAA.svg?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/tecnickcom)
+
+If this project is useful to you, please consider [supporting development via GitHub Sponsors](https://github.com/sponsors/tecnickcom).
+
+---
+
+## Contents
+
+- [Overview](#overview)
+- [Description](#description)
+- [For TCPDF Users](#for-tcpdf-users)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Font Setup](#font-setup)
+- [Quick Start](#quick-start)
+- [PDF Import](#pdf-import)
+- [Remote Resources and fileOptions](#remote-resources-and-fileoptions)
+- [Digital Signatures](#digital-signatures)
+- [PDF/A Archival](#pdfa-archival)
+- [PDF/X Conformance](#pdfx-conformance)
+- [PDF/UA Accessibility](#pdfua-accessibility)
+- [Development](#development)
+- [Packaging](#packaging)
+- [Contributing](#contributing)
+- [Third-Party Fonts](#third-party-fonts)
+- [ICC Profile](#icc-profile)
+- [Contact](#contact)
+
+---
+
+## Overview
+
+`tc-lib-pdf` is a pure-PHP library for dynamically generating PDF documents.  
+It is the modern evolution of the widely used TCPDF library, redesigned around a modular package architecture, Composer-first workflow, and strict PHP type safety.
+
+It coordinates specialized companion packages for fonts, images, graphics, pages, filtering, and encryption into a cohesive document-authoring API. The result is a production-ready toolkit for invoices, reports, labels, and other generated PDFs where predictable output and long-term maintainability matter.
+
+| | |
+|---|---|
+| **Namespace** | `\Com\Tecnick\Pdf` |
+| **Author** | Nicola Asuni \<info@tecnick.com\> |
+| **License** | [GNU LGPL v3](https://www.gnu.org/copyleft/lesser.html) — see [LICENSE](LICENSE) |
+| **Website** | <https://tcpdf.org> |
+| **API docs** | <https://tcpdf.org/docs/srcdoc/tc-lib-pdf> |
+| **Packagist** | <https://packagist.org/packages/tecnickcom/tc-lib-pdf> |
+
+Releases follow [Semantic Versioning](https://semver.org):
+
+- **PATCH** — backwards-compatible bug fixes
+- **MINOR** — backwards-compatible new features
+- **MAJOR** — breaking changes
+
+---
+
+## Description
+
+`tc-lib-pdf` is a modern PDF generation library for PHP applications that need deterministic document output without delegating rendering to an external service. It builds on the long-standing ideas behind TCPDF, but reshapes them into a cleaner, Composer-native package designed for contemporary PHP development.
+
+For teams already familiar with TCPDF, this project offers a more modular foundation with stronger typing, clearer package boundaries, and an API surface intended to be easier to maintain in large codebases. For teams adopting it fresh, it provides a practical way to generate production PDFs directly from PHP while retaining fine-grained control over layout, typography, graphics, metadata, and standards-oriented output.
+
+The library is particularly well suited to backend-driven document workflows such as invoices, shipping labels, statements, certificates, reports, and archived business records. Instead of treating PDF generation as an opaque export step, `tc-lib-pdf` exposes the document model in a way that lets developers compose pages programmatically, integrate with existing application data, and keep output logic versioned alongside the rest of the codebase.
+
+Because it is part of the broader `tc-lib-*` ecosystem, `tc-lib-pdf` can coordinate fonts, images, page geometry, graphics primitives, and optional features such as barcodes and encryption through dedicated companion packages. That modular design makes the project easier to evolve over time while still delivering the all-in-one capabilities PHP developers expect from a serious PDF engine.
+
+## For TCPDF Users
+
+If you already know TCPDF, `tc-lib-pdf` will feel familiar in purpose but it is not positioned as a drop-in replacement.
+
+- The codebase is split across focused Composer packages instead of a single monolithic distribution.
+- The API surface is more strongly typed and organized around companion services such as fonts, pages, graphics, and images.
+- Setup is Composer-first, which means asset preparation such as font generation is part of project bootstrap rather than an implicit bundled step.
+
+The fastest way to evaluate the library is to follow the installation and font setup steps below, then compare the runnable examples in [examples/index.md](examples/index.md) with the equivalent workflows you already maintain in TCPDF.
+
+## Features
+
+### Text & Fonts
+- Full **UTF-8 Unicode** and **right-to-left** (RTL) language support
+- **TrueTypeUnicode**, **OpenTypeUnicode v1**, TrueType, OpenType v1, Type1, and CID-0 fonts
+- Font subsetting to keep file sizes small
+- Text hyphenation, stretching, and letter-spacing (tracking)
+- Language-aware TeX hyphenation patterns and optional zero-width breakpoints
+- Text rendering modes: fill, stroke, and clipping
+- Automatic line breaks, page breaks, and justification
+
+### Layout & Content
+- All standard page sizes, custom formats, custom margins, and configurable units of measure
+- **HTML** and **CSS** rendering
+- **SVG** rendering
+- Multi-column layouts and no-write page regions
+- Headers, footers, and common page content
+- Bookmarks, named destinations, and table of contents
+- Automatic page numbering and page groups
+- Full page box control (Media/Crop/Bleed/Trim/Art), page reordering, and viewer preferences
+
+### Images & Graphics
+- Native **JPEG**, **PNG**, and **SVG** support
+- Extended image format handling via GD (`GD`, `GD2`, `GD2PART`, `GIF`, `JPEG`, `PNG`, `BMP`, `XBM`, `XPM`, `WBMP`, `TIFF`, `ICO`, `PSD`, `IFF`, `SWC`)
+- Geometric graphics and 2D transformations
+- Linear and radial gradients, Coons patch mesh gradients, crop marks, and registration bars
+- **JPEG and PNG ICC profiles**, grayscale/RGB/CMYK/spot colors, transparencies, and overprint control
+
+### Security & Standards
+- Password and certificate-based document encryption (RC4 and AES, up to 256-bit)
+- **Digital signatures** — detached CMS (PKCS#7) signatures with configurable appearance fields
+- **RFC 3161 TSA timestamps** — embed a trusted timestamp token from any RFC 3161-compliant Time Stamping Authority (TSA) into the CMS signature; configurable digest algorithm (`sha256`, `sha384`, `sha512`), policy OID, nonce, timeout, and TLS peer verification
+- **LTV (Long-Term Validation)** — embed revocation evidence in the same PDF revision as the signature:
+  - collects the signing certificate chain and fetches OCSP responses and/or CRL payloads from AIA and CDP URLs
+  - deduplicates binary payloads by fingerprint
+  - emits `/DSS`, `/VRI`, `/OCSPs`, `/CRLs`, and `/Certs` objects in the catalog
+  - each feature (OCSP, CRL, cert embedding, DSS, VRI) can be enabled independently via `setSignature()` LTV options
+- **PDF annotations**: links, text notes, file attachments, markup, shapes, media, and widgets
+- **JavaScript** embedding
+- **PDF/A** (1/2/3, including a/b/u conformance levels) — see [PDF/A Archival](#pdfa-archival) section and [E001_invoice.php](examples/E001_invoice.php) for a Factur-X / ZUGFeRD example
+- **PDF/X** (generic alias, PDF/X-1a, PDF/X-3, PDF/X-4, PDF/X-5) — print-exchange conformance: per-variant OutputIntent identifiers, GTS_PDFXVersion in Info dict and XMP, PDF version enforcement, CMYK color forcing for restrictive profiles (X-1a, X-3), transparency restrictions, and suppression of encryption and JavaScript
+- **PDF/UA** (generic alias, PDF/UA-1, PDF/UA-2) — accessibility conformance: tagged structure tree (`StructTreeRoot` / `ParentTree`), `MarkInfo /Marked true`, document language (`/Lang`), `DisplayDocTitle true`, `ActualText` for ligatures and special glyphs, figure alt-text tagging, and heading-level clamping to prevent skipped levels; PDF/UA-2 targets PDF 2.0
+
+### PDF Import
+- Import pages from existing PDFs as **Form XObjects** and place them on any destination page
+- Import a single page at a user-defined position and scale (`importPage` / `useImportedPage`)
+- Append full documents page-by-page, auto-sized to the source page dimensions (`addPageFromImport`)
+- Load source PDFs from a file path or raw byte string (`setImportSourceFile` / `setImportSourceData`)
+
+### Other
+- **1D and 2D barcodes** via [`tc-lib-barcode`](https://github.com/tecnickcom/tc-lib-barcode)
+- Interactive AcroForm fields (buttons, checkboxes, radio buttons, text, combo boxes, list boxes)
+- XObject templates and layers with object visibility controls
+- Multiple output targets: inline display, forced download, file save, and MIME attachment
+- Factur-X / ZUGFeRD workflows via embedded XML in PDF/A-3 documents
+- Page compression via the `zlib` PHP extension
+
+---
+
+## Requirements
+
+- **PHP 8.1** or later
+- Required PHP extensions: `date`, `pcre` (enforced by Composer)
+- Composer
+
+Optional PHP extensions for extended functionality: `gd`, `zlib`.
+
+Feature-specific prerequisites:
+
+- Digital signatures, timestamps, and LTV workflows require signing certificates/keys and any external TSA or revocation endpoints your configuration references.
+- `make preflight` depends on external validation tools when you want standards validation beyond the built-in sample generation.
+
+---
+
+## Installation
+
+For a clean first run:
+
+1. Install the package with Composer.
+2. Generate the companion font files.
+3. Run the minimal script using the generated `K_PATH_FONTS` path.
+
+```bash
+composer require tecnickcom/tc-lib-pdf
+```
+
+Or add to your `composer.json`:
+
+```json
+{
+    "require": {
+        "tecnickcom/tc-lib-pdf": "^8"
+    }
+}
+```
+
+---
+
+## Font Setup
+
+When you install `tc-lib-pdf` as a dependency in your project (via `composer require` or `composer install`), the fonts from the companion package [`tc-lib-pdf-font`](https://github.com/tecnickcom/tc-lib-pdf-font) must be generated before they can be used.
+
+Composer does not execute scripts declared by dependencies, so you need to add the font generation step to your **consuming project's** `composer.json` file:
+
+```json
+{
+  "scripts": {
+    "tc-lib-pdf-fonts": [
+      "[ -d vendor/tecnickcom/tc-lib-pdf-font ] && make -C vendor/tecnickcom/tc-lib-pdf-font deps fonts || true"
+    ],
+    "post-install-cmd": [
+      "@tc-lib-pdf-fonts"
+    ],
+    "post-update-cmd": [
+      "@tc-lib-pdf-fonts"
+    ]
+  }
+}
+```
+
+This ensures fonts are generated automatically when you run:
+
+```bash
+composer install
+composer update
+composer require ...
+```
+
+To also cover `composer dump-autoload` (used in many CI pipelines), add the hook to `post-autoload-dump` as well:
+
+```json
+"post-autoload-dump": [
+    "@tc-lib-pdf-fonts"
+]
+```
+
+If you prefer to generate fonts manually, run the build in the `tc-lib-pdf-font` package:
+
+```bash
+cd vendor/tecnickcom/tc-lib-pdf-font
+make deps fonts
+```
+
+Equivalent one-liner from your project root:
+
+```bash
+make -C vendor/tecnickcom/tc-lib-pdf-font deps fonts
+```
+
+Once fonts are generated, they are cached in `vendor/tecnickcom/tc-lib-pdf-font/target/fonts/` and will not be regenerated unless explicitly rebuilt.
+
+You can also add your own fonts and generate their PHP font data with `tc-lib-pdf-font`. For shared or immutable environments, generate them once into a persistent directory you control (outside `vendor/`) and point `K_PATH_FONTS` to that location.
+
+For a runnable end-to-end custom font workflow, see [examples/E072_import_new_font.php](examples/E072_import_new_font.php).
+
+Example import commands (from the project root):
+
+```bash
+mkdir -p target/fonts/source target/fonts/custom
+
+curl -fL --retry 3 -o target/fonts/source/NotoSans-Regular.ttf \
+    https://github.com/notofonts/noto-fonts/raw/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf
+
+php vendor/tecnickcom/tc-lib-pdf-font/util/convert.php \
+    --outpath=target/fonts/custom \
+    --type=TrueTypeUnicode \
+    --flags=32 \
+    --encoding_id=1 \
+    --fonts=target/fonts/source/NotoSans-Regular.ttf
+```
+
+Then point `K_PATH_FONTS` to `target/fonts/custom` (or an absolute path to that directory) before creating the `Tcpdf` instance.
+
+```php
+\define('K_PATH_FONTS', '/opt/app/fonts/tc-lib-pdf');
+```
+
+This avoids regenerating fonts on every dependency reinstall and lets multiple deployments reuse the same prepared font set.
+
+---
+
+## Quick Start
+
+The following example assumes the script lives in your project root. If you place it elsewhere, adjust the `autoload.php` and `K_PATH_FONTS` paths accordingly.
+
+```php
+<?php
+
+require(__DIR__ . '/vendor/autoload.php');
+
+\define('K_PATH_FONTS', \realpath(__DIR__ . '/vendor/tecnickcom/tc-lib-pdf-font/target/fonts'));
+
+$pdf = new \Com\Tecnick\Pdf\Tcpdf();
+
+$bfont = $pdf->font->insert($pdf->pon, 'helvetica', '', 12);
+
+$page = $pdf->addPage();
+
+$pdf->page->addContent($bfont['out']);
+
+$html = '<h1>Hello, PDF!</h1><p>Generated with tc-lib-pdf.</p>';
+
+$pdf->addHTMLCell(
+    html:   $html,
+    posx:   15,   // mm from left page edge
+    posy:   20,   // mm from top page edge
+    width:  180,  // mm wide (0 = to right margin)
+);
+
+$rawpdf = $pdf->getOutPDFString();
+
+$pdf->renderPDF($rawpdf);
+```
+
+`getOutPDFString()` returns the raw PDF bytes. `renderPDF()` streams those bytes to the browser; if you need file storage or an email attachment, keep the returned string and write or hand it off yourself.
+
+> **Note:** `realpath()` returns `false` when the fonts directory does not yet exist. If you see `K_PATH_FONTS` errors on first run, verify that fonts were generated after `composer install` (see [Font Setup](#font-setup)).
+
+For more complete examples — including invoices, images, barcodes, HTML tables, dedicated HTML selector/form/table showcases, PDF/X, and PDF/UA — see the [examples](examples) directory.
+Annotation-focused runnable example: [examples/E027_annotations.php](examples/E027_annotations.php).
+
+To run the bundled examples locally:
+
+```bash
+make x       # build example assets
+make server  # start a local PHP server
+```
+
+Then open <http://localhost:8971/index.php>.
+
+If the minimal example fails on first run, verify these two points first:
+
+- `K_PATH_FONTS` resolves to an existing generated font directory.
+- The companion fonts were generated after `composer install` or `composer update`.
+
+---
+
+## PDF Import
+
+`tc-lib-pdf` can import pages from existing PDFs as Form XObjects and place them on destination pages.
+
+### Source registration and page count
+
+```php
+$sourceId = $pdf->setImportSourceFile('/path/to/source.pdf');
+// or: $sourceId = $pdf->setImportSourceData($rawPdfBytes);
+
+$count = $pdf->getSourcePageCount($sourceId);
+```
+
+### Import one page and place it
+
+```php
+$tpl = $pdf->importPage($sourceId, 1, [
+    'box' => 'CropBox',          // MediaBox|CropBox|BleedBox|TrimBox|ArtBox
+    'groupXObject' => true,
+    'cache' => true,
+    'respectRotation' => true,
+]);
+
+$pdf->addPage();
+$placed = $pdf->useImportedPage($tpl, 20, 20, 120, 80, [
+    'keepAspectRatio' => true,
+    'align' => 'CC',             // TL|TC|TR|CL|CC|CR|BL|BC|BR
+    'clip' => true,
+]);
+```
+
+### Append pages from a source document
+
+```php
+// Append all pages.
+$templates = $pdf->appendDocument($sourceId);
+
+// Append only selected pages.
+$templates = $pdf->appendDocument($sourceId, [1, 3, 5]);
+
+// Add one imported page sized to the source page.
+$tpl = $pdf->addPageFromImport($sourceId, 2);
+```
+
+### Import examples
+
+- Single page import: [examples/E065_import_single_page.php](examples/E065_import_single_page.php)
+- Full document append: [examples/E066_import_document_append.php](examples/E066_import_document_append.php)
+- Advanced N-up composition from imported pages: [examples/E067_import_page_region_nup.php](examples/E067_import_page_region_nup.php)
+
+### Import limitations and fidelity notes
+
+- Form and annotation semantics are not merged into editable destination structures; pages are imported as Form XObjects.
+- Digital signatures in source files are not preserved as valid signatures in the destination output.
+- Encrypted source PDFs are currently not importable with the bundled parser backend. Password-like options are accepted by the import API, but encrypted inputs fail with an explicit actionable exception.
+- For multi-stream page contents, import normalizes by decoding and concatenating stream bytes; this can change low-level byte representation while preserving rendered appearance in typical cases.
+- Transparency-group behavior is conformance-aware: when transparency is disallowed by the active PDF mode (for example PDF/X-1a or PDF/X-3), import suppresses transparency groups to remain compliant.
+- Setting `groupXObject` to `false` can reduce output size, but may change compositing on source pages that rely on transparency blending.
+
+---
+
+## Remote Resources and `fileOptions`
+
+By default `tc-lib-pdf` **does not fetch any remote URLs**. Images, fonts, and SVG files referenced by HTTP or HTTPS are blocked unless you explicitly allow the originating hosts. Local file paths are never restricted.
+
+Remote access is controlled by the optional `$fileOptions` array passed as the last argument to the `Tcpdf` constructor (and forwarded to `initClassObjects()`).
+
+### Allowing remote hosts
+
+```php
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(
+    unit: 'mm',
+    fileOptions: [
+        'allowedHosts' => ['cdn.example.com', 'assets.myapp.io'],
+    ],
+);
+```
+
+Only the listed host names are permitted. Any attempt to load a resource from an unlisted host is silently blocked. Supply an explicit allowlist rather than a wildcard to limit the attack surface when user-supplied URLs might reach this code path.
+
+### All `fileOptions` keys
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `allowedHosts` | `string[]` | `[]` (none) | Host names the library may fetch over HTTP/HTTPS. Remote loading is disabled when this list is empty. |
+| `maxRemoteSize` | `int` | `52428800` (50 MiB) | Maximum bytes accepted for a single remote download. Requests exceeding this limit are aborted. |
+| `curlopts` | `array<int, bool\|int\|string>` | `[]` | Per-request cURL options (keyed by `CURLOPT_*` constants) merged on top of the built-in defaults. |
+| `defaultCurlOpts` | `array<int, bool\|int\|string>` | `null` | Replaces the built-in default cURL option set entirely. Omit this key to keep the safe defaults. |
+| `fixedCurlOpts` | `array<int, bool\|int\|string>` | `null` | cURL options that are always enforced and cannot be overridden by `curlopts` — useful for pinning TLS settings in locked-down environments. |
+
+### Example: pinning TLS and setting a short timeout
+
+```php
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(
+    unit: 'mm',
+    fileOptions: [
+        'allowedHosts'  => ['cdn.example.com'],
+        'maxRemoteSize' => 10 * 1024 * 1024, // 10 MiB
+        'curlopts'      => [
+            CURLOPT_TIMEOUT        => 10,
+            CURLOPT_CONNECTTIMEOUT => 5,
+        ],
+        'fixedCurlOpts' => [
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+        ],
+    ],
+);
+```
+
+---
+
+## Digital Signatures
+
+`tc-lib-pdf` supports detached CMS (PKCS#7) signatures with optional RFC 3161 timestamps and LTV (Long-Term Validation) material, all embedded in a single PDF revision.
+
+Signature-focused runnable examples:
+
+- [examples/E007_signature_basic.php](examples/E007_signature_basic.php) : basic detached CMS signature with visible signature fields.
+- [examples/E008_signature_timestamp.php](examples/E008_signature_timestamp.php) : detached CMS signature with RFC 3161 TSA timestamp configuration.
+- [examples/E009_signature_ltv.php](examples/E009_signature_ltv.php) : detached CMS signature with LTV validation material embedding.
+
+### Basic signature
+
+```php
+$pdf->setSignature([
+    'signcert'  => 'file:///path/to/cert.pem',
+    'privkey'   => 'file:///path/to/key.pem',
+    'password'  => '',
+    'cert_type' => 2,
+    'info'      => [
+        'Name'        => 'Jane Smith',
+        'Location'    => 'London',
+        'Reason'      => 'Document approval',
+        'ContactInfo' => 'jane@example.com',
+    ],
+]);
+```
+
+### Adding a TSA timestamp (RFC 3161)
+
+Call `setSignTimeStamp()` after `setSignature()` to request a timestamp token from a trusted TSA and embed it in the CMS unsigned attributes:
+
+```php
+$pdf->setSignTimeStamp([
+    'enabled'        => true,
+    'host'           => 'https://freetsa.org/tsr',
+    'username'       => '',
+    'password'       => '',
+    'cert'           => '',
+    'hash_algorithm' => 'sha256',   // sha256 | sha384 | sha512
+    'policy_oid'     => '',         // optional OID string
+    'nonce_enabled'  => true,
+    'timeout'        => 30,
+    'verify_peer'    => true,
+]);
+```
+
+### LTV (Long-Term Validation)
+
+Enable LTV via the `ltv` key inside `setSignature()`. The library fetches OCSP responses and CRL payloads from the certificate's AIA and CDP extensions and writes them into the same PDF revision as the signature:
+
+```php
+$pdf->setSignature([
+    'signcert' => 'file:///path/to/cert.pem',
+    'privkey'  => 'file:///path/to/key.pem',
+    'password' => '',
+    'ltv'      => [
+        'enabled'     => true,
+        'embed_ocsp'  => true,   // fetch OCSP responses
+        'embed_crl'   => true,   // fetch CRL payloads (fallback)
+        'embed_certs' => true,   // include certificate DER bytes
+        'include_dss' => true,   // emit /DSS in catalog
+        'include_vri' => true,   // emit /VRI map keyed by cert SHA-1
+    ],
+]);
+```
+
+When LTV is enabled the output PDF contains `/DSS`, `/VRI`, `/OCSPs`, `/CRLs`, and `/Certs` objects, making Adobe-style long-term signature validation feasible without any external retrieval at verification time.
+
+### Generating a self-signed test certificate
+
+```bash
+openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+    -keyout tcpdf.key -out tcpdf.crt
+# convert to PKCS#12 if needed
+openssl pkcs12 -export -in tcpdf.crt -inkey tcpdf.key -out tcpdf.p12
+```
+
+---
+
+## PDF/A Archival
+
+`tc-lib-pdf` supports PDF/A output for long-term archival workflows (ISO 19005). Pass the mode string as the `mode` argument to the `Tcpdf` constructor:
+
+```php
+// PDF/A-1b (default conformance level when suffix is omitted)
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa1');
+
+// Explicit conformance levels
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa1a');  // PDF/A-1a
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa1b');  // PDF/A-1b
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa2a');  // PDF/A-2a
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa2b');  // PDF/A-2b
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa2u');  // PDF/A-2u
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa3a');  // PDF/A-3a
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa3b');  // PDF/A-3b
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa3u');  // PDF/A-3u
+```
+
+| Mode suffix | Conformance | Unicode ToUnicode | Tagged structure |
+|-------------|-------------|-------------------|------------------|
+| `a` | Level A | required | required |
+| `b` | Level B | required | not required |
+| `u` | Level U (parts 2/3 only) | required | not required |
+
+PDF/A-3 supports embedding arbitrary file attachments (for example XML invoice payloads). This is the basis for **Factur-X / ZUGFeRD** workflows — embed the structured XML in a PDF/A-3 document and register the relationship via XMP metadata:
+
+```php
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfa3');
+// ... build document ...
+$pdf->Annotation(/* file attachment annotation pointing to the XML */);
+$pdf->setCustomXMP('x:xmpmeta.rdf:RDF.rdf:Description.pdfaExtension:schemas.rdf:Bag', $xmpBag);
+```
+
+Runnable example (invoice with embedded Factur-X XML): [examples/E001_invoice.php](examples/E001_invoice.php).
+
+---
+
+## PDF/X Conformance
+
+`tc-lib-pdf` supports multiple PDF/X profiles for print-exchange workflows. Pass the mode string as the `mode` argument to the `Tcpdf` constructor:
+
+```php
+// Generic PDF/X alias (maps to the library's baseline print-exchange workflow)
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfx');
+
+// Specific variants
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfx1a'); // PDF/X-1a:2003
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfx3');  // PDF/X-3:2003
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfx4');  // PDF/X-4:2010
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfx5');  // PDF/X-5g:2010
+```
+
+Each variant automatically applies the appropriate conformance constraints:
+
+| Mode | Min PDF version | Transparency | Process colors | GTS_PDFXVersion |
+|------|-----------------|--------------|----------------|-----------------|
+| `pdfx` / `pdfx3` | 1.3 | blocked | CMYK forced | PDF/X-3:2003 |
+| `pdfx1a` | 1.3 | blocked | CMYK forced | PDF/X-1a:2003 |
+| `pdfx4` | 1.6 | allowed | unrestricted | PDF/X-4:2010 |
+| `pdfx5` | 1.6 | allowed | unrestricted | PDF/X-5g:2010 |
+
+All PDF/X modes suppress encryption and JavaScript (not permitted by the ISO 15930 standard).
+
+Runnable examples: [examples/E010_pdfx.php](examples/E010_pdfx.php) through [examples/E014_pdfx5.php](examples/E014_pdfx5.php).
+
+---
+
+## PDF/UA Accessibility
+
+`tc-lib-pdf` supports tagged PDF output conforming to PDF/UA (ISO 14289). Pass the mode string as the `mode` argument to the `Tcpdf` constructor:
+
+```php
+// Generic PDF/UA alias
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfua');
+
+// Specific parts
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfua1'); // PDF/UA-1 (PDF 1.7)
+$pdf = new \Com\Tecnick\Pdf\Tcpdf(mode: 'pdfua2'); // PDF/UA-2 (PDF 2.0)
+```
+
+When a PDF/UA mode is active the library automatically:
+
+- Writes a `StructTreeRoot` with a `ParentTree` that maps every page to its tagged content blocks
+- Emits `MarkInfo << /Marked true >>` in the document catalog
+- Sets `/Lang` (defaults to `en-US` when not explicitly provided)
+- Forces `ViewerPreferences /DisplayDocTitle true`
+- Maps HTML heading elements (`h1`–`h6`) to PDF structure roles `H1`–`H6` with level-clamping to prevent skipped heading levels
+- Tags text content with MCIDs and wraps each run in the appropriate structure element (`P`, `H1`–`H6`, `Link`, etc.)
+- Tags `<img>` elements as `Figure` with their `alt` attribute written as `/Alt` in the structure element
+- Emits `ActualText` entries for ligatures and special glyphs so text extraction and screen readers work correctly
+- Provides Artifact marked-content helpers for non-semantic content (`beginArtifact()`, `endArtifact()`, `addArtifactContent()`)
+
+To provide the document language explicitly:
+
+```php
+$pdf->setDocInfo(['a_meta_language' => 'de-DE']);
+```
+
+To tag decorative or repeated content as Artifact (for example headers, footers, and page numbers):
+
+```php
+$pid = $pdf->addPage()['pid'];
+
+$headerOperators = $pdf->graph->getLine(10, 10, 200, 10);
+$pdf->addArtifactContent($headerOperators, $pid, 'Pagination', 'Header');
+
+$footerText = $pdf->getTextCell('Page 1', 180, 280, 20, 5);
+$pdf->addArtifactContent($footerText, $pid, 'Pagination', 'Footer');
+```
+
+In PDF/UA mode, the built-in `defaultPageContent()` page-number footer is emitted as `Artifact` with
+`/Type /Pagination /Subtype /Footer`.
+
+Runnable examples: [examples/E015_pdfua.php](examples/E015_pdfua.php) through [examples/E017_pdfua2.php](examples/E017_pdfua2.php).
+
+---
+
+## Development
+
+```bash
+# Install all development dependencies
+make deps
+
+# List all available Make targets
+make help
+
+# Run the full quality pipeline (lint, static analysis, tests, coverage)
+make qa
+
+# Generate PDF/X + PDF/UA sample matrix and run external validators (if installed)
+make preflight
+```
+
+Build artifacts and reports are written to the `target/` directory.
+
+---
+
+## Packaging
+
+The primary distribution channel is Composer. For system-level deployments, RPM and DEB packages are also provided.
+
+```bash
+make rpm   # build RPM package  → target/RPM/
+make deb   # build DEB package  → target/DEB/
+```
+
+When using the RPM or DEB package, bootstrap the library with its system autoloader:
+
+```php
+require_once '/usr/share/php/Com/Tecnick/Pdf/autoload.php';
+```
+
+---
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before submitting a pull request.
+
+1. Fork the repository and create a feature branch.
+2. Write or update tests for your change.
+3. Run `make qa` to ensure the full pipeline passes.
+4. Open a pull request with a clear description of the change.
+
+Security vulnerabilities should be reported according to [SECURITY.md](SECURITY.md).
+
+---
+
+## Third-Party Fonts
+
+PHP font metadata files under the fonts directory are covered by the project license (GNU LGPL v3). They can be regenerated with the built-in font utilities.
+
+Original source files are renamed for compatibility and compressed with PHP `gzcompress` (`.z` extension) where applicable.
+
+| Prefix | Source | License |
+|--------|--------|---------|
+| `freefont` | [GNU FreeFont](https://ftp.gnu.org/gnu/freefont/freefont-ttf-20120503.zip) | GNU GPL v3 |
+| `pdfa` | [tc-font-pdfa](https://github.com/tecnickcom/tc-font-pdfa) (derived from GNU FreeFont) | GNU GPL v3 |
+| `dejavu` | [DejaVu Fonts 2.35](https://sourceforge.net/projects/dejavu/files/dejavu/2.35/dejavu-fonts-ttf-2.35.zip) | Bitstream Vera (with DejaVu public-domain changes) |
+| `unifont` | [GNU Unifont 15.1.03](https://www.unifoundry.com/pub/unifont/unifont-15.1.03/unifont-15.1.03.tar.gz) | GPL v2+ with font embedding exception (also distributed under SIL OFL 1.1) |
+| `cid0` | [GNU Unifont](http://unifoundry.com/unifont.html) (CID mappings) | GPL v2+ with font embedding exception |
+| `core` | [Adobe Core14 AFM](https://partners.adobe.com/public/developer/en/pdf/Core14_AFMs.zip) | Adobe copyright terms (see AFM notices) |
+
+---
+
+## ICC Profile
+
+The bundled `sRGB.icc` profile is sourced from the Debian [`icc-profiles-free`](https://packages.debian.org/source/stable/icc-profiles-free) package.
+
+---
+
+## Contact
+
+Nicola Asuni — <info@tecnick.com>

@@ -24,6 +24,17 @@ $sidebarMenus = [
             'route' => 'add-property',
             'icon'  => 'plus-square'
         ],
+         [
+            'title' => 'Add Agent',
+            'route' => 'agentregister',
+            'icon'  => 'plus-square'
+        ],
+        [
+            'title' => 'Agent List',
+            'route' => 'agentdisplay',
+            'icon'  => 'user'
+        ],
+        
 
     ],
 
@@ -32,6 +43,11 @@ $sidebarMenus = [
         [
             'title' => 'Dashboard',
             'route' => 'agentDashboard',
+            'icon'  => 'grid'
+        ],
+         [
+            'title' => 'Explore Properties',
+            'route' => 'exploreproperty',
             'icon'  => 'grid'
         ],
 
@@ -51,11 +67,25 @@ $sidebarMenus = [
             'icon'  => 'home'
         ],
 
+        // [
+        //     'title' => 'Information Sheet',
+        //     'route' => 'clientInfoSheet',
+        //     'icon'  => 'heart'
+        // ],
+       
         [
-            'title' => 'Favorite Properties',
-            'route' => 'favoriteProperties',
+            'title' => 'Spouse Information Sheet',
+            'route' => 'spouseInfoSheet',
             'icon'  => 'heart'
         ],
+        
+        [
+            'title' => 'Reservations',
+            'route' => 'reservations',
+            'icon'  => 'heart'
+        ],
+        
+
 
         [
             'title' => 'Site Visit',
@@ -236,11 +266,28 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                         <i data-feather="chevron-right" class="submenu-arrow"></i>
                     </button>
                     <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
-                        <li><a href="userProfile">My Profile</a></li>
-                        <li><a href="userSettings">Settings</a></li>
+                        <li><a href="userprofile">My Profile</a></li>
+                        <li><a href="#">Settings</a></li>
                     </ul>
                 </li>
             <?php endif; ?>
+
+              <!-- Pre-Qual Studd -->
+            <?php if ($role === 'Agent'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('prequal-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>Client Pre-Qualification</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="prequal-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="index.php?route=clientPreQual&status=Pending">Pending</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Approved">Approved</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Archived">Archived</a></li>
+                                            </ul>
+                </li>
+            <?php endif; ?>
+
 
            
     <!-- </nav> -->

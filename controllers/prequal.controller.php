@@ -208,6 +208,21 @@ class PrequalController {
                 return;
             }
 
+            // CREATE RESERVATION AFTER PREQUAL SUCCESS
+            $createdReservation = $this->prequalModel->createReservation(
+                $savedPrequalID,
+                $agentID
+            );
+
+            if (!$createdReservation) {
+                $this->db->rollBack();
+                $this->jsonResponse([
+                    'success' => false,
+                    'message' => 'Prequal saved but reservation failed.'
+                ], 500);
+                return;
+            }
+
             $this->db->commit();
             $this->jsonResponse(['success' => true, 'prequalID' => $savedPrequalID]);
 

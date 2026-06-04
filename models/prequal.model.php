@@ -486,4 +486,34 @@ class PrequalModel {
 
         return $stmt->execute();
     }
+
+    public function createReservation($prequalID, $agentID){
+        $stmt = $this->db->query("SELECT MAX(id) AS max_id FROM reservations");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $nextId = ((int)$row['max_id']) + 1;
+
+        $reservationID = 'R' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+
+        $sql = "INSERT INTO reservations (
+                    reservationID,
+                    prequalID,
+                    agentID,
+                    reserveStatus
+                )
+                VALUES (
+                    :reservationID,
+                    :prequalID,
+                    :agentID,
+                    'Pending'
+                )";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindValue(':reservationID', $reservationID);
+        $stmt->bindValue(':prequalID', $prequalID);
+        $stmt->bindValue(':agentID', $agentID);
+
+        return $stmt->execute();
+    }
 }

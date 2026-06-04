@@ -1,0 +1,354 @@
+
+<?php
+/* $base_dir = views/ ;  */ 
+$static_url = '/habitrack/views/Adminassets';
+/* $route = 'add-property';
+require_once __DIR__ . '/../../controllers/add-property.controller.php';
+ */
+
+require_once __DIR__ . '/../../../controllers/agentregister.controller.php'; 
+
+
+$agentID = $_SESSION['agentID'] ?? null;
+
+if (!$agentID) {
+    header("Location: login");
+    exit;
+}
+
+//  Fetch property data
+$agent = ControllerAddAgent::ctrGetAgent($agentID);
+//$image = ControllerAddAgent::ctrGetAgentImage($agentID);
+
+if (!$agent) {
+    die("Agent not found.");
+}
+
+/*  ob_start();
+$navlink_content = ob_get_clean();
+
+ob_start();  */
+?>
+
+<div
+    id="main-area"
+    class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
+    style="
+        left:300px;
+        bottom:0;
+        z-index:20;
+    "
+    >
+
+     <div class="md:flex justify-between items-center">
+                <h5 class="text-lg font-semibold">My Profile</h5>
+
+                <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="agentDashboard">Dashboard</a></li>
+                    <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180"><i class="mdi mdi-chevron-right"></i></li>
+                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">My Profile</li>
+                </ul>
+            </div>
+
+
+    <div class="container-fluid relative px-3">
+        <div class="layout-specing">
+            <div class="grid grid-cols-1">
+                <div class="profile-banner relative text-transparent rounded-md shadow dark:shadow-gray-700 overflow-hidden">
+                    <input id="pro-banner" name="profile-banner" type="file" class="hidden" onchange="loadFile(event)">
+                    <div class="relative shrink-0">
+                        <img src="<?php echo $static_url; ?>/images/bg.jpg" class="h-80 w-full object-cover" id="profile-banner" alt="">
+                        <div class="absolute inset-0 bg-black/70"></div>
+                        <label class="absolute inset-0 cursor-pointer" for="pro-banner"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-12 grid-cols-1 gap-6 mt-6">
+                <div class="xl:col-span-3 lg:col-span-4 md:col-span-4">
+                    <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+                        <div class="profile-pic text-center">
+                            <input id="pro-img" name="profile-image" class="hidden" onchange="loadFile(event)"  />
+                            <input type="hidden" id="agentID" value="<?= htmlspecialchars($agent['agentID']) ?>">
+                            <div>
+                                <?php
+    $agentPic = trim($agent['agentPic'] ?? '');
+
+    $fullName = trim(
+        ($agent['agentFName'] ?? '') . ' ' .
+        ($agent['agentMName'] ?? '') . ' ' .
+        ($agent['agentLName'] ?? '') . ' ' .
+        ($agent['agentSuffix'] ?? '')
+    );
+?>
+
+<div class="relative size-24 mx-auto">
+
+    <?php if ($agentPic !== ''): ?>
+
+        <img
+            src="<?= htmlspecialchars('/habitrack' . $agentPic) ?>"
+            class="rounded-full shadow dark:shadow-gray-700 ring-4 ring-slate-50 dark:ring-slate-800 w-24 h-24 object-cover"
+            id="profile-image"
+            alt="<?= htmlspecialchars($fullName) ?>"
+        >
+
+    <?php else: ?>
+
+        <img
+            src="<?php echo $static_url; ?>/images/client/07.jpg"
+            class="rounded-full shadow dark:shadow-gray-700 ring-4 ring-slate-50 dark:ring-slate-800 w-24 h-24 object-cover"
+            id="profile-image"
+            alt="Default Profile"
+        >
+
+    <?php endif; ?>
+
+    <label class="absolute inset-0 cursor-pointer" for="pro-img"></label>
+</div>
+
+<div class="mt-4">
+    <h5 class="text-lg font-semibold">
+        <?= htmlspecialchars($fullName) ?>
+    </h5>
+
+    <p class="text-slate-400">
+        <?= htmlspecialchars($agent['agentID']) ?>
+    </p>
+
+    
+                             <div class="md:col-span-6 col-span-12 bg-white dark:bg-slate-900 h-fit">
+                                    <label for="agentStatus" class="form-label text-gray-900 dark:text-gray-200"></label>
+                                    <select id="agentStatus" name="agentStatus" class="select2 form-select w-40 rounded 
+                       bg-white dark:bg-slate-800 
+                       text-gray-800 dark:text-gray-200 
+                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Agent Status"  value="<?= htmlspecialchars($agent['agentStatus']) ?>"disabled>
+                                         <option value="">Agent Status</option>
+
+                                        <option value="Active" <?= $agent['agentStatus'] == 'Active' ? 'selected' : '' ?>>
+                                            Active
+                                        </option>
+
+                                    
+
+                                        <option value="Archived" <?= $agent['agentStatus'] == 'Archived' ? 'selected' : '' ?>>
+                                            Archived
+                                        </option>
+                                    </select>
+                            </div>
+</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+             <div class="xl:col-span-9 lg:col-span-8 md:col-span-8">
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+                            <h5 class="text-lg font-semibold mb-4">Agent Personal Details :</h5>
+                            <form>
+                                
+                                <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                                    <div class>
+                                        <label class="form-label font-medium">First Name : <span class="text-red-600">*</span></label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
+                                            <input type="text" readonly id="agentFName" name="agentFName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="First Name:" id="firstname" name="name" required=""
+                                            value="<?= htmlspecialchars($agent['agentFName']) ?>">
+                                        </div>
+                                    </div>
+                                    <!--  <div class="grid lg:grid-cols-2 grid-cols-1 gap-5"> -->
+                                    <div>
+                                        <label class="form-label font-medium">Middle Name : <span class="text-red-600">*</span></label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
+                                            <input type="text" readonly id="agentMName" name="agentMName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-white dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Middle Name:" id="middlename" name="name" required=""
+                                            value="<?= htmlspecialchars($agent['agentMName']) ?>">
+                                        </div>
+                                    </div>
+                              
+                              
+                                    <div>
+                                        <label class="form-label font-medium">Last Name : <span class="text-red-600">*</span></label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
+                                            <input type="text" readonly id="agentLName" name="agentLName" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Last Name:" id="lastname" name="name" required=""
+                                            value="<?= htmlspecialchars($agent['agentLName']) ?>">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="form-label font-medium">Suffix : </label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
+                                            <input type="text" readonly id="agentSuffix" name="agentSuffix" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Suffix:" id="suffixname" name="name"
+                                            value="<?= htmlspecialchars($agent['agentSuffix']) ?>">
+                                        </div>
+                                    </div>
+                                        <!-- Gender + Birthdate (single grid cell) -->
+                                        <div class="grid grid-cols-2 gap-5">
+
+                                            <!-- Gender -->
+                                            <div>
+                                                <label class="form-label font-medium">Gender : <span class="text-red-600">*</span></label>
+                                                <select id="agentGender" disabled name="agentGender" class="form-input w-full mt-2 bg-white dark:bg-slate-800 text-gray-800 white:text-gray-200 border-gray-300 dark:border-slate-700" value="<?= htmlspecialchars($agent['agentGender']) ?>">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="Male" <?= $agent['agentGender'] == 'Male' ? 'selected' : '' ?>>Male</option>
+                                                    <option value="Female" <?= $agent['agentGender'] == 'Female' ? 'selected' : '' ?>>Female</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Birthdate -->
+                                            <div>
+                                                <label class="form-label font-medium">Birthdate : <span class="text-red-600">*</span></label>
+                                                <input type="date" readonly id="agentBirthdate" name="agentBirthdate" value="<?= htmlspecialchars($agent['agentBirthdate']) ?>"
+                                                    class="form-input w-full mt-2 bg-transparent dark:bg-slate-900 text-gray-800 white:text-gray-200 border border-gray-200 dark:border-slate-700 rounded">
+                                            </div>
+
+                                        </div>
+
+                                   
+                                    
+                                   <!--  <div>
+                                        <label class="form-label font-medium">Agent Current Position : <span class="text-red-600">*</span></label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="mail" class="size-4 absolute top-3 start-4"></i>
+                                            <input type="email" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Email" name="email" required="">
+                                        </div>
+                                    </div> -->
+                    
+                                    <div>
+                                        <label class="form-label font-medium">Sold Units : </label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="bookmark" class="size-4 absolute top-3 start-4"></i>
+                                            <input name="agentSoldUnits" readonly id="agentSoldUnits" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Sold Units :"
+                                            value="<?= htmlspecialchars($agent['agentSoldUnits']) ?>">
+                                        </div>
+                                    </div>
+                                    <!-- <div>
+                                        <label class="form-label font-medium">Agent Level: </label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="bookmark" class="size-4 absolute top-3 start-4"></i>
+                                            <input name="name" id="occupation" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Level :">
+                                        </div>
+                                    </div> -->
+                                </div><!--end grid-->
+
+                                <div class="grid grid-cols-1">
+                                    <div class="mt-5">
+                                        <label class="form-label font-medium">Address: </label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="message-circle" class="size-4 absolute top-3 start-4"></i>
+                                            <textarea
+                                            name="agentAddress" readonly
+                                            id="agentAddress"
+                                            class="form-input ps-11 w-full py-2 px-3 h-28 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0"
+                                            placeholder="Address :"
+                                        ><?= htmlspecialchars($agent['agentAddress']) ?></textarea>
+                                        </div>
+                                    </div>
+                                </div><!--end row-->
+
+                                <!-- <input type="submit" id="submit" name="send" class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-5" value="Save Changes"> -->
+                            </form><!--end form-->
+                        </div>
+
+                        <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+                            <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                                <div>
+                                    <h5 class="text-lg font-semibold mb-4">Contact Info :</h5>
+
+                                    <form>
+                                        <div class="grid grid-cols-1 gap-5">
+                                            <div>
+                                                <label class="form-label font-medium">Agent Phone No. :</label>
+                                                <div class="form-icon relative mt-2">
+                                                    <i data-feather="phone" class="size-4 absolute top-3 start-4"></i>
+                                                    <input name="agentPhoneNum" readonly id="agentPhoneNum" type="number" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Phone :"
+                                                    value="<?= htmlspecialchars($agent['agentPhoneNum']) ?>">
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label class="form-label font-medium">Agent Email :</label>
+                                                <div class="form-icon relative mt-2">
+                                                    <i data-feather="globe" class="size-4 absolute top-3 start-4"></i>
+                                                    <input name="agentEmail" readonly id="agentEmail" type="url" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Email :"
+                                                    value="<?= htmlspecialchars($agent['agentEmail']) ?>">
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                        <label class="form-label font-medium">Agent Facebook Account : </label>
+                                        <div class="form-icon relative mt-2">
+                                            <i data-feather="bookmark" class="size-4 absolute top-3 start-4"></i>
+                                            <input name="agentFB" readonly id="agentFB" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="FB Name :"
+                                            value="<?= htmlspecialchars($agent['agentFB']) ?>">
+                                        </div>
+                                    </div>
+
+
+                                        </div><!--end grid-->
+
+                                        
+                                        <a 
+    href="/habitrack/reports/generate-agent-profile.php?agentID=<?= $agent['agentID'] ?>" 
+    target="_blank"
+    class="btn bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-blue-700 text-white rounded-md mt-5 inline-block px-4 py-2"
+>
+    Print PDF
+</a>
+                                    </form>
+                                                                 
+                                </div><!--end col-->
+                                
+                                <!-- <div> 
+                                    <h5 class="text-lg font-semibold mb-4">Change password :</h5>
+                                    <form>
+                                        <div class="grid grid-cols-1 gap-5">
+                                            <div>
+                                                <label class="form-label font-medium">Old password :</label>
+                                                <div class="form-icon relative mt-2">
+                                                    <i data-feather="key" class="size-4 absolute top-3 start-4"></i>
+                                                    <input type="password" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Old password" required="">
+                                                </div>
+                                            </div>
+    
+                                            <div>
+                                                <label class="form-label font-medium">New password :</label>
+                                                <div class="form-icon relative mt-2">
+                                                    <i data-feather="key" class="size-4 absolute top-3 start-4"></i>
+                                                    <input type="password" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="New password" required="">
+                                                </div>
+                                            </div>
+    
+                                            <div>
+                                                <label class="form-label font-medium">Re-type New password :</label>
+                                                <div class="form-icon relative mt-2">
+                                                    <i data-feather="key" class="size-4 absolute top-3 start-4"></i>
+                                                    <input type="password" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Re-type New password" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <button class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-5">Save password</button>
+                                    </form>
+                                </div>
+                            </div> -->
+                        </div>
+
+                       <!--  <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
+                            <h5 class="text-lg font-semibold mb-4 text-red-600">Delete Account :</h5>
+
+                            <p class="text-slate-400 mb-4">Do you want to delete the account? Please press below "Delete" button</p>
+
+                            <a href="" class="btn bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700 text-white rounded-md">Delete</a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <!-- End Content -->
+        </div>
+    </div><!--end container-->
+
+

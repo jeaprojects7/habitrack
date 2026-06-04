@@ -10,4 +10,14 @@ class PropertyController {
 
         return $properties;
     }
+    public static function ctrGetPropertyImages($id)
+{
+    return ModelProperty::mdlGetPropertyImages($id);
+}
+
+//gn add kolng ni
+ public static function ctrGetPropertiesFiltered($filters){
+
+    return (new PropertyModel)->mdlGetPropertiesFiltered($filters);
+}
 }
