@@ -4,6 +4,26 @@ $reservationID = $_GET['id'] ?? null;
 if (!$reservationID) {
     die("Invalid reservation ID");
 }
+
+require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+
+$res = ReservationController::ctrGetReservationById($reservationID);
+
+if (!$res) {
+    die("Reservation not found");
+}
+
+$prequalID = $res['prequalID'] ?? null;
+
+
+if (!$prequalID) {
+    die("Invalid prequal ID (missing in reservation)");
+}
+
+// Get prequalID from the reservation
+// require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+// $res = ReservationController::ctrGetReservationById($reservationID);
+// $prequalID = $res['prequalID'] ?? null;
 // if (!$reservationID) {
 //     die("No reservation selected");
 // } this works
@@ -17,7 +37,7 @@ if (!$reservationID) {
 // $reservationID = $_GET['id'] ?? null;
 ?> -->
 
-
+<input type="hidden" id="prequalID" value="<?= htmlspecialchars($prequalID ?? '') ?>">
 <div
     id="main-area"
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"

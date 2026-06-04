@@ -16,6 +16,7 @@ function saveClientInfo() {
     // client.append("email", $("input[name=email]").val());
     // client.append("phonenumber", $("input[name=phonenumber]").val());
 
+    client.append("prequalID", $("#prequalID").val());
     client.append("civilstatus", $("#civilstatus").val());
     client.append("gender", $("#gender").val());
     client.append("birthdate", $("#birthdate").val());
@@ -241,6 +242,8 @@ function saveClientInfo() {
 
 $("#btn-submit").click(function (e) {
     e.preventDefault();
+    console.log($("#prequalID").val());
+    
 
     // FINAL CHECK (page 6 validation if needed)
     if (!validatePage(6)) return;

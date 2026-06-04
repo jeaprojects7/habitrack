@@ -15,6 +15,14 @@ if (!$res) {
     die("Reservation not found.");
 }
 
+$prequalID = $res['prequalID'] ?? null;
+
+require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
+
+$existingInfo = ControllerClient::ctrCheckClientInfo($prequalID);
+$hasFilled = !empty($existingInfo);
+
+
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 $loggedInClientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
@@ -383,7 +391,7 @@ $prequalColor = match($prequalStatus) {
                                     Information Sheet
                                 </label>
 
-                                <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
+                                <!-- <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
 
                                     <button
                                         id="btn-is"
@@ -392,8 +400,19 @@ $prequalColor = match($prequalStatus) {
                                         Fill-up
                                     </button>
 
-                                </a>
+                                </a> -->
 
+                                <?php if ($hasFilled): ?>
+                                    <a href="index.php?route=clientInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
+                                    class="px-4 py-2 bg-gray-600 text-white rounded inline-flex items-center justify-center">
+                                        View
+                                    </a>
+                                <?php else: ?>
+                                    <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded inline-flex items-center justify-center">
+                                        Fill Up
+                                    </a>
+                                <?php endif; ?>
                             </div>
                             <!-- Upload Valid ID -->
                             <div class="flex flex-col">
