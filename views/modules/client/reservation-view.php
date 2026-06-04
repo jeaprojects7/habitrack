@@ -11,16 +11,21 @@ if (!$reservationID) {
 $res = ReservationController::ctrGetReservationById($reservationID);
 
 
+
+
+
 $resStatus = strtolower($res['reserveStatus'] ?? 'pending');
 
+
 $statusColor = match($resStatus) {
-    'confirmed' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+    'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-blue-300',
     'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
     'pending'   => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
     default     => 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
 };
 
 $prequalStatus = strtolower($res['prequalStatus'] ?? 'pending');
+$requirementsDisabled = ($prequalStatus !== 'approved');  //gn add komn ni pra sa whole n m disable ang buttons if indi p sya approved
 
 $prequalColor = match($prequalStatus) {
     'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
@@ -372,9 +377,11 @@ $prequalColor = match($prequalStatus) {
 
                                 <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
 
+                                   <!--  nag add kodi -->
                                     <button
                                         id="btn-is"
-                                        class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200"
+                                        <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                         class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>"
                                     >
                                         Fill-up
                                     </button>
@@ -391,7 +398,8 @@ $prequalColor = match($prequalStatus) {
 
                                 <label
                                     for="valid-id-upload"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200"
+                                    <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200 <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>"
                                 >
                                     Upload
                                 </label>
@@ -407,6 +415,7 @@ $prequalColor = match($prequalStatus) {
                                     id="valid-id-upload"
                                     name="valid_id"
                                     type="file"
+                                    <?= $requirementsDisabled ? 'disabled' : '' ?>
                                     accept="image/*"
                                     class="hidden"
                                     onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
@@ -422,7 +431,8 @@ $prequalColor = match($prequalStatus) {
 
                                 <button
                                     type="button"
-                                    class="w-full px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
+                                    <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    class="w-full px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>"
                                 >
                                     Submit
                                 </button>

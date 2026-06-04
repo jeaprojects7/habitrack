@@ -12,6 +12,8 @@ return [
         'agentprofile',
         'agentdisplay',
         'property-detail',
+        'clientReservation',
+        'clientReservationDetails',
         'logout',
     ],
     'Agent' => [
@@ -20,6 +22,7 @@ return [
         'agentDashboard',
         'userprofile',
         'clientPreQual',
+        'clientPreDetails',
         'exploreproperty',
         'print-properties',
         'logout'

@@ -1,390 +1,262 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pre-qualification Form</title>
-  <!-- color-scheme follows navbar dark toggle via JS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <style>
-    /* ── Reset ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<?php
+require_once __DIR__ . "/../../../controllers/clientPreQual.controller.php";
 
-    /* ── Design tokens ── */
-    :root {
-      --color-background-primary:   #ffffff;
-      --color-background-secondary: #f8f9fb;
-      --color-text-primary:         #030712;
-      --color-text-secondary:       #374151;
-      --color-border-tertiary:      #e5e7eb;
-      --color-border-secondary:     #d1d5db;
-      --color-accent:               #3b82f6;
-      --color-accent-hover:         #2563eb;
-      --color-accent-active:        #1d4ed8;
-      --font-sans:                  'Segoe UI', system-ui, -apple-system, sans-serif;
-      --border-radius-md:           8px;
+$statusUpdate = PrequalController::ctrUpdateSelectedPrequalStatus();
+$prequal = PrequalController::ctrGetSelectedPrequal();
+
+function htPrequalDetailsE($value) {
+    return htmlspecialchars((string) ($value ?? ''), ENT_QUOTES, 'UTF-8');
+}
+
+function htPrequalDetailsValue($value, $fallback = 'Not provided') {
+    $value = trim((string) ($value ?? ''));
+    return $value !== '' ? htPrequalDetailsE($value) : $fallback;
+}
+
+function htPrequalDetailsMoney($value) {
+    if ($value === null || $value === '') {
+        return 'Not provided';
     }
 
-    /* ── Dark mode (mirrors navbar #chk toggle → <html class="dark">) ── */
-    .dark {
-      --color-background-primary:   #111827;
-      --color-background-secondary: #1f2937;
-      --color-text-primary:         #f9fafb;
-      --color-text-secondary:       #9ca3af;
-      --color-border-tertiary:      #374151;
-      --color-border-secondary:     #4b5563;
-      --color-accent:               #3b82f6;
-      --color-accent-hover:         #60a5fa;
-      --color-accent-active:        #93c5fd;
-    }
-    .dark body { background: #111827; }
-    .dark .field select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    }
+    return 'PHP ' . number_format((float) $value, 2);
+}
 
-    body { font-family: var(--font-sans); background: var(--color-background-secondary); }
+$status = strtolower($prequal['prequalStatus'] ?? 'pending');
+$statusClass = match ($status) {
+    'approved' => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+    'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    'archived' => 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200',
+    default => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
+};
 
-    /* ── Page wrapper ── */
-    .page {
-      background: var(--color-background-primary);
-      min-height: 100vh;
-      max-width: 860px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 0 0 0.5px var(--color-border-tertiary);
-    }
+$financingType = strtolower($prequal['financingType'] ?? '');
+$hasCoOwner = !empty($prequal['coOwnerID']);
+?>
 
-    /* ── Top bar ── */
-    .top-bar {
-      padding: 14px 24px;
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--color-text-primary);
-      border-bottom: 0.5px solid var(--color-border-tertiary);
-      flex-shrink: 0;
-    }
+<div id="main-area"
+     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
+     style="left:300px;bottom:0;z-index:20;">
 
-    /* ── Form body ── */
-    .form-body { padding: 20px 24px 24px; flex: 1; }
-
-    /* ── Grid rows ── */
-    .row { display: grid; gap: 12px; margin-bottom: 14px; }
-    .row-2 { grid-template-columns: 1fr 1fr; }
-    .row-3 { grid-template-columns: 1fr 1fr 1fr; }
-    .row-4 { grid-template-columns: 2fr 2fr 1fr 1fr; }
-
-    /* ── Field ── */
-    .field label {
-      font-size: 13px;
-    }
-    .field input,
-    .field select {
-      width: 100%;
-      height: 36px;
-      border: 0.5px solid var(--color-border-tertiary);
-      border-radius: 6px;
-      padding: 0 10px;
-      font-size: 14px;
-      color: var(--color-text-primary);
-      background: var(--color-background-primary);
-      outline: none;
-      transition: border-color .15s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .field select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 28px;
-    }
-    .field input:focus,
-    .field select:focus {
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 2px rgba(59,130,246,.12);
-    }
-    .field input[type="date"] { padding: 0 8px; }
-
-    /* ── Section box ── */
-    .section-box {
-      background: var(--color-background-secondary);
-      border-radius: var(--border-radius-md);
-      padding: 14px 16px;
-      margin-bottom: 14px;
-    }
-    .section-title {
-      font-size: 14px;
-    }
-
-    /* ── Radio groups ── */
-    .three-col {
-      display: grid;
-      grid-template-columns: 160px 1fr 1fr;
-      gap: 12px;
-      align-items: start;
-    }
-    .yn-group { display: flex; flex-direction: column; }
-    .yn-group .yn-label {
-      font-size: 13px;
-    }
-    .radio-row {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      margin-top: 6px;
-    }
-    .radio-row label {
-      font-size: 14px;
-    }
-    .radio-row input[type="radio"] {
-      accent-color: var(--color-accent);
-      width: 14px;
-      height: 14px;
-      cursor: pointer;
-    }
-
-    /* ── Footer ── */
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
-      border-top: 0.5px solid var(--color-border-tertiary);
-      flex-shrink: 0;
-    }
-    .btn-back {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border: 0.5px solid var(--color-border-tertiary);
-      border-radius: 6px;
-      background: var(--color-background-primary);
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      transition: background .15s, border-color .15s;
-    }
-    .btn-back:hover {
-      background: var(--color-background-secondary);
-      border-color: var(--color-border-secondary);
-    }
-    .btn-next {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 20px;
-      border: none;
-      border-radius: 6px;
-      background: var(--color-accent);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background .15s, transform .1s;
-    }
-    .btn-next:hover  { background: var(--color-accent-hover); }
-    .btn-next:active { background: var(--color-accent-active); transform: scale(0.98); }
-
-    /* ── Utility ── */
-    .hidden { display: none !important; }
-    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
-  </style>
-</head>
-<body>
-
-<div class="page">
-  <div class="top-bar">Pre-qualification Form</div>
-
-  <!-- Notification shown when redirected from Connect-to-Agent -->
-  <div id="prequal-notification" style="display:none;padding:28px;text-align:center;">
-    <div style="max-width:640px;margin:0 auto;background:linear-gradient(135deg,#16a34a 0%,#10b981 100%);color:#fff;padding:22px;border-radius:10px;box-shadow:0 8px 20px rgba(16,185,129,.12);">
-      <div style="font-size:18px;font-weight:700;margin-bottom:8px;">You're connected to <span class="prequal-agent-name">Agent</span>.</div>
-      <div style="font-size:13px;opacity:.95;margin-bottom:12px;">Please continue to fill out the pre-qualification form so the agent can contact you.</div>
-      <button onclick="htShowPrequalForm()" style="padding:10px 18px;background:#fff;color:#065f46;border-radius:8px;border:none;font-weight:600;cursor:pointer;">Continue</button>
-    </div>
-  </div>
-
-  <div id="prequal-form-container" class="form-body">
-
-    <!-- Row 1: Civil status / Employment / Income -->
-    <div class="row row-3">
-      <div class="field">
-        <label for="civil-status">Civil status</label>
-        <select id="civil-status" name="civil_status" onchange="toggleSpouse()">
-          <option value="">— select —</option>
-          <option value="married">Married</option>
-          <option value="widow">Widow</option>
-          <option value="divorced">Divorced</option>
-          <option value="single">Single</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="employment-status">Employment status</label>
-        <select id="employment-status" name="employment_status">
-          <option value="">— select —</option>
-          <option value="local">Local</option>
-          <option value="ofw">OFW</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="monthly-income">Monthly income</label>
-        <input type="number" id="monthly-income" name="monthly_income" placeholder="0.00" min="0" step="0.01" />
-      </div>
-    </div>
-
-    <!-- Spouse Details (shown only when civil status = married) -->
-    <div id="spouse-section" class="section-box hidden">
-      <div class="section-title">Spouse details</div>
-      <div class="row row-4">
-        <div class="field">
-          <label for="spouse-firstname">First name</label>
-          <input type="text" id="spouse-firstname" name="spouse_firstname" />
+    <?php if (!$prequal): ?>
+        <div class="max-w-3xl mx-auto bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-8">
+            <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Prequalification not found</h2>
+            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                Select a prequalification from the list to view its details.
+            </p>
+            <a href="index.php?route=clientPreQual"
+               class="inline-flex mt-5 px-4 py-2 rounded-md bg-green-600 text-white text-sm font-medium hover:bg-green-700">
+                Back to Prequalifications
+            </a>
         </div>
-        <div class="field">
-          <label for="spouse-lastname">Last name</label>
-          <input type="text" id="spouse-lastname" name="spouse_lastname" />
-        </div>
-        <div class="field">
-          <label for="spouse-mi">M.I.</label>
-          <input type="text" id="spouse-mi" name="spouse_mi" maxlength="3" />
-        </div>
-        <div class="field">
-          <label for="spouse-suffix">Suffix</label>
-          <input type="text" id="spouse-suffix" name="spouse_suffix" />
-        </div>
-      </div>
-      <div class="row row-2">
-        <div class="field">
-          <label for="spouse-email">Email</label>
-          <input type="email" id="spouse-email" name="spouse_email" />
-        </div>
-        <div class="field">
-          <label for="spouse-phone">Phone number</label>
-          <input type="tel" id="spouse-phone" name="spouse_phone" />
-        </div>
-      </div>
-      <div class="row row-2">
-        <div class="field">
-          <label for="spouse-employment">Employment status</label>
-          <select id="spouse-employment" name="spouse_employment_status">
-            <option value="">— select —</option>
-            <option value="local">Local</option>
-            <option value="ofw">OFW</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="spouse-income">Monthly income</label>
-          <input type="number" id="spouse-income" name="spouse_monthly_income" placeholder="0.00" min="0" step="0.01" />
-        </div>
-      </div>
-    </div>
+    <?php else: ?>
+        <div class="max-w-5xl mx-auto space-y-5 pb-8">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <a href="index.php?route=clientPreQual"
+                       class="inline-flex items-center text-sm text-slate-500 hover:text-green-600 dark:text-slate-400 dark:hover:text-green-400">
+                        <i class="mdi mdi-arrow-left mr-1"></i> Back
+                    </a>
+                    <h1 class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">
+                    <?= htPrequalDetailsValue(trim(($prequal['clientFName'] ?? '') . ' ' . ($prequal['clientMName'] ?? '') . ' ' . ($prequal['clientLName'] ?? '') . ' ' . ($prequal['clientSuffix'] ?? '')), 'Client') ?>
+                    </h1>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                        <?= htPrequalDetailsValue($prequal['propertyName'] ?? '') ?>
+                    </p>
+                </div>
+                <span class="w-fit px-3 py-1 rounded-full text-sm font-semibold <?= $statusClass ?>">
+                    <?= htPrequalDetailsE(ucfirst($prequal['prequalStatus'] ?? 'Pending')) ?>
+                </span>
+            </div>
 
-    <!-- Financing type -->
-    <div class="row" style="grid-template-columns:240px">
-      <div class="field">
-        <label for="financing-type">Financing type</label>
-        <select id="financing-type" name="financing_type" onchange="toggleFinancing()">
-          <option value="">— select —</option>
-          <option value="bank">Bank</option>
-          <option value="pagibig">Pag-Ibig</option>
-        </select>
-      </div>
-    </div>
+            <?php if ($statusUpdate): ?>
+                <?php $messageClass = $statusUpdate['success'] ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-900' : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-900'; ?>
+                <div class="border rounded-lg px-4 py-3 text-sm <?= $messageClass ?>">
+                    <?= htPrequalDetailsE($statusUpdate['message'] ?? '') ?>
+                </div>
+            <?php endif; ?>
 
-    <!-- Bank Section -->
-    <div id="bank-section" class="section-box hidden">
-      <div class="three-col">
-        <div class="field">
-          <label for="bank-name">Bank name</label>
-          <input type="text" id="bank-name" name="bank_name" />
-        </div>
-        <div class="yn-group">
-          <span class="yn-label">Do you have existing house loan?</span>
-          <div class="radio-row">
-            <label><input type="radio" name="existing_house_loan" value="yes" /> YES</label>
-            <label><input type="radio" name="existing_house_loan" value="no"  /> No</label>
-          </div>
-        </div>
-        <div class="yn-group">
-          <span class="yn-label">Do you have cancelled house loan?</span>
-          <div class="radio-row">
-            <label><input type="radio" name="cancelled_house_loan" value="yes" /> YES</label>
-            <label><input type="radio" name="cancelled_house_loan" value="no"  /> No</label>
-          </div>
-        </div>
-      </div>
-    </div>
+            <!-- <?php if ($status === 'pending'): ?>
+                <section class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-5">
+                    <h2 class="text-base font-semibold text-slate-900 dark:text-white">Prequalification Decision</h2>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Update this pending prequalification status.</p>
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        <form method="post" action="index.php?route=clientPreDetails">
+                            <input type="hidden" name="prequal_id" value="<?= htPrequalDetailsE($prequal['prequalID'] ?? '') ?>">
+                            <input type="hidden" name="prequal_status_action" value="approve">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 rounded-md bg-green-600 text-white text-sm font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                Approved
+                            </button>
+                        </form>
+                        <form method="post" action="index.php?route=clientPreDetails">
+                            <input type="hidden" name="prequal_id" value="<?= htPrequalDetailsE($prequal['prequalID'] ?? '') ?>">
+                            <input type="hidden" name="prequal_status_action" value="reject">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                Rejected
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            <?php endif; ?> -->
 
-    <!-- Pag-Ibig Section -->
-    <div id="pagibig-section" class="section-box hidden">
-      <div class="row row-2" style="max-width:480px">
-        <div class="field">
-          <label for="contribution-date">Contribution start date</label>
-          <input type="date" id="contribution-date" name="contribution_start_date" />
-        </div>
-        <div class="yn-group" style="padding-top:4px">
-          <span class="yn-label">Do you have current loan?</span>
-          <div class="radio-row">
-            <label><input type="radio" name="current_loan" value="yes" /> YES</label>
-            <label><input type="radio" name="current_loan" value="no"  /> No</label>
-          </div>
-        </div>
-      </div>
-    </div>
+            <section class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-5">
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Client Details</h2>
+                <div class="mt-4 grid gap-4 md:grid-cols-3">
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Email</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['clientEmail'] ?? '') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Phone</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['clientPhoneNum'] ?? '') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Submitted</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['submissionDate'] ?? '') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Civil Status</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue(ucfirst($prequal['clientCivilStatus'] ?? '')) ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Employment Status</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue(strtoupper($prequal['clientEmpStatus'] ?? '')) ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Monthly Income</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsMoney($prequal['clientMonthlyIncome'] ?? null) ?></p>
+                    </div>
+                </div>
+            </section>
 
-  </div><!-- /.form-body -->
+            <section class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-5">
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Property Details</h2>
+                <div class="mt-4 grid gap-4 md:grid-cols-3">
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Property</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['propertyName'] ?? '') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Type</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['propertyType'] ?? '') ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Location</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200">
+                            <?= htPrequalDetailsValue(trim(($prequal['propertyCity'] ?? '') . ', ' . ($prequal['propertyBrgy'] ?? ''), ', ')) ?>
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Price</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsMoney($prequal['propertyPrice'] ?? null) ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Lot Area</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['propertyLotArea'] ?? '') ?> sqm</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Floor Area</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['houseFloorArea'] ?? '') ?> sqm</p>
+                    </div>
+                </div>
+            </section>
 
-  <div class="footer">
-    <button class="btn-back" onclick="history.back()">
-      <i class="ti ti-arrow-left" aria-hidden="true"></i> Back
-    </button>
-    <button class="btn-next" onclick="submitForm()">
-      Submit <i class="ti ti-arrow-right" aria-hidden="true"></i>
-    </button>
-  </div>
+            <section class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-5">
+                <h2 class="text-base font-semibold text-slate-900 dark:text-white">Financing Details</h2>
+                <div class="mt-4 grid gap-4 md:grid-cols-3">
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Financing Type</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue(ucfirst($prequal['financingType'] ?? '')) ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase text-slate-400">Financing Status</p>
+                        <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['financingStatus'] ?? '') ?></p>
+                    </div>
+
+                    <?php if ($financingType === 'bank'): ?>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Bank Name</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['bankName'] ?? '') ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Existing House Loan</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['existingHouseLoan'] ?? '') ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Cancelled House Loan</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['cancelledHouseLoan'] ?? '') ?></p>
+                        </div>
+                    <?php elseif ($financingType === 'pagibig'): ?>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Contribution Start Date</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['contributionStartDate'] ?? '') ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Current Loan</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['currentLoan'] ?? '') ?></p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+
+            <?php if ($hasCoOwner): ?>
+                <section class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-5">
+                    <h2 class="text-base font-semibold text-slate-900 dark:text-white">Co-owner Details</h2>
+                    <div class="mt-4 grid gap-4 md:grid-cols-3">
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Name</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200">
+                                <?= htPrequalDetailsValue(trim(($prequal['coOwnerFName'] ?? '') . ' ' . ($prequal['coOwnerMName'] ?? '') . ' ' . ($prequal['coOwnerLName'] ?? '') . ' ' . ($prequal['coOwnerSuffix'] ?? ''))) ?>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Relationship</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['coOwnerRelationship'] ?? '') ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Email</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['coOwnerEmail'] ?? '') ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Phone</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue($prequal['coOwnerPhoneNum'] ?? '') ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Employment Status</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsValue(strtoupper($prequal['coOwnerEmpStatus'] ?? '')) ?></p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase text-slate-400">Monthly Income</p>
+                            <p class="mt-1 text-sm text-slate-700 dark:text-slate-200"><?= htPrequalDetailsMoney($prequal['coOwnerMonthlyIncome'] ?? null) ?></p>
+                        </div>
+                    </div>
+
+                </section>
+
+            <?php endif; ?>
+            <?php if ($status === 'pending'): ?>
+                <section class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-5">
+                    <h2 class="text-base font-semibold text-slate-900 dark:text-white">Prequalification Decision</h2>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Update this pending prequalification status.</p>
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        <form method="post" action="index.php?route=clientPreDetails">
+                            <input type="hidden" name="prequal_id" value="<?= htPrequalDetailsE($prequal['prequalID'] ?? '') ?>">
+                            <input type="hidden" name="prequal_status_action" value="approve">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 rounded-md bg-green-600 text-white text-sm font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                Approve
+                            </button>
+                        </form>
+                        <form method="post" action="index.php?route=clientPreDetails">
+                            <input type="hidden" name="prequal_id" value="<?= htPrequalDetailsE($prequal['prequalID'] ?? '') ?>">
+                            <input type="hidden" name="prequal_status_action" value="reject">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 rounded-md bg-red-600 text-white text-sm font-semibold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                Reject
+                            </button>
+                        </form>
+                    </div>
+                </section>
+            <?php endif; ?>
+        </div>
+
+    <?php endif; ?>
+
 </div>
-
-<script src="pre-qual.js"></script>
-<script>
-// ── Sync dark mode with navbar #chk toggle ──────────────────────────────────
-(function () {
-  const html = document.documentElement;
-
-  function applyDark(on) {
-    html.classList.toggle('dark', on);
-  }
-
-  // Apply immediately on load based on current state of #chk
-  function init() {
-    const chk = document.getElementById('chk');
-    if (chk) {
-      applyDark(chk.checked);
-      chk.addEventListener('change', function () {
-        applyDark(this.checked);
-      });
-    }
-  }
-
-  // #chk may live in a separately included navbar; wait for DOM
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
-  // Also watch for class changes on <html> in case another script drives it
-  new MutationObserver(function (mutations) {
-    mutations.forEach(function (m) {
-      if (m.attributeName === 'class') {
-        const isDark = html.classList.contains('dark');
-        const chk = document.getElementById('chk');
-        if (chk && chk.checked !== isDark) chk.checked = isDark;
-      }
-    });
-  }).observe(html, { attributes: true });
-})();
-</script>
-</body>
-</html>

@@ -84,13 +84,13 @@ $printQuery = http_build_query([
                 <h5 class="text-lg font-semibold">Agent List</h5>
 
                 <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
-                    <li class="inline-block capitalize text-[16px] font-medium duration-500 white:text-gray/100 dark:text-white/70 hover:text-green-600 dark:hover:text-white">
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 white:text-gray/100 dark:text-white/70 hover:text-blue-600 dark:hover:text-white">
                         <a href="adminDashboard">Habitrack</a>
                     </li>
                     <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180">
                         <i class="mdi mdi-chevron-right"></i>
                     </li>
-                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">
+                    <li class="inline-block capitalize text-[16px] font-medium text-blue-600 dark:text-white" aria-current="page">
                         Agents
                     </li>
                 </ul>
@@ -148,7 +148,7 @@ $printQuery = http_build_query([
 
 <!-- Filter    -->
      <button type="submit"
-        class="px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold transition">
+        class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
         Filter
     </button>
 
@@ -175,7 +175,7 @@ $printQuery = http_build_query([
                 
                 <?php foreach ($agents as $agent): ?>
                      <a href="set-edit-session.php?type=agent&id=<?= $agent['agentID'] ?>"
-                            class="text-lg hover:text-green-600 font-medium ease-in-out duration-500"
+                            class="text-lg hover:text-blue-600 font-medium ease-in-out duration-500"
                         >
                     <?php
                         $agentPic = trim($agent['agentPic'] ?? '');
@@ -197,7 +197,7 @@ $printQuery = http_build_query([
                                         alt="<?= htmlspecialchars(trim($fullName ?? '')) ?>"
                                     >
                                 <?php else: ?>
-                                    <div class="h-56 w-full md:w-48 flex items-center justify-center bg-green-100 dark:bg-slate-800 text-green-700 dark:text-green-400 text-4xl font-semibold">
+                                    <div class="h-56 w-full md:w-48 flex items-center justify-center bg-blue-100 dark:bg-slate-800 text-blue-700 dark:text-blue-400 text-4xl font-semibold">
                                         <?= htmlspecialchars($initials) ?>
                                     </div>
                                 <?php endif; ?>
@@ -215,17 +215,17 @@ $printQuery = http_build_query([
 
                                 <ul class="md:py-4 py-6 border-y border-slate-100 dark:border-gray-800 list-none space-y-2">
                                     <li class="flex items-center">
-                                        <i class="mdi mdi-email-outline text-2xl me-2 text-green-600"></i>
+                                        <i class="mdi mdi-email-outline text-2xl me-2 text-blue-600"></i>
                                         <span><?= htmlspecialchars($agent['agentEmail'] ?? '') ?></span>
                                     </li>
 
                                     <li class="flex items-center">
-                                        <i class="mdi mdi-phone text-2xl me-2 text-green-600"></i>
+                                        <i class="mdi mdi-phone text-2xl me-2 text-blue-600"></i>
                                         <span><?= htmlspecialchars($agent['agentPhoneNum'] ?? '') ?></span>
                                     </li>
 
                                     <li class="flex items-center">
-                                        <i class="mdi mdi-map-marker text-2xl me-2 text-green-600"></i>
+                                        <i class="mdi mdi-map-marker text-2xl me-2 text-blue-600"></i>
                                         <span><?= htmlspecialchars($agent['agentAddress'] ?? '') ?></span>
                                     </li>
                                 </ul>

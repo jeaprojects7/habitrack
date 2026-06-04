@@ -190,8 +190,25 @@ $currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
                         <?php echo htmlspecialchars($_SESSION['email'] ?? ''); ?>
                     </p>
                 </div>
+                 <ul class="py-1">
+                    <li>
+                        <a href="userprofile" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <i data-feather="user" class="w-4 h-4"></i> My Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="?route=settings" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
+                            <i data-feather="settings" class="w-4 h-4"></i> Settings
+                        </a>
+                    </li>
+                    <li class="border-t border-gray-100 dark:border-slate-700">
+                        <a href="logout" class="flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-slate-700">
+                            <i data-feather="log-out" class="w-4 h-4"></i> Logout
+                        </a>
+                    </li>
+                </ul>
 
-                <ul class="py-1">
+                <!-- <ul class="py-1">
 
                 <?php foreach ($currentNavbarMenu as $item): ?>
 
@@ -210,7 +227,7 @@ $currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
 
                 <?php endforeach; ?>
 
-            </ul>
+            </ul> -->
 
                 <?php else: ?>
                 <!-- Guest -->

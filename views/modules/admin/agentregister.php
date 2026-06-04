@@ -26,9 +26,9 @@ ob_start() */;
                 <h5 class="text-lg font-semibold">Add Agent</h5>
 
                 <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
-                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="adminDashboard">Habitrack</a></li>
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-blue-600 dark:hover:text-white"><a href="adminDashboard">Habitrack</a></li>
                     <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180"><i class="mdi mdi-chevron-right"></i></li>
-                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">Add Agent</li>
+                    <li class="inline-block capitalize text-[16px] font-medium text-blue-600 dark:text-white" aria-current="page">Add Agent</li>
                 </ul>
             </div>
     <div class="container-fluid relative px-3">
