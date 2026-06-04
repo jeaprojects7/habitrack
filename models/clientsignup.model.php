@@ -101,6 +101,19 @@ class ModelClient{
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+    public static function mdlCheckClientInfo($prequalID){
+		$stmt = (new Connection)->connect()->prepare("
+			SELECT * FROM client_information 
+			WHERE prequalID = :prequalID 
+			LIMIT 1
+		");
+
+		$stmt->bindParam(":prequalID", $prequalID);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
     static public function mdlSaveClientInfo($data){
 
         $db = new Connection();
@@ -111,6 +124,21 @@ class ModelClient{
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
+            // Check if this prequalID already has client information
+            $checkPrequal = $pdo->prepare("
+                SELECT prequalID
+                FROM client_information
+                WHERE prequalID = :prequalID
+                LIMIT 1
+            ");
+
+            $checkPrequal->bindParam(":prequalID", $data["prequalID"], PDO::PARAM_STR);
+            $checkPrequal->execute();
+
+            if($checkPrequal->fetch()){
+                $pdo->rollBack();
+                return "already_exists";
+            }
             
             // Generate ID
             $cis_id = $pdo->prepare("
@@ -137,6 +165,7 @@ class ModelClient{
                 INSERT INTO client_information(
 
                     clientCISID,
+                    prequalID,
 
                     clientCitizenship,
                     clientGender,
@@ -182,6 +211,7 @@ class ModelClient{
                 ) VALUES (
 
                     :clientCISID,
+                    :prequalID,
 
                     :clientCitizenship,
                     :clientGender,
@@ -227,7 +257,7 @@ class ModelClient{
                 )
 
             ");
-
+            $stmt->bindParam(":prequalID", $data["prequalID"], PDO::PARAM_STR);
             $stmt->bindParam(":clientCISID", $ciscode, PDO::PARAM_STR);
             $stmt->bindParam(":clientCitizenship", $data["clientCitizenship"], PDO::PARAM_STR);
             $stmt->bindParam(":clientGender", $data["clientGender"], PDO::PARAM_STR);
@@ -473,44 +503,72 @@ class ModelClient{
 
     static public function mdlClientChangePassword($oldpassword, $newpassword){
 
-    $clientID = $_SESSION["clientID"];
+        $clientID = $_SESSION["clientID"];
 
-    // CHECK OLD PASSWORD
-    $stmt = (new Connection)->connect()->prepare("
-        SELECT * 
-        FROM client 
-        WHERE clientID = :clientID 
-        AND clientPass = :oldpassword
-    ");
-
-    $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
-    $stmt->bindParam(":oldpassword", $oldpassword, PDO::PARAM_STR);
-
-    $stmt->execute();
-
-    $answer = $stmt->fetch();
-
-    // IF OLD PASSWORD IS CORRECT
-    if(!empty($answer)){
-
+        // CHECK OLD PASSWORD
         $stmt = (new Connection)->connect()->prepare("
-            UPDATE client 
-            SET clientPass = :newpassword 
-            WHERE clientID = :clientID
+            SELECT * 
+            FROM client 
+            WHERE clientID = :clientID 
+            AND clientPass = :oldpassword
         ");
 
-        $stmt->bindParam(":newpassword", $newpassword, PDO::PARAM_STR);
         $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+        $stmt->bindParam(":oldpassword", $oldpassword, PDO::PARAM_STR);
 
         $stmt->execute();
 
-        return "success";
+        $answer = $stmt->fetch();
 
-    }else{
+        // IF OLD PASSWORD IS CORRECT
+        if(!empty($answer)){
 
-        return "incorrect";
+            $stmt = (new Connection)->connect()->prepare("
+                UPDATE client 
+                SET clientPass = :newpassword 
+                WHERE clientID = :clientID
+            ");
+
+            $stmt->bindParam(":newpassword", $newpassword, PDO::PARAM_STR);
+            $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            return "success";
+
+        }else{
+
+            return "incorrect";
+
+        }
 
     }
 
-}
+    static public function mdlGetClientInfoByPrequalID($prequalID){
+
+        $stmt = (new Connection)->connect()->prepare("
+            SELECT
+                ci.*,
+                p.*,
+                c.clientID,
+                c.clientFName,
+                c.clientMName,
+                c.clientLName,
+                c.clientSuffix,
+                c.clientEmail,
+                c.clientPhoneNum
+            FROM client_information ci
+            INNER JOIN prequal p
+                ON ci.prequalID = p.prequalID
+            INNER JOIN client c
+                ON p.clientID = c.clientID
+            WHERE ci.prequalID = :prequalID
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":prequalID", $prequalID, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

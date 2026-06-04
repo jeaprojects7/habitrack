@@ -9,6 +9,18 @@ print_r($reservations);
 echo "</pre>";
 exit(); */
 
+// at the top of your reservations module
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$clientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
+
+if (!$clientID) {
+    // not logged in — redirect or show empty
+    $reservations = [];
+} else {
+    $reservations = ReservationController::ctrGetReservationsByClient($clientID);
+}
+
 ?>
 
 <div

@@ -32,5 +32,6 @@ return [
     'clientPreDetails'   => 'modules/agent/clientPreDetails.php',
     'logout'            => 'modules/logout.php',
     'calendar'          => 'modules/client/calendar.php',
-    'pre-qual'          => 'modules/client/pre-qual.php'
+    'pre-qual'          => 'modules/client/pre-qual.php',
+    'clientInfoSheet-view'          => 'modules/client/clientInfoSheet-view.php'
 ];

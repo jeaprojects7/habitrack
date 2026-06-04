@@ -87,6 +87,11 @@ $sidebarMenus = [
         
 
 
+        // [
+        //     'title' => 'Site Visit',
+        //     'route' => 'calendar',
+        //     'icon'  => 'calendar'
+        // ],
         [
             'title' => 'Site Visit',
             'route' => 'calendar',

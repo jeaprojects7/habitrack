@@ -40,6 +40,7 @@ return [
         'clientlogin',
         'dashboard',
         'calendar',
-        'pre-qual'
+        'pre-qual',
+        'clientInfoSheet-view'
     ],
 ];
