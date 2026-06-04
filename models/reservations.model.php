@@ -53,6 +53,7 @@ class ModelReservation {
         r.reserveDate,
         r.reserveTime,
         r.reserveStatus,
+        r.clientValidID,
 
         pq.prequalID,
         pq.prequalStatus,
@@ -106,6 +107,7 @@ class ModelReservation {
                 r.reserveDate,
                 r.reserveTime,
                 r.reserveStatus,
+                r.clientValidID,
 
                 pq.prequalID,
                 pq.prequalStatus,

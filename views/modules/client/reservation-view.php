@@ -9,7 +9,6 @@ if (!$reservationID) {
 }
 
 $res = ReservationController::ctrGetReservationById($reservationID);
-
 if (!$res) {
     http_response_code(404);
     die("Reservation not found.");
@@ -21,7 +20,8 @@ require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
 
 $existingInfo = ControllerClient::ctrCheckClientInfo($prequalID);
 $hasFilled = !empty($existingInfo);
-
+$validIDPath = $res['clientValidID'] ?? '';
+$hasValidIDSaved = !empty($validIDPath);
 
 if (session_status() === PHP_SESSION_NONE) session_start();
 
@@ -376,7 +376,7 @@ $prequalColor = match($prequalStatus) {
                                 <label class="form-label font-medium">Information Sheet</label>
                                 <?php if ($hasFilled): ?>
                                     <a href="index.php?route=clientInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-gray-600 text-white rounded-lg cursor-pointer">
+                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
                                         View
                                     </a>
                                 <?php else: ?>
@@ -391,14 +391,26 @@ $prequalColor = match($prequalStatus) {
                             <div class="flex flex-col">
                                 <label class="form-label font-medium">Valid ID</label>
 
-                                <label for="valid-id-upload"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
-                                    Upload
-                                </label>
+                                <?php if ($hasValidIDSaved): ?>
+
+                                    <button type="button"
+                                        onclick="openSavedValidIDModal()"
+                                        class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg">
+                                        View
+                                    </button>
+
+                                <?php else: ?>
+
+                                    <label for="valid-id-upload"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
+                                        Upload
+                                    </label>
+
+                                <?php endif; ?>
 
                                 <div class="flex items-center justify-center gap-2 mt-2">
                                     <span id="file-name" class="text-xs text-gray-500 dark:text-white/70 break-all">
-                                        No file chosen
+                                        <?= $hasValidIDSaved ? 'Uploaded' : 'No file chosen' ?>
                                     </span>
                                     <button type="button" id="preview-label"
                                             class="text-xs text-blue-600 hover:underline hidden"
@@ -415,7 +427,8 @@ $prequalColor = match($prequalStatus) {
                             <div class="flex flex-col">
                                 <label class="form-label font-medium invisible">Submit</label>
                                 <button type="button" id="submit-valid-id-btn"
-                                        class="w-full px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200">
+                                    class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= ($hasFilled && $hasValidIDSaved) ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                                    <?= ($hasFilled && $hasValidIDSaved) ? 'disabled' : '' ?>>
                                     Submit
                                 </button>
                             </div>
@@ -468,6 +481,20 @@ $prequalColor = match($prequalStatus) {
     let hasValidID      = false;
     var hasFilled       = <?= $hasFilled ? 'true' : 'false' ?>;
     var reservationID   = <?= json_encode($reservationID) ?>;
+    var savedValidIDPath = <?= json_encode($validIDPath) ?>;
+    console.log(savedValidIDPath);
+    
+
+    function openSavedValidIDModal() {
+        document.getElementById('valid-id-modal-img').src =
+            '/habitrack' + savedValidIDPath;
+        
+        const modal = document.getElementById('valid-id-modal');
+        console.log(modal);
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
 
     function handleValidIDChange(event) {
         const file         = event.target.files[0];

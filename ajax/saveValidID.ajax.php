@@ -56,7 +56,8 @@ $result = ReservationController::ctrSaveValidID(
 if ($result == "ok") {
 
     echo json_encode([
-        "status" => "success"
+        "status" => "success",
+        "path" => $imagePath
     ]);
 
 } else {
