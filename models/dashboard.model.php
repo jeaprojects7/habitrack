@@ -26,6 +26,7 @@ class DashboardModel
             "SELECT DISTINCT propertyType
              FROM   properties
              WHERE  propertyType IS NOT NULL
+               AND  propertyStatus = 'Available'
              ORDER  BY propertyType"
         );
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -43,6 +44,7 @@ class DashboardModel
                  WHERE  propertyType = :type
                    AND  propertyCity IS NOT NULL
                    AND  propertyBrgy IS NOT NULL
+                   AND  propertyStatus = 'Available'
                  ORDER  BY propertyCity, propertyBrgy"
             );
             $stmt->execute([':type' => $type]);
@@ -52,6 +54,7 @@ class DashboardModel
                  FROM   properties
                  WHERE  propertyCity IS NOT NULL
                    AND  propertyBrgy IS NOT NULL
+                   AND  propertyStatus = 'Available'
                  ORDER  BY propertyCity, propertyBrgy"
             );
         }
@@ -127,7 +130,7 @@ class DashboardModel
         $result = [];
         foreach ($amenityColumns as $column => $label) {
             $stmt = $this->db->prepare(
-                "SELECT COUNT(*) FROM properties WHERE `$column` = 1"
+                "SELECT COUNT(*) FROM properties WHERE `$column` = 1 AND propertyStatus = 'Available'"
             );
             $stmt->execute();
             if ((int) $stmt->fetchColumn() > 0) {
@@ -149,6 +152,7 @@ class DashboardModel
             "SELECT DISTINCT propertyName
              FROM   properties
              WHERE  propertyType = :type
+               AND  propertyStatus = 'Available'
              ORDER  BY propertyName"
         );
         $stmt->execute([':type' => $type]);
@@ -184,8 +188,8 @@ class DashboardModel
      */
     public function searchProperties(array $filters): array
     {
-        $where  = ['propertyLat IS NOT NULL', 'propertyLng IS NOT NULL'];
-        $params = [];
+        $where  = ['propertyLat IS NOT NULL', 'propertyLng IS NOT NULL', 'propertyStatus = :status'];
+        $params = [':status' => 'Available'];
 
         // Property type (required to know which filter panel is active)
         if (!empty($filters['type'])) {
@@ -311,6 +315,7 @@ class DashboardModel
                  WHERE  propertyType = :type
                    AND  `$column` IS NOT NULL
                    AND  `$column` > 0
+                   AND  propertyStatus = 'Available'
                  ORDER  BY `$column`"
             );
             $stmt->execute([':type' => $type]);
@@ -320,6 +325,7 @@ class DashboardModel
                  FROM   properties
                  WHERE  `$column` IS NOT NULL
                    AND  `$column` > 0
+                   AND  propertyStatus = 'Available'
                  ORDER  BY `$column`"
             );
         }

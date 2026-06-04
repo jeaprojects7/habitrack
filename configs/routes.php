@@ -1,7 +1,6 @@
 <?php
 return [
     'Admin' => [
-        'adminlogin',
         'adminDashboard',
         'add-property',
         'edit-property',
@@ -9,7 +8,7 @@ return [
         'print-properties',
         'print-agents',
         'agentregister',
-        'edit-agentprofile',
+        'edit-agent',
         'agentprofile',
         'agentdisplay',
         'property-detail',
@@ -21,13 +20,22 @@ return [
         'agentDashboard',
         'userprofile',
         'clientPreQual',
+        'exploreproperty',
+        'print-properties',
         'logout'
     ],
     'Client' => [
         'clientsignup',
+        'home',
+        'clientInfoSheet',
+        'spouseInfoSheet',
+        'reservations',
+        'reservation-view',
+        'edit-clientprofile',
+        'clientprofile',
+        'logout',
         'clientlogin',
         'dashboard',
-        'logout',
         'calendar',
         'pre-qual'
     ],

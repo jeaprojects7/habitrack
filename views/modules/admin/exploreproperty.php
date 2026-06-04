@@ -148,10 +148,9 @@ $printQuery = http_build_query([
     <div class="property-grid grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 mt-6">
 
         <?php foreach ($properties as $item): ?>
-             <a
-                            href="index.php?route=edit-property&propertyID=<?= $item['propertyID'] ?>"
-                            class="text-lg hover:text-green-600 font-medium ease-in-out duration-500"
-                        >
+            <a href="set-edit-session.php?type=property&id=<?= $item['propertyID'] ?>"
+    class="text-lg hover:text-green-600 font-medium ease-in-out duration-500"
+>
 
             <div class="group rounded-xl bg-white dark:bg-slate-900 shadow hover:shadow-xl dark:hover:shadow-xl dark:shadow-gray-700 dark:hover:shadow-gray-700 overflow-hidden ease-in-out duration-500">
 
@@ -164,7 +163,10 @@ $printQuery = http_build_query([
                         class="w-full h-64 object-cover"
                     >
 
+                    
+
                 </div>
+                 
 
                 <!-- CONTENT -->
                 <div class="p-6">

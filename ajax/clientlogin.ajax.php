@@ -10,7 +10,7 @@ $pass = $_POST["clientLoginPass"];
 
 $answer = (new ModelClient)->mdlGetClientCredentials('client', 'clientEmail', $email);
 
-if (!empty($answer) && $answer["clientEmail"] == $email && $answer["clientPass"] == $pass) {
+if (!empty($answer) && $answer["clientEmail"] == $email && password_verify($pass, $answer["clientPass"])) { /* added 52126 */
 
     $_SESSION["loggedIn"] = "ok";
     $_SESSION["clientID"] = $answer["clientID"];

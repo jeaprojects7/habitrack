@@ -1,5 +1,7 @@
 
 <?php
+
+//IDELETE N NI KAY WLA NA NI SYA YUNES
 /* $base_dir = views/ ;  */ 
 $static_url = '/habitrack/views/Adminassets';
 /* $route = 'add-property';

@@ -128,7 +128,7 @@ function _htRenderModal(p) {
     statusEl.textContent  = status;
     statusEl.style.color  = status.toLowerCase().includes('sold')     ? '#dc2626'
                           : status.toLowerCase().includes('reserved') ? '#d97706'
-                          : '#16a34a';
+                          : '#3b82f6';
 
     _htModalShow('content');
 }
@@ -300,7 +300,7 @@ function _htOpenAgentDetail(agentId, agents) {
 
     var detail = document.getElementById('agent-modal-detail');
     detail.innerHTML =
-        '<div style="background:linear-gradient(135deg,#166534 0%,#16a34a 100%);padding:18px 18px 16px;position:relative;text-align:center;">'
+        '<div style="background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);padding:18px 18px 16px;position:relative;text-align:center;">'
         + '<button onclick="_htAgentGoBack()" style="position:absolute;top:12px;left:12px;background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">‹</button>'
         + picHtml
         + '<p style="margin:0 0 3px;font-size:1rem;font-weight:700;color:#fff;">' + _htEsc(fullName) + '</p>'
@@ -314,7 +314,7 @@ function _htOpenAgentDetail(agentId, agents) {
         + rowsHtml
         // Connect button
         + '<button onclick="_htConnectAgent(\'' + _htEsc(agent.agentEmail) + '\',\'' + _htEsc(fullName) + '\',\'' + _htEsc(agent.agentID) + '\')" '
-        + 'style="display:block;width:calc(100% - 36px);margin:14px 18px;padding:11px;background:linear-gradient(135deg,#166534 0%,#16a34a 100%);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;">'
+        + 'style="display:block;width:calc(100% - 36px);margin:14px 18px;padding:11px;background:linear-gradient(135deg,#1e40af 0%,#2563eb 100%);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;">'
         + 'Connect to agent'
         + '</button>'
 
@@ -335,20 +335,37 @@ function _htConnectAgent(email, name, agentId) {
         return;
     }
 
-    // Persist agent info so the pre-qual page can pick it up after navigation
-    try {
-        localStorage.setItem('htPrequalAgent', JSON.stringify({
-            email: email,
-            name: name,
-            agentId: agentId
-        }));
-    } catch (e) {
-        console.warn('Unable to persist agent info to localStorage', e);
+    if (!window._htSelectedPropertyID) {
+        alert('Please select a property before connecting to an agent.');
+        return;
     }
 
-    // Redirect to the Pre-Qual side panel (route-based navigation)
+    // Persist agent info and selected property so the pre-qual page can pick it up after navigation
+    try {
+        var dataToSave = {
+            email: email,
+            name: name,
+            agentId: agentId,
+            propertyId: window._htSelectedPropertyID
+        };
+        localStorage.setItem('htPrequalAgent', JSON.stringify(dataToSave));
+        
+        // Verify the data was actually saved
+        var verify = JSON.parse(localStorage.getItem('htPrequalAgent'));
+        if (!verify.propertyId) {
+            console.error('Warning: propertyId was not saved to localStorage', dataToSave);
+            alert('Error saving property selection. Please try again.');
+            return;
+        }
+    } catch (e) {
+        console.error('Unable to persist agent info to localStorage', e);
+        alert('Error saving data. Please try again.');
+        return;
+    }
+
+    // Redirect to the Pre-Qual form (route-based navigation)
     // Uses the same route parameter format as the app: ?route=pre-qual
-    window.location.href = '/habitrack/?route=pre-qual';
+    window.location = 'pre-qual';
 }
 
 /** Format a date string (YYYY-MM-DD) to readable form. */
@@ -443,4 +460,119 @@ function htClosePrequalModal() {
     document.body.style.overflow = '';
     // Close agent modal as well
     htCloseAgentModal();
+}
+
+// ═════════════════════════════════════════════
+//  PICTURES CAROUSEL MODAL
+// ═════════════════════════════════════════════
+
+var _htPicsImages  = [];
+var _htPicsIndex   = 0;
+var _htPicsProperty = '';
+
+function htOpenPicturesModal(propertyId) {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (!modal) return;
+
+    _htPicsProperty = propertyId;
+    _htPicsImages   = [];
+    _htPicsIndex    = 0;
+
+    modal.style.display    = 'flex';
+    document.body.style.overflow = 'hidden';
+    _htPicsBindBackdrop();
+
+    document.getElementById('pics-main-img').style.display  = 'none';
+    document.getElementById('pics-loading').style.display   = 'block';
+    document.getElementById('pics-empty').style.display     = 'none';
+    document.getElementById('pics-thumbs').innerHTML        = '';
+    document.getElementById('pics-modal-subtitle').textContent = '';
+    document.getElementById('pics-modal-counter').textContent  = '';
+    document.getElementById('pics-prev-btn').style.display  = 'none';
+    document.getElementById('pics-next-btn').style.display  = 'none';
+
+    fetch('/habitrack/controllers/dashboard.controller.php?action=getImages&id=' + encodeURIComponent(propertyId))
+        .then(function(res) { return res.json(); })
+        .then(function(json) {
+            document.getElementById('pics-loading').style.display = 'none';
+            if (!json.success || !json.data || json.data.length === 0) {
+                document.getElementById('pics-empty').style.display = 'block';
+                return;
+            }
+            _htPicsImages = json.data;
+            _htPicsRender(0);
+        })
+        .catch(function() {
+            document.getElementById('pics-loading').style.display = 'none';
+            document.getElementById('pics-empty').style.display   = 'block';
+        });
+}
+
+function _htPicsRender(index) {
+    _htPicsIndex = index;
+    var images   = _htPicsImages;
+    var total    = images.length;
+    var img      = images[index];
+
+    document.getElementById('pics-modal-subtitle').textContent = _htPicsProperty + ' · photos';
+    document.getElementById('pics-modal-counter').textContent  = 'Image ' + (index + 1) + ' of ' + total;
+
+    var mainImg = document.getElementById('pics-main-img');
+    mainImg.style.display = 'none';
+    mainImg.onerror = function() {
+        this.style.display = 'none';
+        document.getElementById('pics-empty').style.display = 'block';
+        document.getElementById('pics-empty').textContent = 'Image could not be loaded.';
+    };
+    mainImg.onload = function() {
+        this.style.display = 'block';
+        document.getElementById('pics-empty').style.display = 'none';
+    };
+    mainImg.src = '/habitrack' + img.imagePath;
+
+    document.getElementById('pics-prev-btn').style.display = total > 1 ? 'flex' : 'none';
+    document.getElementById('pics-next-btn').style.display = total > 1 ? 'flex' : 'none';
+
+    var thumbs = document.getElementById('pics-thumbs');
+    thumbs.innerHTML = '';
+    images.forEach(function(im, i) {
+        var t = document.createElement('img');
+        t.src   = '/habitrack' + im.imagePath;
+        t.alt   = 'Thumbnail ' + (i + 1);
+        t.style.cssText = 'width:56px;height:42px;object-fit:cover;border-radius:5px;cursor:pointer;opacity:' + (i === index ? '1' : '0.45') + ';border:' + (i === index ? '2px solid #fff' : '2px solid transparent') + ';transition:opacity .15s;';
+        t.onclick = (function(idx) { return function() { _htPicsRender(idx); }; })(i);
+        thumbs.appendChild(t);
+    });
+}
+
+function htPicsNav(dir) {
+    var total = _htPicsImages.length;
+    if (total === 0) return;
+    var next = (_htPicsIndex + dir + total) % total;
+    _htPicsRender(next);
+}
+
+function htClosePicturesModal() {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (modal) modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (!modal || modal.style.display === 'none') return;
+    if (e.key === 'ArrowLeft')  htPicsNav(-1);
+    if (e.key === 'ArrowRight') htPicsNav(1);
+    if (e.key === 'Escape')     htClosePicturesModal();
+});
+
+// Close on backdrop click — bind on first open to ensure DOM is ready
+function _htPicsBindBackdrop() {
+    var modal = document.getElementById('ht-pictures-modal');
+    if (modal && !modal._backdropBound) {
+        modal._backdropBound = true;
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) htClosePicturesModal();
+        });
+    }
 }

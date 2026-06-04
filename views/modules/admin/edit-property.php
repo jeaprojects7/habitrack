@@ -6,7 +6,9 @@ $static_url = '/habitrack/views/Adminassets';
 require_once __DIR__ . '/../../../controllers/add-property.controller.php'; 
 
 //  Get ID from URL
-$propertyID = $_GET['propertyID'] ?? null;
+/* $propertyID = $_GET['propertyID'] ?? null; */
+
+$propertyID = $_SESSION['propertyID'] ?? null;
 
 if (!$propertyID) {
     die("No property ID provided.");
