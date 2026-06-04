@@ -10,6 +10,19 @@ if (!$reservationID) {
 
 $res = ReservationController::ctrGetReservationById($reservationID);
 
+if (!$res) {
+    http_response_code(404);
+    die("Reservation not found.");
+}
+
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$loggedInClientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
+
+if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
+    http_response_code(403);
+    die("Access denied.");
+}
 
 $resStatus = strtolower($res['reserveStatus'] ?? 'pending');
 

@@ -98,4 +98,47 @@ class ModelReservation {
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    static public function mdlGetReservationsByClient($clientID) {
+        $stmt = (new Connection)->connect()->prepare("
+            SELECT
+                r.reservationID,
+                r.reserveDate,
+                r.reserveTime,
+                r.reserveStatus,
+
+                pq.prequalID,
+                pq.prequalStatus,
+
+                c.clientID,
+                c.clientFName,
+                c.clientLName,
+
+                p.propertyID,
+                p.propertyName,
+                p.propertyType,
+                p.propertyCity,
+                p.propertyBrgy,
+                p.propertyPrice,
+                p.propertyLotArea
+
+            FROM reservations r
+
+            JOIN prequal pq
+                ON r.prequalID = pq.prequalID
+
+            JOIN client c
+                ON pq.clientID = c.clientID
+
+            JOIN properties p
+                ON pq.propertyID = p.propertyID
+
+            WHERE c.clientID = :clientID
+
+            ORDER BY r.reserveDate DESC
+        ");
+        $stmt->bindParam(':clientID', $clientID, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
