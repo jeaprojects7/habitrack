@@ -14,4 +14,12 @@ class ReservationController {
     public static function ctrGetReservationsByClient($clientID) {
         return ModelReservation::mdlGetReservationsByClient($clientID);
     }
+
+    public static function ctrSaveValidID($reservationID, $clientValidID)
+    {
+        return ModelReservation::mdlSaveValidID(
+            $reservationID,
+            $clientValidID
+        );
+    }
 }

@@ -141,4 +141,21 @@ class ModelReservation {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public static function mdlSaveValidID($reservationID, $imagePath)
+    {
+            $stmt = (new Connection)->connect()->prepare("
+            UPDATE reservations
+            SET clientValidID = :clientValidID
+            WHERE reservationID = :reservationID
+        ");
+
+        $stmt->bindParam(":clientValidID", $imagePath, PDO::PARAM_STR);
+        $stmt->bindParam(":reservationID", $reservationID, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return "ok";
+        }
+
+        return "error";
+    }
 }
