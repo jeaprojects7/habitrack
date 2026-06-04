@@ -371,8 +371,8 @@ $prequalColor = match($prequalStatus) {
 
                         <!-- BOTTOM BUTTONS -->
                         <!-- <div class="flex grid-col gap-3">beforeee -->
-                        <div class="grid lg:grid-cols-3 gap-5 items-start">
-
+                        <!-- <div class="grid grid-cols-3 gap-5 items-start"> -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
                             <!-- Information Sheet
                             <a href="index.php?route=clientInfoSheet&id=<?= $reservationID ?>">
 
@@ -404,62 +404,135 @@ $prequalColor = match($prequalStatus) {
 
                                 <?php if ($hasFilled): ?>
                                     <a href="index.php?route=clientInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
-                                    class="px-4 py-2 bg-gray-600 text-white rounded inline-flex items-center justify-center">
+                                    
+                                    class="w-full text-center px-5 py-2.5 bg-gray-600 text-white rounded-lg cursor-pointer"
+                                    >
                                         View
                                     </a>
                                 <?php else: ?>
                                     <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="px-4 py-2 bg-blue-600 text-white rounded inline-flex items-center justify-center">
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                    >
                                         Fill Up
                                     </a>
                                 <?php endif; ?>
                             </div>
                             <!-- Upload Valid ID -->
-                            <div class="flex flex-col">
+                            <!-- Upload Valid ID -->
+<!-- Upload Valid ID -->
+<div class="flex flex-col">
 
-                                <label class="form-label font-medium">
-                                    Valid ID
-                                </label>
+    <label class="form-label font-medium">
+        Valid ID
+    </label>
 
-                                <label
-                                    for="valid-id-upload"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200"
-                                >
-                                    Upload
-                                </label>
+    <!-- Upload Button -->
+    <label
+        for="valid-id-upload"
+        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+    >
+        Upload
+    </label>
 
-                                <span
-                                    id="file-name"
-                                    class="text-xs text-center text-gray-500 dark:text-white/70 break-all mt-2"
-                                >
-                                    No file chosen
-                                </span>
+    <!-- File name + Preview label -->
+    <div class="flex items-center justify-center gap-2 mt-2">
 
-                                <input
-                                    id="valid-id-upload"
-                                    name="valid_id"
-                                    type="file"
-                                    accept="image/*"
-                                    class="hidden"
-                                    onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
-                                >
+        <span
+            id="file-name"
+            class="text-xs text-gray-500 dark:text-white/70 break-all"
+        >
+            No file chosen
+        </span>
 
-                            </div>
-                            <!-- Submit -->
-                            <div class="flex flex-col">
+        <!-- Preview label ONLY shows when file exists -->
+        <button
+            type="button"
+            id="preview-label"
+            class="text-xs text-blue-600 hover:underline hidden"
+            onclick="openValidIDModal()"
+        >
+            Preview
+        </button>
 
-                                <label class="form-label font-medium invisible">
-                                    Hidden
-                                </label>
+    </div>
 
-                                <button
-                                    type="button"
-                                    class="w-full px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200"
-                                >
-                                    Submit
-                                </button>
+    <input
+        id="valid-id-upload"
+        type="file"
+        accept="image/*"
+        class="hidden"
+        onchange="handleValidIDChange(event)"
+    >
 
-                            </div>
+</div>
+<!-- IMAGE MODAL -->
+<!-- IMAGE MODAL -->
+<div id="valid-id-modal"
+     class="fixed inset-0 bg-black/80 hidden z-[9999]">
+
+    <!-- OFFSET FOR SIDEBAR + NAVBAR -->
+    <div class="absolute left-[300px] right-0 top-[90px] bottom-0 flex items-center justify-center">
+
+        <div class="relative">
+
+            <!-- CLOSE BUTTON (now guaranteed visible) -->
+            <button
+                type="button"
+                onclick="closeValidIDModal()"
+                class="absolute -top-5 -right-5 bg-black/80 hover:bg-black text-white w-10 h-10 rounded-full flex items-center justify-center text-xl z-[10000]"
+            >
+                &times;
+            </button>
+
+            <!-- IMAGE -->
+            <img
+                id="valid-id-modal-img"
+                src=""
+                class="max-w-[90vw] max-h-[85vh] rounded-lg shadow-lg"
+            >
+
+        </div>
+
+    </div>
+</div>
+    <div class="relative">
+
+        <!-- X button -->
+        <button
+            onclick="closeValidIDModal()"
+            class="absolute -top-10 right-0 text-white text-3xl font-bold"
+        >
+            &times;
+        </button>
+
+        <!-- Full image -->
+        <img
+            id="valid-id-modal-img"
+            src=""
+            class="max-w-[90vw] max-h-[90vh] rounded-lg shadow-lg"
+        >
+
+
+        <!-- Submit -->
+        <div class="flex flex-col">
+
+            <label class="form-label font-medium invisible">
+                Hidden
+            </label>
+
+            <button
+                type="button"
+                id="submit-valid-id-btn"
+                class="w-full px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+            >
+                Submit
+            </button>
+
+        </div>
+    </div>
+
+
+                            
                             <!-- Upload Valid ID beforeee-->
                             <!-- <div class="flex flex-col gap-2">
 
@@ -529,3 +602,80 @@ $prequalColor = match($prequalStatus) {
     </div>
 
 </div>
+
+<script>
+let validIDImageSrc = "";
+let hasValidID = false;
+
+function handleValidIDChange(event) {
+    const file = event.target.files[0];
+
+    const fileName = document.getElementById('file-name');
+    const previewLabel = document.getElementById('preview-label');
+
+    if (!file) {
+        fileName.textContent = "No file chosen";
+        previewLabel.classList.add('hidden');
+
+        hasValidID = false;
+        validIDImageSrc = "";
+        return;
+    }
+
+    fileName.textContent = file.name;
+    previewLabel.classList.remove('hidden');
+
+    hasValidID = true; // ✅ THIS IS YOUR CHECK VARIABLE
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        validIDImageSrc = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+}
+
+/* OPEN MODAL (ONLY SHOW IMAGE HERE) */
+function openValidIDModal() {
+    if (!validIDImageSrc) return;
+
+    document.getElementById('valid-id-modal-img').src = validIDImageSrc;
+
+    const modal = document.getElementById('valid-id-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+/* CLOSE MODAL */
+function closeValidIDModal() {
+    const modal = document.getElementById('valid-id-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+/* click outside closes */
+document.getElementById('valid-id-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeValidIDModal();
+    }
+});
+
+$("#submit-valid-id-btn").on("click", function () {
+    submitValidID();
+});
+
+function submitValidID() {
+    if (!hasValidID || !hasFilled){
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Submitting',
+        text: 'Please wait...',
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });}
+}
+</script>
