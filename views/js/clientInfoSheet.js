@@ -174,7 +174,7 @@ function saveClientInfo() {
                 html: "<span style='font-size:25px;'>Information Sheet saved successfully!</span>",
                 showConfirmButton: true
             }).then(() => {
-                window.location = "home";
+                window.location = "reservations";
             });
 
         },
@@ -823,6 +823,177 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+$(document).ready(function () {
+
+    fetch("/habitrack/ajax/clientsignup.get.autofill.php")
+.then(res => res.json())
+.then(res => {
+    if (res.status !== "found") {
+        console.log("No previous Client Information Sheet found.");
+        return;
+    }
+
+    const d = res.data;
+
+    // ── PAGE 1 ────────────────────────────────────────────────
+    $("[name='citizenship']").val(d.clientCitizenship || "");
+    $("[name='religion']").val(d.clientReligion || "");
+    $("[name='placeofbirth']").val(d.clientPlaceOfBirth || "");
+
+    // Gender dropdown
+    if (d.clientGender) {
+        const gLabel = d.clientGender.charAt(0).toUpperCase() + d.clientGender.slice(1);
+        selectGender(d.clientGender, gLabel);
+    }
+
+    // Birthdate — flatpickr needs setDate
+    if (d.clientBirthdate) {
+        const bp = document.querySelector("#birthdate")._flatpickr;
+        if (bp) bp.setDate(d.clientBirthdate, true, "Y-m-d");
+    }
+
+    // ── CIVIL STATUS (Page 1 dropdown) ─────────────────────
+    if (d.clientCivilStatus) {
+        const csLabel =
+            d.clientCivilStatus.charAt(0).toUpperCase() +
+            d.clientCivilStatus.slice(1);
+
+        selectCivilStatus(d.clientCivilStatus, csLabel);
+    }
+
+    // ── PAGE 2 ────────────────────────────────────────────────
+    // Address is stored concatenated — put the whole string in the
+    // first meaningful field so the user can see it; the JS concatenates
+    // on save anyway so we fill unitno with the full string as a fallback
+    if (d.clientAddress) {
+        const addrParts = d.clientAddress.split(", ");
+        $("[name='unitno']").val(addrParts[0] || "");
+        $("[name='street']").val(addrParts[1] || "");
+        $("[name='subdivision']").val(addrParts[2] || "");
+        $("[name='barangay']").val(addrParts[3] || "");
+        $("[name='city']").val(addrParts[4] || "");
+        $("[name='province']").val(addrParts[5] || "");
+    }
+
+    if (d.clientProvinceAddress) {
+        const provParts = d.clientProvinceAddress.split(", ");
+        $("[name='prov_unitno']").val(provParts[0] || "");
+        $("[name='prov_street']").val(provParts[1] || "");
+        $("[name='prov_subdivision']").val(provParts[2] || "");
+        $("[name='prov_barangay']").val(provParts[3] || "");
+        $("[name='prov_city']").val(provParts[4] || "");
+        $("[name='prov_province']").val(provParts[5] || "");
+    }
+
+    // ── PAGE 3 ────────────────────────────────────────────────
+    $("[name='tin']").val(d.clientTaxIdenNum || "");
+    $("[name='sss_gsis']").val(d.clientSSS_GSISnumber || "");
+
+    // Dependents — use input[name=] selectors matching the HTML
+    $("input[name='elem']").val(d.clientDependentsElem || "0");
+    $("input[name='highschool']").val(d.clientDependentsHS || "0");
+    $("input[name='college']").val(d.clientDependentsC || "0");
+    $("input[name='notstudying']").val(d.clientDependentsNotStud || "0");
+
+    // ── PAGE 4 ────────────────────────────────────────────────
+    $("[name='empbusinessname']").val(d.clientEmployerBusinessName || "");
+    $("[name='natureofbusiness']").val(d.clientNatureOfBusiness || "");
+    $("[name='businessaddress']").val(d.clientBusinessAddress || "");
+    $("[name='position']").val(d.clientPosition || "");
+    $("[name='department']").val(d.clientDepartment || "");
+    $("[name='employerphonenumber']").val(d.clientEmpPhoneNum || "");
+    $("[name='employeremail']").val(d.clientEmployerEmail || "");
+
+    // Source of income dropdown
+    if (d.clientSourceOfIncome) {
+        const siLabel = d.clientSourceOfIncome.charAt(0).toUpperCase() + d.clientSourceOfIncome.slice(1);
+        selectSourceOfIncome(d.clientSourceOfIncome, siLabel);
+    }
+
+    // Appointment dropdown
+    if (d.clientAppointment) {
+        const apLabel = d.clientAppointment.charAt(0).toUpperCase() + d.clientAppointment.slice(1);
+        selectAppointment(d.clientAppointment, apLabel);
+    }
+
+    // Place of work dropdown
+    if (d.clientPlaceOfWork) {
+        const pwLabel = d.clientPlaceOfWork.charAt(0).toUpperCase() + d.clientPlaceOfWork.slice(1);
+        selectWorkplace(d.clientPlaceOfWork, pwLabel);
+    }
+
+    // Date hired — flatpickr
+    if (d.clientDateHired) {
+        const dhp = document.querySelector("#datehired")._flatpickr;
+        if (dhp) dhp.setDate(d.clientDateHired, true, "Y-m-d");
+    }
+
+    // ── MONTHLY INCOME (Page 4 textbox or input) ───────────
+    if (d.clientMonthlyIncome) {
+        $("[name='gmi']").val(d.clientMonthlyIncome);
+    }
+
+    // ── PAGE 5 ────────────────────────────────────────────────
+    // Father's name — stored concatenated, split back into parts
+    if (d.clientFathersName) {
+
+        const fp = d.clientFathersName.trim().split(" ");
+
+        $("input[name='fathersfirstname']").val(fp[0] || "");
+
+        // middle name = everything except first and last
+        if (fp.length > 2) {
+            $("input[name='fathersmiddlename']").val(
+                fp.slice(1, fp.length - 1).join(" ")
+            );
+        } else {
+            $("input[name='fathersmiddlename']").val("");
+        }
+
+        $("input[name='fatherslastname']").val(fp[fp.length - 1] || "");
+        $("input[name='fatherssuffix']").val(""); // optional rule
+    }
+
+    // Mother's name — stored concatenated, split back
+    if (d.clientMothersMaidenName) {
+        const mp = d.clientMothersMaidenName.split(" ");
+        $("input[name='mothersfirstname']").val(mp[0] || "");
+        $("input[name='mothersmiddlename']").val(mp.length >= 3 ? mp[1] : "");
+        $("input[name='motherslastname']").val(mp[mp.length - 1] || "");
+    }
+
+    $("[name='parentsaddress']").val(d.clientParentsAddress || "");
+    $("[name='parentsphonenumber']").val(d.clientParentsPhoneNum || "");
+
+    // ── PAGE 6 ────────────────────────────────────────────────
+    // SPA name — stored concatenated, split back
+    if (d.clientSpaName) {
+
+        const sp = d.clientSpaName.trim().split(" ");
+
+        $("input[name='spafirstname']").val(sp[0] || "");
+
+        if (sp.length > 2) {
+            $("input[name='spamiddlename']").val(
+                sp.slice(1, sp.length - 1).join(" ")
+            );
+        } else {
+            $("input[name='spamiddlename']").val("");
+        }
+
+        $("input[name='spalastname']").val(sp[sp.length - 1] || "");
+
+        $("input[name='spasuffix']").val("");
+    }
+
+    $("[name='spaaddress']").val(d.clientSpaAddress || "");
+    $("[name='spaphonenumber']").val(d.clientSpaPhoneNum || "");
+
+    console.log("Auto-fill complete");
+})
+.catch(err => console.error(err));
+
+});
 // let birthdatePicker;
 
 // document.addEventListener("DOMContentLoaded", function () {

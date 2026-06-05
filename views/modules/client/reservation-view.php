@@ -381,7 +381,8 @@ $prequalColor = match($prequalStatus) {
                                     </a>
                                 <?php else: ?>
                                     <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                    id=fillUpBtn>
                                         Fill Up
                                     </a>
                                 <?php endif; ?>
@@ -543,6 +544,18 @@ $prequalColor = match($prequalStatus) {
 
 function submitValidID() {
 
+if (!hasValidID && !hasFilled) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Requirements',
+            html: `
+                Please complete the Information Sheet<br>
+                and upload a Valid ID first.
+            `
+        });
+        return;
+    }
+
     if (!hasValidID) {
         Swal.fire({
             icon: 'warning',
@@ -591,7 +604,9 @@ function submitValidID() {
                 Swal.fire({
                     icon: "success",
                     title: "Success",
-                    text: "Valid ID uploaded successfully."
+                    text: "Reservation requirements uploaded successfully."
+                }).then(() => {
+                    location.reload();
                 });
 
             }else{

@@ -113,4 +113,10 @@ class ControllerClient{
 		return (new ModelClient)->mdlGetClientInfoByPrequalID($prequalID);
 
 	}
+
+	static public function ctrGetLatestClientInfoByClientID($clientID){
+
+		return (new ModelClient)->mdlGetLatestClientInfoByClientID($clientID);
+
+	}
 }

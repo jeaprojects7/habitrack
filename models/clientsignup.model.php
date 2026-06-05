@@ -571,4 +571,31 @@ class ModelClient{
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    static public function mdlGetLatestClientInfoByClientID($clientID){
+
+        $stmt = (new Connection)->connect()->prepare("
+
+            SELECT ci.*,
+            p.clientCivilStatus AS clientCivilStatus,
+            p.clientMonthlyIncome AS clientMonthlyIncome
+
+            FROM client_information ci
+
+            INNER JOIN prequal p
+                ON ci.prequalID = p.prequalID
+
+            WHERE p.clientID = :clientID
+
+            ORDER BY ci.id DESC
+            LIMIT 1
+
+        ");
+
+        $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
