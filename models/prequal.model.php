@@ -112,8 +112,25 @@ class PrequalModel {
         return false;
     }
 
-    public function savecoOwner($prequalID, $financingID, $coOwner) {
+    public function savecoOwner($prequalID, $financingID, $coOwner, $financingData = []) {
+        // If a row already exists for this prequalID, update it instead of inserting
+        $existing = $this->getCoOwnerByPrequalID($prequalID);
+        if ($existing) {
+            $coOwnerID = $existing['coOwnerID'];
+            $this->updateCoOwner($coOwnerID, $coOwner);
+            $this->saveCoOwnerFinancing($coOwnerID, $financingData);
+            return $coOwnerID;
+        }
+
         $coOwnerID = $this->generateId('CP');
+
+        $coFinancingType      = $financingData['co_financing_type']          ?? '';
+        $coContributionStart  = $financingData['co_contribution_start_date'] ?? null;
+        $coCurrentLoan        = $financingData['co_current_loan']            ?? null;
+        $coBankName           = $financingData['co_bank_name']               ?? null;
+        $coExistingHouseLoan  = $financingData['co_existing_house_loan']     ?? null;
+        $coCancelledHouseLoan = $financingData['co_cancelled_house_loan']    ?? null;
+        $coFinancingStatus    = $this->resolveFinancingStatus($coFinancingType, $coContributionStart, $coCurrentLoan, $coExistingHouseLoan, $coCancelledHouseLoan);
 
         $sql = "INSERT INTO clientcoprequal (
                     coOwnerID,
@@ -127,7 +144,14 @@ class PrequalModel {
                     coOwnerEmail,
                     coOwnerPhoneNum,
                     coOwnerEmpStatus,
-                    coOwnerMonthlyIncome
+                    coOwnerMonthlyIncome,
+                    coFinancingType,
+                    coContributionStart,
+                    coCurrentLoan,
+                    coBankName,
+                    coExistingHouseLoan,
+                    coCancelledHouseLoan,
+                    coFinancingStatus
                 ) VALUES (
                     :coOwnerID,
                     :prequalID,
@@ -140,23 +164,78 @@ class PrequalModel {
                     :coOwnerEmail,
                     :coOwnerPhoneNum,
                     :coOwnerEmpStatus,
-                    :coOwnerMonthlyIncome
+                    :coOwnerMonthlyIncome,
+                    :coFinancingType,
+                    :coContributionStart,
+                    :coCurrentLoan,
+                    :coBankName,
+                    :coExistingHouseLoan,
+                    :coCancelledHouseLoan,
+                    :coFinancingStatus
                 )";
 
         $stmt = $this->db->prepare($sql);
 
-        $stmt->bindValue(':coOwnerID',           $coOwnerID,                   PDO::PARAM_STR);
-        $stmt->bindValue(':prequalID',           $prequalID,                   PDO::PARAM_STR);
-        $stmt->bindValue(':financingID',         $financingID,                 PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerRelationship', $coOwner['relationship'],      PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerFName',        $coOwner['firstname'],         PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerMName',        $coOwner['mi'],                PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerLName',        $coOwner['lastname'],          PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerSuffix',       $coOwner['suffix'],            PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerEmail',        $coOwner['email'],             PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerPhoneNum',     $coOwner['phone'],             PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerEmpStatus',    $coOwner['employment_status'], PDO::PARAM_STR);
-        $stmt->bindValue(':coOwnerMonthlyIncome',$coOwner['monthly_income'],    PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerID',            $coOwnerID,                   PDO::PARAM_STR);
+        $stmt->bindValue(':prequalID',            $prequalID,                   PDO::PARAM_STR);
+        $stmt->bindValue(':financingID',          $financingID,                 PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerRelationship',  $coOwner['relationship'],      PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerFName',         $coOwner['firstname'],         PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerMName',         $coOwner['mi'],                PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerLName',         $coOwner['lastname'],          PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerSuffix',        $coOwner['suffix'],            PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerEmail',         $coOwner['email'],             PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerPhoneNum',      $coOwner['phone'],             PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerEmpStatus',     $coOwner['employment_status'], PDO::PARAM_STR);
+        $stmt->bindValue(':coOwnerMonthlyIncome', $coOwner['monthly_income'],    PDO::PARAM_STR);
+        $stmt->bindValue(':coFinancingType',      $coFinancingType,              PDO::PARAM_STR);
+
+        $stmt->bindValue(':coContributionStart',  ($coContributionStart  === null || $coContributionStart  === '') ? null : $coContributionStart,  ($coContributionStart  === null || $coContributionStart  === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coCurrentLoan',        ($coCurrentLoan        === null || $coCurrentLoan        === '') ? null : $coCurrentLoan,        ($coCurrentLoan        === null || $coCurrentLoan        === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coBankName',           ($coBankName           === null || $coBankName           === '') ? null : $coBankName,           ($coBankName           === null || $coBankName           === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coExistingHouseLoan',  ($coExistingHouseLoan  === null || $coExistingHouseLoan  === '') ? null : $coExistingHouseLoan,  ($coExistingHouseLoan  === null || $coExistingHouseLoan  === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coCancelledHouseLoan', ($coCancelledHouseLoan === null || $coCancelledHouseLoan === '') ? null : $coCancelledHouseLoan, ($coCancelledHouseLoan === null || $coCancelledHouseLoan === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coFinancingStatus',    $coFinancingStatus,            PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return $coOwnerID;
+        }
+
+        return false;
+    }
+
+    public function saveCoOwnerFinancing($coOwnerID, $data) {
+        $sql = "UPDATE clientcoprequal SET
+                    coFinancingType = :coFinancingType,
+                    coContributionStart = :coContributionStart,
+                    coCurrentLoan = :coCurrentLoan,
+                    coBankName = :coBankName,
+                    coExistingHouseLoan = :coExistingHouseLoan,
+                    coCancelledHouseLoan = :coCancelledHouseLoan,
+                    coFinancingStatus = :coFinancingStatus
+                WHERE coOwnerID = :coOwnerID";
+
+        $stmt = $this->db->prepare($sql);
+
+        $coFinancingType         = $data['co_financing_type'];
+        $coContributionStart     = $data['co_contribution_start_date'];
+        $coCurrentLoan           = $data['co_current_loan'];
+        $coBankName              = $data['co_bank_name'];
+        $coExistingHouseLoan     = $data['co_existing_house_loan'];
+        $coCancelledHouseLoan    = $data['co_cancelled_house_loan'];
+
+        $stmt->bindValue(':coOwnerID',            $coOwnerID,            PDO::PARAM_STR);
+        $stmt->bindValue(':coFinancingType',      $coFinancingType,      PDO::PARAM_STR);
+
+        $stmt->bindValue(':coContributionStart',  ($coContributionStart === null || $coContributionStart === '') ? null : $coContributionStart, ($coContributionStart === null || $coContributionStart === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coCurrentLoan',        ($coCurrentLoan       === null || $coCurrentLoan       === '') ? null : $coCurrentLoan,       ($coCurrentLoan       === null || $coCurrentLoan       === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coBankName',           ($coBankName          === null || $coBankName          === '') ? null : $coBankName,          ($coBankName          === null || $coBankName          === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coExistingHouseLoan',  ($coExistingHouseLoan === null || $coExistingHouseLoan === '') ? null : $coExistingHouseLoan, ($coExistingHouseLoan === null || $coExistingHouseLoan === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':coCancelledHouseLoan', ($coCancelledHouseLoan === null || $coCancelledHouseLoan === '') ? null : $coCancelledHouseLoan, ($coCancelledHouseLoan === null || $coCancelledHouseLoan === '') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        // Apply the same financing status resolution logic for co-owners
+        $status = $this->resolveFinancingStatus($coFinancingType, $coContributionStart, $coCurrentLoan, $coExistingHouseLoan, $coCancelledHouseLoan);
+        $stmt->bindValue(':coFinancingStatus', $status, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
             return $coOwnerID;
@@ -244,7 +323,13 @@ class PrequalModel {
                     c.coOwnerEmail,
                     c.coOwnerPhoneNum,
                     c.coOwnerEmpStatus,
-                    c.coOwnerMonthlyIncome
+                    c.coOwnerMonthlyIncome,
+                    c.coFinancingType,
+                    c.coContributionStart,
+                    c.coCurrentLoan,
+                    c.coBankName,
+                    c.coExistingHouseLoan,
+                    c.coCancelledHouseLoan
                 FROM prequal p
                 LEFT JOIN financing f ON p.financingID = f.financingID
                 LEFT JOIN clientcoprequal c ON p.coOwnerID = c.coOwnerID
@@ -293,7 +378,13 @@ class PrequalModel {
                     c.coOwnerEmail,
                     c.coOwnerPhoneNum,
                     c.coOwnerEmpStatus,
-                    c.coOwnerMonthlyIncome
+                    c.coOwnerMonthlyIncome,
+                    c.coFinancingType,
+                    c.coContributionStart,
+                    c.coCurrentLoan,
+                    c.coBankName,
+                    c.coExistingHouseLoan,
+                    c.coCancelledHouseLoan
                 FROM prequal p
                 LEFT JOIN financing f ON p.financingID = f.financingID
                 LEFT JOIN clientcoprequal c ON p.coOwnerID = c.coOwnerID
@@ -340,7 +431,13 @@ class PrequalModel {
                     c.coOwnerEmail,
                     c.coOwnerPhoneNum,
                     c.coOwnerEmpStatus,
-                    c.coOwnerMonthlyIncome
+                    c.coOwnerMonthlyIncome,
+                    c.coFinancingType,
+                    c.coContributionStart,
+                    c.coCurrentLoan,
+                    c.coBankName,
+                    c.coExistingHouseLoan,
+                    c.coCancelledHouseLoan
                 FROM prequal p
                 LEFT JOIN financing f ON p.financingID = f.financingID
                 LEFT JOIN clientcoprequal c ON p.coOwnerID = c.coOwnerID
@@ -442,6 +539,84 @@ class PrequalModel {
         $stmt->bindValue(':submissionDate',     date('Y-m-d'),     PDO::PARAM_STR);
 
         return $stmt->execute();
+    }
+
+    public function getCoOwnerByPrequalID($prequalID) {
+        $sql = "SELECT coOwnerID FROM clientcoprequal
+                WHERE prequalID = :prequalID
+                LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':prequalID', $prequalID, PDO::PARAM_STR);
+        if ($stmt->execute()) {
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+        }
+        return false;
+    }
+
+    public function getCoOwnerById($coOwnerID) {
+        $sql = "SELECT
+                    coOwnerID,
+                    coOwnerRelationship,
+                    coOwnerFName,
+                    coOwnerMName,
+                    coOwnerLName,
+                    coOwnerSuffix,
+                    coOwnerEmail,
+                    coOwnerPhoneNum,
+                    coOwnerEmpStatus,
+                    coOwnerMonthlyIncome,
+                    coFinancingType,
+                    coContributionStart,
+                    coCurrentLoan,
+                    coBankName,
+                    coExistingHouseLoan,
+                    coCancelledHouseLoan
+                FROM clientcoprequal
+                WHERE coOwnerID = :coOwnerID
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':coOwnerID', $coOwnerID, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+        }
+
+        return false;
+    }
+
+    public function getFullCoOwnerByClient($clientID) {
+        $sql = "SELECT
+                    c.coOwnerID,
+                    c.coOwnerRelationship,
+                    c.coOwnerFName,
+                    c.coOwnerMName,
+                    c.coOwnerLName,
+                    c.coOwnerSuffix,
+                    c.coOwnerEmail,
+                    c.coOwnerPhoneNum,
+                    c.coOwnerEmpStatus,
+                    c.coOwnerMonthlyIncome,
+                    c.coFinancingType,
+                    c.coContributionStart,
+                    c.coCurrentLoan,
+                    c.coBankName,
+                    c.coExistingHouseLoan,
+                    c.coCancelledHouseLoan
+                FROM clientcoprequal c
+                JOIN prequal p ON c.prequalID = p.prequalID
+                WHERE p.clientID = :clientID
+                ORDER BY p.submissionDate DESC
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':clientID', $clientID, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?: false;
+        }
+
+        return false;
     }
 
     public function getCoOwnerByClient($clientID) {
