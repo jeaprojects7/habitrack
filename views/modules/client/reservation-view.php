@@ -3,6 +3,8 @@ $static_url = '/habitrack/views/Adminassets';
 $reservationID = $_GET['id'] ?? null;
 
 require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+require_once __DIR__ . '/../../../controllers/coowner.controller.php';
+require_once __DIR__ . '/../../../models/spouse.model.php';
 
 if (!$reservationID) {
     die("Invalid reservation ID");
@@ -16,8 +18,14 @@ if (!$res) {
 }
 
 $prequalID = $res['prequalID'] ?? null;
-// $coOwnerID = $res['coOwnerID'] ?? null; // if already joined in query
-// $hasCoOwner = !empty($coOwnerID);
+$coOwnerID = $res['coOwnerID'] ?? null; // if already joined in query
+$hasCoOwner = !empty((new ControllerCoOwner)::ctrGetCoOwnerByID($res['coOwnerID']));
+$spouse = ModelSpouse::mdlGetSpouseInfo($prequalID);
+$hasSpouse = $spouse["clientCISID"] ?? false;
+// echo "<pre>";
+// print_r(ModelSpouse::mdlGetSpouseInfo($prequalID));
+// echo "</pre>";
+// die();
 
 require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
 
@@ -394,22 +402,35 @@ $prequalColor = match($prequalStatus) {
 
                             <div class="flex flex-col">
                                 <label class="form-label font-medium">Spouse</label>
-                                <a href="index.php?route=spouseInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                    id=fillUpBtnSpouse>
-                                        Fill Up
-                                </a>
-
+                                <?php if ($hasSpouse): ?>
+                                    <a href="index.php?route=spouseInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
+                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                        View
+                                    </a>
+                                <?php else: ?>
+                                    <a href="index.php?route=spouseInfoSheet&id=<?= urlencode($prequalID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                        id=fillUpBtnSpouse>
+                                            Fill Up
+                                    </a>
+                                <?php endif; ?>
                             </div>
-
+                                    
                             <div class="flex flex-col">
                                 <label class="form-label font-medium">Co-owner</label>
-                                <a href="index.php?route=co-ownerInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                    id=fillUpBtnCo>
-                                        Fill Up
-                                </a>
-
+                                <?php if ($hasCoOwner): ?>
+                                    <a href="index.php?route=co-ownerInfoSheet-view&id=<?= urlencode($prequalID) ?>"
+                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                        View
+                                    </a>
+                                <?php else: ?>
+                                <div class="flex flex-col">
+                                    <a href="index.php?route=co-ownerInfoSheet&id=<?= urlencode($reservationID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                        id=fillUpBtnCo>
+                                            Fill Up
+                                    </a>
+                                <?php endif; ?>
                             </div>
                             <!-- CoOwner Information Sheet -->
                             <!-- <div class="flex flex-col">

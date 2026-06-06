@@ -2,12 +2,29 @@
 session_start();
 
 require_once "../controllers/clientsignup.controller.php";
-require_once "../models/clientsignup.model.php";
+require_once "../models/spouse.model.php";
 
 class SpouseInfoSheet {
 
+    // ===== MISSING PAGE 1 =====
+    public $spouseFName;
+    public $spouseMName;
+    public $spouseLName;
+    public $spouseSuffix;
+    public $spouseEmail;
+    public $spousePhoneNum;
+
+    // ===== PAGE 3 DEPENDENTS =====
+    public $spouseDependentsElem;
+    public $spouseDependentsHS;
+    public $spouseDependentsC;
+    public $spouseDependentsNotStud;
+
+    // ===== PAGE 4 =====
+    public $spouseMonthlyIncome;
+
     // ===== PAGE 1 =====
-    // public $civilstatus;
+    public $clientCISID;
     public $gender;
     public $birthdate;
 
@@ -16,132 +33,188 @@ class SpouseInfoSheet {
     public $placeofbirth;
 
     // ===== PAGE 2 =====
-    public $address;
-    public $prov_address;
+    public $spouseAddress;
+    public $spouseProvinceAddress;
 
     // ===== PAGE 3 =====
-    public $tin;
-    public $sss_gsis;
+    public $spouseTaxIdenNum;
+    public $spouseSSS_GSISnumber;
 
     // ===== PAGE 4 =====
-    public $sourceofincome;
-    public $empbusinessname;
-    public $natureofbusiness;
-    public $businessaddress;
+    public $spouseSourceOfIncome;
+    public $spouseEmployerBusinessName;
+    public $spouseNatureOfBusiness;
+    public $spouseBusinessAddress;
 
-    public $appointment;
-    public $placeofwork;
-    public $datehired;
+    public $spouseAppointment;
+    public $spousePlaceOfWork;
+    public $spouseDateHired;
 
-    public $position;
-    public $department;
-    public $employerphonenumber;
-    public $employeremail;
+    public $spousePosition;
+    public $spouseDepartment;
+    public $spouseEmpPhoneNum;
+    public $spouseEmployerEmail;
 
     // ===== PAGE 5 =====
-    public $parentsaddress;
-    public $parentsphonenumber;
+    public $spouseParentsAddress;
+    public $spouseParentsPhoneNum;
 
-    public $fathersfullname;
-    public $mothersfullname;
+    public $spouseFathersName;
+    public $spouseMothersMaidenName;
 
     public function saveSpouseInfoSheet() {
 
         $data = array(
-            // "spouseISID" => $_SESSION["spouseISID"],
-            // ===== PAGE 1 =====
-            "spouseGender" => $this->gender,
-            "spouseBirthdate" => $this->birthdate,
+          
+        "clientCISID" => $this->clientCISID,
 
-            "spouseCitizenship" => $this->citizenship,
-            "spouseReligion" => $this->religion,
-            "spousePlaceOfBirth" => $this->placeofbirth,
+        // ===== PAGE 1 =====
+        "spouseFName" => $this->spouseFName,
+        "spouseMName" => $this->spouseMName,
+        "spouseLName" => $this->spouseLName,
+        "spouseSuffix" => $this->spouseSuffix,
 
-            // ===== PAGE 2 =====
-            "spouseAddress" => $this->address,
-            "spouseProvinceAddress" => $this->prov_address,
+        "spouseEmail" => $this->spouseEmail,
+        "spousePhoneNum" => $this->spousePhoneNum,
+        "spouseGender" => $this->gender,
+        "spouseBirthdate" => $this->birthdate,
 
-            // ===== PAGE 3 =====
-            "spouseTaxIdenNum" => $this->tin,
-            "spouseSSS_GSISnumber" => $this->sss_gsis,
+        "spouseCitizenship" => $this->citizenship,
+        "spouseReligion" => $this->religion,
+        "spousePlaceOfBirth" => $this->placeofbirth,
 
-            // ===== PAGE 4 =====
-            "spouseSourceOfIncome" => $this->sourceofincome,
-            "spouseEmployerBusinessName" => $this->empbusinessname,
-            "spouseNatureOfBusiness" => $this->natureofbusiness,
-            "spouseBusinessAddress" => $this->businessaddress,
+        // ===== PAGE 2 =====
+        "spouseAddress" => $this->spouseAddress,
+        "spouseProvinceAddress" => $this->spouseProvinceAddress,
 
-            "spouseAppointment" => $this->appointment,
-            "spousePlaceOfWork" => $this->placeofwork,
-            "spouseDateHired" => $this->datehired,
+        // ===== PAGE 3 =====
+        "spouseTaxIdenNum" => $this->spouseTaxIdenNum,
+        "spouseSSS_GSISnumber" => $this->spouseSSS_GSISnumber,
 
-            "spousePosition" => $this->position,
-            "spouseDepartment" => $this->department,
-            "spouseEmpPhoneNum" => $this->employerphonenumber,
-            "spouseEmployerEmail" => $this->employeremail,
+        "spouseDependentsElem" => $this->spouseDependentsElem,
+        "spouseDependentsHS" => $this->spouseDependentsHS,
+        "spouseDependentsC" => $this->spouseDependentsC,
+        "spouseDependentsNotStud" => $this->spouseDependentsNotStud,
 
-            // ===== PAGE 5 =====
-            "spouseParentsAddress" => $this->parentsaddress,
-            "spouseParentsPhoneNum" => $this->parentsphonenumber,
+        // ===== PAGE 4 =====
+        "spouseMonthlyIncome" => $this->spouseMonthlyIncome,
 
-            "spouseFathersName" => $this->fathersfullname,
-            "spouseMothersMaidenName" => $this->mothersfullname,
+        // FIX ENUM VALUES BEFORE INSERT
+        "spouseSourceOfIncome" => $this->spouseSourceOfIncome,
+        "spouseEmployerBusinessName" => $this->spouseEmployerBusinessName,
+        "spouseNatureOfBusiness" => $this->spouseNatureOfBusiness,
+        "spouseBusinessAddress" => $this->spouseBusinessAddress,
+
+        "spouseAppointment" => $this->spouseAppointment,
+        "spousePlaceOfWork" => $this->spousePlaceOfWork,
+        "spouseDateHired" => $this->spouseDateHired,
+
+        "spousePosition" => $this->spousePosition,
+        "spouseDepartment" => $this->spouseDepartment,
+        "spouseEmpPhoneNum" => $this->spouseEmpPhoneNum,
+        "spouseEmployerEmail" => $this->spouseEmployerEmail,
+
+        // ===== PAGE 5 =====
+        "spouseParentsAddress" => $this->spouseParentsAddress,
+        "spouseParentsPhoneNum" => $this->spouseParentsPhoneNum,
+
+        "spouseFathersName" => $this->spouseFathersName,
+        "spouseMothersMaidenName" => $this->spouseMothersMaidenName,
 
 
         );
 
         $answer = (new ControllerClient)->ctrSaveSpouseInfo($data);
-
+        /* for 1to1 v */
+        if ($answer === "exists") {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Spouse info already submitted for this reservation."
+            ]);
+            exit;
+        }
+        /* for 1to1 ^ */
         echo $answer;
     }
 }
 
 $save_spouse_info = new SpouseInfoSheet();
 
+// Helper function to safely fetch POST values
+function post($key) {
+    return $_POST[$key] ?? null;
+}
+
 // ===== PAGE 1 =====
-// $save_spouse_info->civilstatus = $_POST["civilstatus"];
-$save_spouse_info->gender = $_POST["gender"];
-// $save_spouse_info->birthdate = $_POST["birthdate"];
-$date = DateTime::createFromFormat('m-d-Y', $_POST["birthdate"]);
+$save_spouse_info->clientCISID = post("clientCISID");
+$save_spouse_info->gender = post("spouseGender");
+
+$date = DateTime::createFromFormat('Y-m-d', post("spouseBirthdate"));
+
+if (!$date) {
+    $date = DateTime::createFromFormat('m-d-Y', post("spouseBirthdate"));
+}
+
 $save_spouse_info->birthdate = $date ? $date->format('Y-m-d') : null;
 
-$save_spouse_info->citizenship = $_POST["citizenship"];
-$save_spouse_info->religion = $_POST["religion"];
-$save_spouse_info->placeofbirth = $_POST["placeofbirth"];
+$save_spouse_info->citizenship = post("spouseCitizenship");
+$save_spouse_info->religion = post("spouseReligion");
+$save_spouse_info->placeofbirth = post("spousePlaceOfBirth");
+
+// 👇 MISSING FIELDS (IMPORTANT FIX)
+$save_spouse_info->spouseFName = post("spouseFName");
+$save_spouse_info->spouseMName = post("spouseMName");
+$save_spouse_info->spouseLName = post("spouseLName");
+$save_spouse_info->spouseSuffix = post("spouseSuffix");
+$save_spouse_info->spouseEmail = post("spouseEmail");
+$save_spouse_info->spousePhoneNum = post("spousePhoneNum");
 
 // ===== PAGE 2 =====
-$save_spouse_info->address = $_POST["address"];
-$save_spouse_info->prov_address = $_POST["prov_address"];
+$save_spouse_info->spouseAddress = post("spouseAddress");
+$save_spouse_info->spouseProvinceAddress = post("spouseProvinceAddress");
 
 // ===== PAGE 3 =====
-$save_spouse_info->tin = $_POST["tin"];
-$save_spouse_info->sss_gsis = $_POST["sss_gsis"];
+$save_spouse_info->spouseTaxIdenNum = post("spouseTaxIdenNum");
+$save_spouse_info->spouseSSS_GSISnumber = post("spouseSSS_GSISnumber");
 
+$save_spouse_info->spouseDependentsElem = post("spouseDependentsElem");
+$save_spouse_info->spouseDependentsHS = post("spouseDependentsHS");
+$save_spouse_info->spouseDependentsC = post("spouseDependentsC");
+$save_spouse_info->spouseDependentsNotStud = post("spouseDependentsNotStud");
 
 // ===== PAGE 4 =====
-$save_spouse_info->sourceofincome = $_POST["sourceofincome"];
-$save_spouse_info->empbusinessname = $_POST["empbusinessname"];
-$save_spouse_info->natureofbusiness = $_POST["natureofbusiness"];
-$save_spouse_info->businessaddress = $_POST["businessaddress"];
+$save_spouse_info->spouseMonthlyIncome = post("spouseMonthlyIncome");
+$save_spouse_info->spouseSourceOfIncome = post("spouseSourceOfIncome");
+$save_spouse_info->spouseEmployerBusinessName = post("spouseEmployerBusinessName");
+$save_spouse_info->spouseNatureOfBusiness = post("spouseNatureOfBusiness");
+$save_spouse_info->spouseBusinessAddress = post("spouseBusinessAddress");
 
-$save_spouse_info->appointment = $_POST["appointment"];
-$save_spouse_info->placeofwork = $_POST["placeofwork"];
+$save_spouse_info->spouseAppointment = post("spouseAppointment");
+$save_spouse_info->spousePlaceOfWork = post("spousePlaceOfWork");
 
-$date = DateTime::createFromFormat('m-d-Y', $_POST["datehired"]);
-$save_spouse_info->datehired = $date ? $date->format('Y-m-d') : null;
+$date = DateTime::createFromFormat('m-d-Y', post("spouseDateHired"));
+$save_spouse_info->spouseDateHired = $date ? $date->format('Y-m-d') : null;
 
-$save_spouse_info->position = $_POST["position"];
-$save_spouse_info->department = $_POST["department"];
-$save_spouse_info->employerphonenumber = $_POST["employerphonenumber"];
-$save_spouse_info->employeremail = $_POST["employeremail"];
+$save_spouse_info->spousePosition = post("spousePosition");
+$save_spouse_info->spouseDepartment = post("spouseDepartment");
+$save_spouse_info->spouseEmpPhoneNum = post("spouseEmpPhoneNum");
+$save_spouse_info->spouseEmployerEmail = post("spouseEmployerEmail");
 
 // ===== PAGE 5 =====
-$save_spouse_info->parentsaddress = $_POST["parentsaddress"];
-$save_spouse_info->parentsphonenumber = $_POST["parentsphonenumber"];
+$save_spouse_info->spouseParentsAddress = post("spouseParentsAddress");
+$save_spouse_info->spouseParentsPhoneNum = post("spouseParentsPhoneNum");
 
-$save_spouse_info->fathersfullname = $_POST["fathersfullname"];
-$save_spouse_info->mothersfullname = $_POST["mothersfullname"];
+$save_spouse_info->spouseFathersName = post("spouseFathersName");
+$save_spouse_info->spouseMothersMaidenName = post("spouseMothersMaidenName");
 
+// SAVE
+// var_dump(post('spouseFName') ?? 'NOT SET');
+// var_dump($_POST['spouseMName'] ?? 'NOT SET');
+// die();
 
+// echo "<pre>";
+// print_r($_POST);
+// echo "</pre>";
+// die();
 $save_spouse_info->saveSpouseInfoSheet();
 ?>

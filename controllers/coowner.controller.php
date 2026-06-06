@@ -23,4 +23,8 @@ class ControllerCoOwner {
 
         return ModelCoOwner::mdlSaveCoOwnerInfo($data);
     }
+
+    static public function ctrGetCoOwnerIS($prequalID){
+        return ModelCoOwner::mdlGetCoOwnerIS($prequalID);
+    }
 }

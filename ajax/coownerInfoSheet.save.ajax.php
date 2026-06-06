@@ -12,6 +12,7 @@ class CoOwnerInfoSheet {
     public $gender;
     public $birthdate;
 
+    public $civilstatus;
     public $citizenship;
     public $religion;
     public $placeofbirth;
@@ -64,6 +65,7 @@ class CoOwnerInfoSheet {
             "coGender" => $this->gender,
             "coBirthdate" => $this->birthdate,
 
+            "coCivilStatus" => $this->civilstatus,
             "coCitizenship" => $this->citizenship,
             "coReligion" => $this->religion,
             "coPlaceOfBirth" => $this->placeofbirth,
@@ -121,6 +123,7 @@ $save->gender = $_POST["gender"] ?? null;
 $date = DateTime::createFromFormat('m-d-Y', $_POST["birthdate"] ?? '');
 $save->birthdate = $date ? $date->format('Y-m-d') : null;
 
+$save->civilstatus = $_POST["civilstatus"] ?? null;
 $save->citizenship = $_POST["citizenship"] ?? null;
 $save->religion = $_POST["religion"] ?? null;
 $save->placeofbirth = $_POST["placeofbirth"] ?? null;

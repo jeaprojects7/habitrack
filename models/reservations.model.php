@@ -64,6 +64,7 @@ class ModelReservation {
         cc.coOwnerLName,
         cc.coOwnerEmail,
         cc.coOwnerPhoneNum,
+        cc.coOwnerRelationship,
 
         p.propertyID,
         p.propertyName,
@@ -78,30 +79,35 @@ class ModelReservation {
         c.clientFName,
         c.clientLName,
 
+        ci.clientCISID,
+
         pi.imagePath
 
-    FROM reservations r
+        FROM reservations r
 
-    JOIN prequal pq
-        ON r.prequalID = pq.prequalID
+        LEFT JOIN client_information ci
+            ON r.prequalID = ci.prequalID
 
-    JOIN client c
-        ON pq.clientID = c.clientID
+        JOIN prequal pq
+            ON r.prequalID = pq.prequalID
 
-    LEFT JOIN clientcoprequal cc
-        ON pq.prequalID = cc.prequalID
+        JOIN client c
+            ON pq.clientID = c.clientID
 
-    JOIN properties p
-        ON pq.propertyID = p.propertyID
+        LEFT JOIN clientcoprequal cc
+            ON pq.prequalID = cc.prequalID
 
-    LEFT JOIN property_images pi
-        ON p.propertyID = pi.propertyID
-        AND pi.imageOrder = 0
-        AND pi.is_deleted = 0
+        JOIN properties p
+            ON pq.propertyID = p.propertyID
 
-    WHERE r.reservationID = :id
+        LEFT JOIN property_images pi
+            ON p.propertyID = pi.propertyID
+            AND pi.imageOrder = 0
+            AND pi.is_deleted = 0
 
-    LIMIT 1;
+        WHERE r.reservationID = :id
+
+        LIMIT 1;
     ");
 
         $stmt->bindParam(":id", $id, PDO::PARAM_STR);

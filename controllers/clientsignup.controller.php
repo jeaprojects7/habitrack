@@ -85,7 +85,7 @@ class ControllerClient{
 
 	static public function ctrSaveSpouseInfo($data){
 
-		$answer = (new ModelClient)->mdlSaveSpouseInfo($data);
+		$answer = (new ModelSpouse)->mdlSaveSpouseInfo($data);
 
 		return $answer;
 	}

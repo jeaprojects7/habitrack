@@ -17,7 +17,7 @@ class ModelCoOwner{
     public static function mdlGetCoOwnerByID($coOwnerID){
         $stmt = (new Connection)->connect()->prepare("
             SELECT * 
-            FROM clientcoprequal 
+            FROM clientcoprequal    
             WHERE coOwnerID = :coOwnerID
             LIMIT 1
         ");
@@ -85,6 +85,7 @@ class ModelCoOwner{
                     coownerISID,
                     coOwnerID,
 
+                    coCivilStatus,
                     coCitizenship,
                     coGender,
                     coReligion,
@@ -127,6 +128,7 @@ class ModelCoOwner{
                     :coownerISID,
                     :coOwnerID,
 
+                    :civilstatus,
                     :coCitizenship,
                     :coGender,
                     :coReligion,
@@ -172,6 +174,7 @@ class ModelCoOwner{
             $stmt->bindParam(":coownerISID", $coCode, PDO::PARAM_STR);
             $stmt->bindParam(":coOwnerID", $data["coOwnerID"], PDO::PARAM_STR);
 
+            $stmt->bindParam(":coCivilStatus", $data["coCivilStatus"], PDO::PARAM_STR);
             $stmt->bindParam(":coCitizenship", $data["coCitizenship"], PDO::PARAM_STR);
             $stmt->bindParam(":coGender", $data["coGender"], PDO::PARAM_STR);
             $stmt->bindParam(":coReligion", $data["coReligion"], PDO::PARAM_STR);
@@ -219,5 +222,22 @@ class ModelCoOwner{
             $pdo->rollBack();
             return $e->getMessage();
         }
+    }
+
+    static public function mdlGetCoOwnerIS($prequalID){
+
+        $stmt = (new Connection)->connect()->prepare("
+            SELECT coi.*, ccp.*
+            FROM clientcoprequal ccp
+            INNER JOIN coowner_information coi
+                ON coi.coOwnerID = ccp.coOwnerID
+            WHERE ccp.prequalID = :prequalID
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":prequalID", $prequalID, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

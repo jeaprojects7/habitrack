@@ -39,6 +39,8 @@ return [
         'calendar',
         'pre-qual',
         'clientInfoSheet-view',
-        'co-ownerInfoSheet'
+        'co-ownerInfoSheet',
+        'spouseInfoSheet-view',
+        'co-ownerInfoSheet-view'
     ],
 ];

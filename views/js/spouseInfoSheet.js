@@ -7,17 +7,25 @@ function saveSpouseInfo() {
     let spouse = new FormData();
 
     // ================= PAGE 1 =================
+    spouse.append("clientCISID", $("#clientCISID").val());
 
-    spouse.append("civilstatus", $("#civilstatus").val());
-    spouse.append("gender", $("#gender").val());
-    spouse.append("birthdate", $("#birthdate").val());
+    spouse.append("spouseFName", $("input[name=firstname]").val());
+    spouse.append("spouseMName", $("input[name=middlename]").val());
+    spouse.append("spouseLName", $("input[name=lastname]").val());
+    spouse.append("spouseSuffix", $("input[name=suffix]").val());
 
-    spouse.append("citizenship", $("input[name=citizenship]").val());
-    spouse.append("religion", $("input[name=religion]").val());
-    spouse.append("placeofbirth", $("input[name=placeofbirth]").val());
+    spouse.append("spouseEmail", $("input[name=email]").val());
+    spouse.append("spousePhoneNum", $("input[name=phonenumber]").val());
+
+    // spouse.append("civilstatus", $("#civilstatus").val());
+    spouse.append("spouseGender", $("#gender").val());
+    spouse.append("spouseBirthdate", $("#birthdate").val());
+
+    spouse.append("spouseCitizenship", $("input[name=citizenship]").val());
+    spouse.append("spouseReligion", $("input[name=religion]").val());
+    spouse.append("spousePlaceOfBirth", $("input[name=placeofbirth]").val());
 
     // ================= PAGE 2 =================
-
     let parts = [
         $("input[name=unitno]").val(),
         $("input[name=street]").val(),
@@ -27,12 +35,10 @@ function saveSpouseInfo() {
         $("input[name=province]").val()
     ];
 
-    let fullAddress = parts
-        .filter(v => v && v.trim() !== "")
-        .join(", ");
-
-    spouse.append("address", fullAddress);
-
+    spouse.append(
+        "spouseAddress",
+        parts.filter(v => v && v.trim() !== "").join(", ")
+    );
 
     let provParts = [
         $("input[name=prov_unitno]").val(),
@@ -43,35 +49,40 @@ function saveSpouseInfo() {
         $("input[name=prov_province]").val()
     ];
 
-    let provAddress = provParts
-        .filter(v => v && v.trim() !== "")
-        .join(", ");
-
-    spouse.append("prov_address", provAddress);
+    spouse.append(
+        "spouseProvinceAddress",
+        provParts.filter(v => v && v.trim() !== "").join(", ")
+    );
 
     // ================= PAGE 3 =================
-    spouse.append("tin", $("input[name=tin]").val());
-    spouse.append("sss_gsis", $("input[name=sss_gsis]").val());
+    spouse.append("spouseTaxIdenNum", $("input[name=tin]").val());
+    spouse.append("spouseSSS_GSISnumber", $("input[name=sss_gsis]").val());
 
+    spouse.append("spouseDependentsElem", $("input[name=elem]").val());
+    spouse.append("spouseDependentsHS", $("input[name=highschool]").val());
+    spouse.append("spouseDependentsC", $("input[name=college]").val());
+    spouse.append("spouseDependentsNotStud", $("input[name=notstudying]").val());
 
     // ================= PAGE 4 =================
-    spouse.append("sourceofincome", $("#sourceofincome").val());
-    spouse.append("empbusinessname", $("input[name=empbusinessname]").val());
-    spouse.append("natureofbusiness", $("input[name=natureofbusiness]").val());
-    spouse.append("businessaddress", $("input[name=businessaddress]").val());
+    spouse.append("spouseMonthlyIncome", $("input[name=gmi]").val());
 
-    spouse.append("appointment", $("#appointment").val());
-    spouse.append("placeofwork", $("#placeofwork").val());
-    spouse.append("datehired", $("#datehired").val());
+    spouse.append("spouseSourceOfIncome", $("#sourceofincome").val());
+    spouse.append("spouseEmployerBusinessName", $("input[name=empbusinessname]").val());
+    spouse.append("spouseNatureOfBusiness", $("input[name=natureofbusiness]").val());
+    spouse.append("spouseBusinessAddress", $("input[name=businessaddress]").val());
 
-    spouse.append("position", $("input[name=position]").val());
-    spouse.append("department", $("input[name=department]").val());
-    spouse.append("employerphonenumber", $("input[name=employerphonenumber]").val());
-    spouse.append("employeremail", $("input[name=employeremail]").val());
+    spouse.append("spouseAppointment", $("#appointment").val());
+    spouse.append("spousePlaceOfWork", $("#placeofwork").val());
+    spouse.append("spouseDateHired", $("#datehired").val());
+
+    spouse.append("spousePosition", $("input[name=position]").val());
+    spouse.append("spouseDepartment", $("input[name=department]").val());
+    spouse.append("spouseEmpPhoneNum", $("input[name=employerphonenumber]").val());
+    spouse.append("spouseEmployerEmail", $("input[name=employeremail]").val());
 
     // ================= PAGE 5 =================
-    spouse.append("parentsaddress", $("input[name=parentsaddress]").val());
-    spouse.append("parentsphonenumber", $("input[name=parentsphonenumber]").val());
+    spouse.append("spouseParentsAddress", $("input[name=parentsaddress]").val());
+    spouse.append("spouseParentsPhoneNum", $("input[name=parentsphonenumber]").val());
 
     let fatherParts = [
         $("input[name=fathersfirstname]").val(),
@@ -80,12 +91,10 @@ function saveSpouseInfo() {
         $("input[name=fatherssuffix]").val()
     ];
 
-    let fathersFullName = fatherParts
-        .filter(v => v && v.trim() !== "")
-        .join(" ");
-
-    spouse.append("fathersfullname", fathersFullName);
-
+    spouse.append(
+        "spouseFathersName",
+        fatherParts.filter(v => v && v.trim() !== "").join(" ")
+    );
 
     let motherParts = [
         $("input[name=mothersfirstname]").val(),
@@ -93,12 +102,10 @@ function saveSpouseInfo() {
         $("input[name=motherslastname]").val()
     ];
 
-    let mothersFullName = motherParts
-        .filter(v => v && v.trim() !== "")
-        .join(" ");
-
-    spouse.append("mothersfullname", mothersFullName);
-
+    spouse.append(
+        "spouseMothersMaidenName",
+        motherParts.filter(v => v && v.trim() !== "").join(" ")
+    );
 
     // ================= AJAX =================
     $.ajax({
@@ -124,19 +131,14 @@ function saveSpouseInfo() {
 
         },
         error: function () {
-
             Swal.fire({
                 icon: "error",
                 title: "Error",
                 text: "Something went wrong"
             });
-
         }
     });
-
-
 }
-
 
 // ================= SUBMIT BUTTON =================
 
@@ -328,21 +330,30 @@ function validatePage(page) {
 
 function loadSpouseInfo() {
 
+    let prequal = new FormData();
+    prequal.append("prequalID", $("#prequalID").val());
     $.ajax({
         url: "/habitrack/ajax/spouseinfosheet.get.ajax.php",
         method: "POST",
         dataType: "json",
+        data: prequal,
+        processData: false,
+        contentType: false,
         success: function (data) {
             console.log("DATA TYPE:", typeof data);
             console.log("DATA:", data);
             if (!data) return;
 
-            $("input[name=firstname]").val(data.spouseFName);
-            $("input[name=middlename]").val(data.spouseMName);
-            $("input[name=lastname]").val(data.spouseLName);
-            $("input[name=suffix]").val(data.spouseSuffix ? data.spouseSuffix : " ") ;
-            $("input[name=email]").val(data.spouseEmail);
-            $("input[name=phonenumber]").val(data.spousePhoneNum);
+            $("input[name=firstname]").val(data.coOwnerFName);
+            $("input[name=middlename]").val(data.coOwnerMName);
+            $("input[name=lastname]").val(data.coOwnerLName);
+            $("input[name=suffix]").val(data.coOwnerSuffix ? data.coOwnerSuffix : " ") ;
+            $("input[name=email]").val(data.coOwnerEmail);
+            $("input[name=phonenumber]").val(data.coOwnerPhoneNum);
+            $("input[name=gmi]").val(data.coOwnerMonthlyIncome);
+            $("#civilstatus").val("Married");
+            console.log($("#civilstatus").val());
+            
         },
 
         error: function () {
