@@ -1,24 +1,72 @@
 document.addEventListener('DOMContentLoaded', function () {
 
- 
-    $("#btn-register").click(function(e) {
-    e.preventDefault();  // Stop form submission
+ //may darkmode na ang error trap
+$("#btn-register").click(function(e) {
+    e.preventDefault();
+
+    const isDark = document.documentElement.classList.contains('dark');
+
+    const darkStyles = isDark ? {
+        background: '#1e293b',
+        color: '#f1f5f9',
+        confirmButtonColor: '#16a34a',
+    } : {};
+
+    const darkClass = isDark ? {
+        popup: 'swal-dark',
+    } : {};
+
+    let requiredFields = [
+        { id: "#agentFName",     label: "First Name"    },
+        { id: "#agentLName",     label: "Last Name"     },
+        { id: "#agentAddress",   label: "Address"       },
+        { id: "#agentGender",    label: "Gender"        },
+        { id: "#agentBirthdate", label: "Birthdate"     },
+        { id: "#agentPhoneNum",  label: "Phone Number"  },
+        { id: "#agentEmail",     label: "Email"         },
+    ];
+
+    let emptyFields = [];
+    requiredFields.forEach(function (field) {
+        let value = $(field.id).val();
+        if (!value || value.trim() === '') {
+            emptyFields.push(field.label);
+        }
+    });
+
+    if (emptyFields.length > 0) {
+        Swal.fire({
+            title: 'Required Fields Missing',
+            icon: 'warning',
+            html: `
+                <div style="text-align:center; color:${isDark ? '#f1f5f9' : 'inherit'}">
+                    <p style="margin-bottom:8px;">The following fields are required:</p>
+                    <ul style="display:inline-block; text-align:left; list-style:disc; padding-left:20px;">
+                        ${emptyFields.map(f => `<li style="margin-bottom:4px;">${f}</li>`).join('')}
+                    </ul>
+                </div>
+            `,
+            confirmButtonText: 'OK',
+            ...darkStyles,
+            customClass: darkClass
+        });
+        return;
+    }
+
     Swal.fire({
         title: 'Update this agent?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, update it!',
-        cancelButtonText: 'Cancel'
-        // ... rest of your Swal config
+        cancelButtonText: 'Cancel',
+        ...darkStyles,
+        customClass: darkClass
     }).then(function (result) {
         if (result.value) {
             addAgent();
-              //document.querySelector('form').submit();
-            // Handle confirmation, e.g., submit form or redirect
         }
     });
-});  
-
+});
 
     function addAgent(){
         //let trans_type = $("#trans_type").val();

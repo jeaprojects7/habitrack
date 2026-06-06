@@ -4,6 +4,10 @@ require_once __DIR__ . '/../../../controllers/reservations.controller.php';
 // require_once __DIR__ . '/../../../models/reservations.model.php';
 
 $reservations = ReservationController::ctrGetReservations();
+/* echo "<pre>";
+print_r($reservations);  
+echo "</pre>";
+exit(); */
 
 // at the top of your reservations module
 if (session_status() === PHP_SESSION_NONE) session_start();

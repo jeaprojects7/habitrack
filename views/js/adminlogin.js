@@ -47,7 +47,7 @@ function loginAdmin() {
                     title: "<span style='font-size:35px;'>Login Successful</span>",
                     showConfirmButton: true
                 }).then(() => {
-                    window.location = "adminDashboard";
+                    window.location = "dashboard";
                 });
 
             } else {

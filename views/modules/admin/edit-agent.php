@@ -351,6 +351,13 @@ ob_start();  */
             </div>
             <!-- End Content -->
         </div>
+        <div class="mt-6">
+        <a href="javascript:history.back()"
+           class="inline-flex items-center px-5 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">
+            ← Back
+        </a>
+    </div>
+</div>
     </div><!--end container-->
 
 

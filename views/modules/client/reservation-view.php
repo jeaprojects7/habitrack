@@ -27,6 +27,7 @@ $hasSpouse = $spouse["clientCISID"] ?? false;
 // echo "</pre>";
 // die();
 
+
 require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
 
 $existingInfo = ControllerClient::ctrCheckClientInfo($prequalID);
@@ -43,16 +44,21 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
     die("Access denied.");
 }
 
+
+
+
 $resStatus = strtolower($res['reserveStatus'] ?? 'pending');
 
+
 $statusColor = match($resStatus) {
-    'confirmed' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+    'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-blue-300',
     'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
     'pending'   => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
     default     => 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
 };
 
 $prequalStatus = strtolower($res['prequalStatus'] ?? 'pending');
+$requirementsDisabled = ($prequalStatus !== 'approved');  //gn add komn ni pra sa whole n m disable ang buttons if indi p sya approved
 
 $prequalColor = match($prequalStatus) {
     'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
@@ -392,8 +398,7 @@ $prequalColor = match($prequalStatus) {
                                     </a>
                                 <?php else: ?>
                                     <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                    id=fillUpBtn>
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-blue-700' ?>" id=fillUpBtn>
                                         Fill Up
                                     </a>
                                 <?php endif; ?>
@@ -489,7 +494,7 @@ $prequalColor = match($prequalStatus) {
                                 <?php else: ?>
 
                                     <label for="valid-id-upload"
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>">
                                         Upload
                                     </label>
 
@@ -506,14 +511,51 @@ $prequalColor = match($prequalStatus) {
                                     </button>
                                 </div>
 
-                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden"
+                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden" <?= $requirementsDisabled ? 'disabled' : '' ?>
                                     onchange="handleValidIDChange(event)">
                             </div>
 
                             <!-- 3. Submit -->
+                          <!--   <div class="flex flex-col">
+
+                                <label class="form-label font-medium">
+                                    Valid ID
+                                </label>
+
+                                <label
+                                    for="valid-id-upload"
+                                    <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors duration-200 <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                                >
+                                    Upload
+                                </label>
+
+                                <span
+                                    id="file-name"
+                                    class="text-xs text-center text-gray-500 dark:text-white/70 break-all mt-2"
+                                >
+                                    No file chosen
+                                </span>
+
+                                <input
+                                    id="valid-id-upload"
+                                    name="valid_id"
+                                    type="file"
+                                    <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    accept="image/*"
+                                    class="hidden"
+                                    onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
+                                >
+
+                            </div> -->
+                            <!-- Submit -->
                             <div class="flex flex-col">
+
+                                
+                                
                                 <label class="form-label font-medium invisible">Submit</label>
                                 <button type="button" id="submit-valid-id-btn"
+                                 <?= $requirementsDisabled ? 'disabled' : '' ?>
                                     class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= ($hasFilled && $hasValidIDSaved) ? 'opacity-50 cursor-not-allowed' : '' ?>"
                                     <?= ($hasFilled && $hasValidIDSaved) ? 'disabled' : '' ?>>
                                     Submit

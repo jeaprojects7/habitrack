@@ -5,10 +5,13 @@ $static_url = '/habitrack/views/Adminassets';
 /* $route = 'edit-property'; */
 require_once __DIR__ . '/../../../controllers/add-property.controller.php'; 
 
+
+
 //  Get ID from URL
 /* $propertyID = $_GET['propertyID'] ?? null; */
 
 $propertyID = $_SESSION['propertyID'] ?? null;
+$isAgent = (($_SESSION['role'] ?? '') === 'Agent');
 
 if (!$propertyID) {
     die("No property ID provided.");
@@ -46,9 +49,9 @@ if (!$property) {
                 <h5 class="text-lg font-semibold">Edit Properties</h5>
 
                 <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
-                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white"><a href="exploreproperty">Explore Properties</a></li>
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-blue-600 dark:hover:text-white"><a href="exploreproperty">Explore Properties</a></li>
                     <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180"><i class="mdi mdi-chevron-right"></i></li>
-                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">Edit Properties</li>
+                    <li class="inline-block capitalize text-[16px] font-medium text-blue-600 dark:text-white" aria-current="page">Edit Properties</li>
                 </ul>
             </div>
 
@@ -58,21 +61,28 @@ if (!$property) {
 
             <!-- FORM (SMALLER - 1/3) -->
             <div class="md:col-span-4 col-span-12 rounded-md shadow p-6 bg-white dark:bg-slate-900 h-fit">
-                <form id="property-form">
+                <form id="property-form" >
                      <!-- hidden ID -->
                     <input type="hidden" id="propertyID" name="propertyID" value="<?= htmlspecialchars($property['propertyID']) ?>">
 
                     <!-- hidden coordinates -->
                     <div class="grid grid-cols-12 gap-5">
-                        <input type="hidden" name="propertyLat" id="propertyLat" value="<?= htmlspecialchars($property['propertyLat']) ?>">
-                        <input type="hidden" name="propertyLng" id="propertyLng" value="<?= htmlspecialchars($property['propertyLng']) ?>">
+                        <script>
+                            window.propertyData = {
+                                lat: <?= json_encode($property['propertyLat'] ?? null) ?>,
+                                lng: <?= json_encode($property['propertyLng'] ?? null) ?>
+                            };
+                            window.isAgent = <?= json_encode($isAgent) ?>;
+                        </script>
+                        <input type="hidden" name="propertyLat" id="propertyLat" value="<?= htmlspecialchars($property['propertyLat']) ?>"readonly="<?= $isAgent ? 'readonly' : '' ?>">
+                        <input type="hidden" name="propertyLng" id="propertyLng" value="<?= htmlspecialchars($property['propertyLng']) ?>"readonly="<?= $isAgent ? 'readonly' : '' ?>">
                         
                          <div class="md:col-span-6 col-span-12 bg-white dark:bg-slate-900 h-fit">
                                     <label for="property_type" class="form-label text-gray-900 dark:text-gray-200">Property Type</label>
                                     <select id="property_type" name="propertyType" class="select2 form-select 
                        bg-white dark:bg-slate-800 
                        text-gray-800 dark:text-gray-200 
-                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Select Property Type"  value="<?= htmlspecialchars($property['propertyType']) ?>">
+                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Select Property Type"  value="<?= htmlspecialchars($property['propertyType']) ?>" <?= $isAgent ? 'disabled' : '' ?>>
                                          <option value="">Select Property Type</option>
 
                                         <option value="Lot" <?= $property['propertyType'] == 'Lot' ? 'selected' : '' ?>>
@@ -90,7 +100,7 @@ if (!$property) {
                                     <select id="propertyStatus" name="propertyStatus" class="select2 form-select 
                        bg-white dark:bg-slate-800 
                        text-gray-800 dark:text-gray-200 
-                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Select Property Type"  value="<?= htmlspecialchars($property['propertyStatus']) ?>">
+                       border-gray-300 dark:border-slate-700" data-allow-clear="true" placeholder="Select Property Type"  value="<?= htmlspecialchars($property['propertyStatus']) ?>" <?= $isAgent ? 'disabled' : '' ?>>
                                          <option value="">Select Property Status</option>
 
                                         <option value="Available" <?= $property['propertyStatus'] == 'Available' ? 'selected' : '' ?>>
@@ -111,28 +121,28 @@ if (!$property) {
                         <div class="col-span-12">
                             <label class="font-medium">Property Name:</label>
                             <input type="text" id="propertyName" name="propertyName" class="form-input mt-2" placeholder="Property Name :" 
-                             value="<?= htmlspecialchars($property['propertyName']) ?>">
+                             value="<?= htmlspecialchars($property['propertyName']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
                         </div>
                          <div class="col-span-12">
                             <label class="font-medium">Property City:</label>
                             <input type="text" id="propertyCity" name="propertyCity" class="form-input mt-2" placeholder="City"
-                            value="<?= htmlspecialchars($property['propertyCity']) ?>">
+                            value="<?= htmlspecialchars($property['propertyCity']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
                         </div>
                         <div class="col-span-12">
                             <label class="font-medium">Property Barangay:</label>
                             <input type="text" id="propertyBrgy" name="propertyBrgy" class="form-input mt-2" placeholder="Brgy"
-                            value="<?= htmlspecialchars($property['propertyBrgy']) ?>">
+                            value="<?= htmlspecialchars($property['propertyBrgy']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
                         </div>
 
                         <div class="md:col-span-12 col-span-12">
                             <label class="font-medium">Lot Area:</label>
                             <input type="number" id="propertyLotArea" name="propertyLotArea" class="form-input mt-2" placeholder="Size (sqm)"
-                            value="<?= htmlspecialchars($property['propertyLotArea']) ?>">
+                            value="<?= htmlspecialchars($property['propertyLotArea']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
                         </div>
                         <div class="col-span-12 mb-8">
                             <label class="font-medium">Price:</label>
                             <input type="number" id="propertyPrice" name="propertyPrice" class="form-input mt-2" placeholder="Price"
-                            value="<?= htmlspecialchars($property['propertyPrice']) ?>">
+                            value="<?= htmlspecialchars($property['propertyPrice']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
                         </div>
 
 
@@ -165,25 +175,25 @@ if (!$property) {
         <div class="md:col-span-12 col-span-12">
             <label class="font-medium">Floor Area:</label>
             <input type="number" id="houseFloorArea" name="houseFloorArea" class="form-input mt-2" placeholder="Floor Area (sqm)"
-            value="<?= htmlspecialchars($property['houseFloorArea']) ?>">
+            value="<?= htmlspecialchars($property['houseFloorArea']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
         </div>
 
         <div class="md:col-span-12 col-span-12">
             <label class="font-medium">Storey:</label>
             <input type="number" id="houseStorey" name="houseStorey" class="form-input mt-2" placeholder="Storey"
-            value="<?= htmlspecialchars($property['houseStorey']) ?>">
+            value="<?= htmlspecialchars($property['houseStorey']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
         </div>
 
         <div class="md:col-span-6 col-span-12">
             <label class="font-medium">Bedroom:</label>
             <input type="number" id="houseBedroom" name="houseBedroom" class="form-input mt-2" placeholder="Bedrooms"
-            value="<?= htmlspecialchars($property['houseBedroom']) ?>">
+            value="<?= htmlspecialchars($property['houseBedroom']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
         </div>
 
         <div class="md:col-span-6 col-span-12">
             <label class="font-medium">Toilet and Bath:</label>
             <input type="number" id="houseTandB" name="houseTandB" class="form-input mt-2" placeholder="Toilet and Bath"
-            value="<?= htmlspecialchars($property['houseTandB']) ?>">
+            value="<?= htmlspecialchars($property['houseTandB']) ?>" <?= $isAgent ? 'readonly' : '' ?>>
         </div>
 
     </div>
@@ -213,10 +223,12 @@ if (!$property) {
                 class="preview-image w-full h-full object-cover rounded-md border cursor-pointer"
             >
 
+            <?php if (!$isAgent): ?>
             <button type="button"
                 class="delete-existing absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded">
                 ×
             </button>
+            <?php endif; ?>
 
         </div>
 
@@ -229,16 +241,19 @@ if (!$property) {
 <div id="preview" class="flex flex-wrap gap-2 mb-4"></div>
                             <div class="preview-box flex justify-center rounded-md shadow dark:shadow-gray-800 overflow-hidden bg-gray-50 dark:bg-slate-800 text-slate-400 p-2 text-center small w-auto max-h-60">Supports JPG and PNG. Max file size : 10MB.</div>
                             <!-- <input type="file" id="input-file" name="input-file" accept="image/*" onchange={handleChange()} hidden> -->
+                             <?php if (!$isAgent): ?>
                              <input type="file" id="propertyPhotos" name="propertyPhotos[]" multiple accept="image/*" hidden>
                             <label class="btn-upload btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="propertyPhotos">Upload Image</label>
+                            <?php endif; ?>
                         </div>
                         
 </div>
-
+                    <?php if (!$isAgent): ?>
                     <button type="submit" id="btn-add"
                         class="btn bg-green-600 hover:bg-green-700 text-white rounded-md mt-5 w-full">
                         Update Property
                     </button>
+                     <?php endif; ?>
                 </form>
             </div>
 
@@ -342,6 +357,7 @@ if (!$property) {
 
 </div>
 
+
                 <!-- CHECKBOXES -->
     <!-- <div class="mt-6">
         <h4 class="font-semibold mb-3">Amenities</h4>
@@ -410,6 +426,12 @@ if (!$property) {
 
         </div>
 
+    </div>
+     <div class="mt-6">
+        <a href="javascript:history.back()"
+           class="inline-flex items-center px-5 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg">
+            ← Back
+        </a>
     </div>
 </div>
 

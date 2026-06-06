@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+const isAgent = window.isAgent === true;
 var map = L.map('map').setView([9.7392, 118.7353], 13);
+
+
+if (isAgent) {
+    map.dragging.disable();
+    map.scrollWheelZoom.disable();
+    map.doubleClickZoom.disable();
+    map.touchZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
+}
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
@@ -17,7 +28,7 @@ console.log("Coords:", lat, lng);
 if (!isNaN(lat) && !isNaN(lng)) {
     map.setView([lat, lng], 15);
 
-    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+    marker = L.marker([lat, lng], { draggable: !isAgent }).addTo(map);
 
     // IMPORTANT: update inputs when dragging existing marker
     marker.on('dragend', function () {
@@ -30,13 +41,15 @@ if (!isNaN(lat) && !isNaN(lng)) {
 
 // ================= CLICK TO MOVE MARKER =================
 map.on('click', function (e) {
+    if (isAgent) return;
 
     const newLat = e.latlng.lat;
     const newLng = e.latlng.lng;
 
     // reuse marker instead of recreating (smoother UX)
     if (!marker) {
-        marker = L.marker([newLat, newLng], { draggable: true }).addTo(map);
+        /* marker = L.marker([newLat, newLng], { draggable: true }).addTo(map); */
+        marker = L.marker([newLat, newLng], { draggable: !isAgent}).addTo(map);
     } else {
         marker.setLatLng([newLat, newLng]);
     }
@@ -92,7 +105,13 @@ map.on('click', function (e) {
 
         // run immediately on page load
         togglePropertyFields();
-    $("#btn-add").click(function(e) {
+        if (isAgent) {
+    document.querySelectorAll("#houseAmenities input[type='checkbox']").forEach(cb => {
+        cb.disabled = true;
+        cb.style.pointerEvents = 'none';
+    });
+}
+    if (!isAgent) $("#btn-add").click(function(e) {
     e.preventDefault();  // Stop form submission
     Swal.fire({
         title: 'Edit this property?',
@@ -319,7 +338,7 @@ document.getElementById("closeModal").addEventListener("click", function (e) {
 });
 
 
-document.querySelectorAll(".delete-existing").forEach(btn => {
+if (!isAgent) document.querySelectorAll(".delete-existing").forEach(btn => {
 
     btn.addEventListener("click", function (e) {
         e.preventDefault();
@@ -376,7 +395,7 @@ console.log(imageID);
 });
 
 // ================= FILE CHANGE =================
-input.addEventListener("change", function () {
+if (!isAgent) input.addEventListener("change", function () {
     //filesArray = Array.from(this.files);
     filesArray = [...filesArray, ...Array.from(this.files)];
     updateInput();

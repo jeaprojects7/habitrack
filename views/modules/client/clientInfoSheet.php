@@ -37,7 +37,7 @@ if (!$prequalID) {
 // $reservationID = $_GET['id'] ?? null;
 ?> -->
 
-<input type="hidden" id="prequalID" value="<?= htmlspecialchars($prequalID ?? '') ?>">
+<input type="hidden" id="prequalID" name="prequalID" value="<?= htmlspecialchars($prequalID ?? '') ?>">
 <div
     id="main-area"
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
