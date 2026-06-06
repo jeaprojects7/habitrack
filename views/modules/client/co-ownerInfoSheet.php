@@ -1,43 +1,46 @@
 <?php
-$reservationID = $_GET['id'] ?? null;
-// $reservationID = $_GET['id'] ?? $_GET['reservationID'] ?? null; /* this works */
-if (!$reservationID) {
-    die("Invalid reservation ID");
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
+
+
+$reservationID = $_GET['id'] ?? null;
+
 require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+require_once __DIR__ . '/../../../controllers/coowner.controller.php';
 
 $res = ReservationController::ctrGetReservationById($reservationID);
 
 if (!$res) {
-    die("Reservation not found");
+    die("Reservation not found.");
 }
 
-$prequalID = $res['prequalID'] ?? null;
+$loggedInClientID = $_SESSION['clientID'] ?? null;
 
-
-if (!$prequalID) {
-    die("Invalid prequal ID (missing in reservation)");
+if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
+    http_response_code(403);
+    die("Access denied.");
 }
 
-// Get prequalID from the reservation
-// require_once __DIR__ . '/../../../controllers/reservations.controller.php';
-// $res = ReservationController::ctrGetReservationById($reservationID);
-// $prequalID = $res['prequalID'] ?? null;
-// if (!$reservationID) {
-//     die("No reservation selected");
-// } this works
+if (empty($res['coOwnerID'])) {
+    http_response_code(403);
+    die("No co-owner assigned.");
+}
+
+
+
+$coOwnerID = $res['coOwnerID'];
+
+
+$coOwner = ControllerCoOwner::ctrGetCoOwnerByID($coOwnerID);
+if (!$coOwner) {
+    die("Co-owner not found.");
+}
+
 ?>
-<!-- <?php
-// $reservationID = $_POST['reservationID'] ?? null;
 
-// $reservationID = $_GET['reservationID'] ?? '';
-// $reservationID = $_GET['id'] ?? null;
-// $reservationID = $_GET['reservationID'] ?? null;
-// $reservationID = $_GET['id'] ?? null;
-?> -->
-
-<input type="hidden" id="prequalID" value="<?= htmlspecialchars($prequalID ?? '') ?>">
 <div
     id="main-area"
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
@@ -46,7 +49,7 @@ if (!$prequalID) {
     <div class="layout-spacing">
         <!-- Header -->
         <div class="md:flex justify-between items-center">
-            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Basic Information Sheet</h5>
+            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Co-owner Information Sheet</h5>
             <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
                 <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-blue-600 dark:hover:text-white"><a href="home">Habitrack</a></li>
                 <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5"><i class="mdi mdi-chevron-right"></i></li>
@@ -65,9 +68,7 @@ if (!$prequalID) {
             <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
             <div id="step-4-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">4</div>
             <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
-            <div id="step-5-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">5</div>
-            <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
-            <div id="step-6-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">6</div>
+            <div id="step-5-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">5</div>            
         </div>
 
         <div class="grid grid-cols-1 mt-4">
@@ -80,29 +81,30 @@ if (!$prequalID) {
 
                     <!-- Row 1: Name -->
                     <div class="grid grid-cols-4 gap-4 mt-4">
+                        <input type="hidden" id="coOwnerID" value="<?= htmlspecialchars($coOwnerID ?? '') ?>">
                         <div class="mb-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">First Name</label>
-                            <input name="firstname" type="text" class="form-input mt-3 cursor-not-allowed font-normal placeholder:font-bold bg-white 
+                            <input name="firstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" disabled> <!-- placeholder="Kairi" -->
+                            dark:placeholder-white/30" placeholder="Kairi"> <!--cursor-not-allowed disabled -->
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">Middle Name</label>
-                            <input name="middlename" type="text" class="form-input mt-3 cursor-not-allowed font-normal placeholder:font-bold bg-white 
+                            <input name="middlename" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" disabled> <!-- placeholder="Benson" -->
+                            dark:placeholder-white/30" placeholder="Benson"> <!--cursor-not-allowed disabled -->
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">Last Name</label>
-                            <input name="lastname" type="text" class="form-input mt-3 cursor-not-allowed font-normal placeholder:font-bold bg-white 
+                            <input name="lastname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" disabled> <!-- placeholder="McClain" -->
+                            dark:placeholder-white/30" placeholder="McClain"> <!--cursor-not-allowed disabled -->
                         </div>
                         <div class="mb-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">Suffix</label>
-                            <input name="suffix" type="text" class="form-input mt-3 cursor-not-allowed font-normal placeholder:font-bold bg-white 
+                            <input name="suffix" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" disabled> <!-- placeholder="Enter Suffix" -->
+                            dark:placeholder-white/30" placeholder="Enter Suffix" > <!--cursor-not-allowed disabled  -->
                         </div>
                     </div>
 
@@ -110,15 +112,15 @@ if (!$prequalID) {
                     <div class="grid grid-cols-12 gap-4">
                         <div class="mb-4 col-span-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">Email</label>
-                            <input name="email" type="text" class="form-input mt-3 cursor-not-allowed font-normal placeholder:font-bold bg-white 
+                            <input name="email" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" disabled> <!-- placeholder="kaimcclain@gmail.com"  -->
+                            dark:placeholder-white/30" placeholder="kaimcclain@gmail.com"> <!--cursor-not-allowed disabled  -->
                         </div>
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Phone Number</label>
-                            <input name="phonenumber" type="text" class="form-input mt-3 cursor-not-allowed font-normal placeholder:font-bold bg-white 
+                            <input name="phonenumber" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')" disabled> <!--  placeholder="09876543211" -->
+                            dark:placeholder-white/30" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="09876543211"> <!-- cursor-not-allowed disabled  -->
                         </div>
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Civil Status</label>
@@ -179,20 +181,6 @@ if (!$prequalID) {
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="mb-4">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Birthdate</label>
-                            <div class="relative mt-3">
-                                <input id="birthdate" name="birthdate" type="text" class="form-input pr-10 font-normal bg-white 
-                                dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 rounded-lg"
-                                placeholder="Select Birthdate">
-
-                                 Clear Button 
-                                <button type="button" id="clearBirthdate" onclick="clearBirthdateField()" 
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 
-                                transition-colors duration-200 hidden">✕</button>
-                            </div>
-                        </div> chat-->
-
 
                     <!-- Row 3: Personal -->
                     <div class="grid grid-cols-4 gap-4">
@@ -208,13 +196,6 @@ if (!$prequalID) {
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Buddhism">
                         </div>
-                        <!-- <div class="mb-4">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Birthdate</label>
-                            <input name="birthdate" type="date" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" placeholder="Buddhism">
-                        </div> -->
-                        
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Place of Birth</label>
                             <input name="placeofbirth" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -223,35 +204,27 @@ if (!$prequalID) {
                         </div>
                     </div>
                     
-                    <!-- Next Button -->
-                    <!-- <div class="flex justify-end mt-6">
-                        <button onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                            Next
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div> -->
+
                     
-                    <!-- Next Button -->
                     <div class="flex justify-between items-center mt-6">
-                    
-                    <!-- ths works ang a -->
-                        <!-- <a href="index.php?route=reservation-view&id=<?= $reservationID ?>"  -->
-                         <a href="index.php?route=reservation-view&id=<?= urlencode($reservationID) ?>"
-                            class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                            Back to Reservation View
-                        </a>
-                        <button id= next-btn onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                            Next
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
+                        <a href="index.php?route=reservation-view&id=<?= urlencode($reservationID) ?>"
+                                class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                                Back to Reservation View
+                            </a>
+                        <!-- Next Button -->
+                        <div class="flex justify-end mt-6">
+                            <button onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                                Next
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+
                 </div>
 
                 <!-- ===== PAGE 2 ===== -->
@@ -466,6 +439,7 @@ if (!$prequalID) {
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     
@@ -510,13 +484,6 @@ if (!$prequalID) {
                             dark:placeholder-white/30" 
                             oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="20000">
                         </div>
-
-                        <!-- <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Source of Income</label>
-                            <input name="sourceofincome" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" placeholder="a">
-                        </div> -->
 
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Source of Income</label>
@@ -669,12 +636,6 @@ if (!$prequalID) {
                             </div>
                         </div>
 
-                          <!-- <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Date Hired</label>
-                            <input name="datehired" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" placeholder="2026">
-                        </div> -->
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Date Hired</label>
                             <div class="relative mt-3">
@@ -850,83 +811,7 @@ if (!$prequalID) {
                             Back
                         </button>
 
-                        <!-- Next Button -->
-                        <button onclick="goToPage(6)" 
-                            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                            
-                            Next
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div id="page-6" class="hidden">
-
-                    <h2 class="text-gray-800 dark:text-white font-bold text-lg">Special Power of Attorney Information</h2>
-
-                    <div class="grid grid-cols-8 gap-4 mt-4">
-
-                        <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">First Name</label>
-                            <input name="spafirstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                                dark:placeholder-white/30" placeholder="a">
-                        </div>
-                       
-                        <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Middle Name</label>
-                            <input name="spamiddlename" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                                dark:placeholder-white/30" placeholder="a">
-                        </div>
-                        
-                        <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Last Name</label>
-                            <input name="spalastname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                                dark:placeholder-white/30" placeholder="a">
-                        </div>
-                        
-                        <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Suffix</label>
-                            <input name="spasuffix" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                                dark:placeholder-white/30" placeholder="a">
-                        </div>
-                    </div>
-
-                     <div class="grid grid-cols-8 gap-4 mt-2">
-                        <div class="mb-4 col-span-6">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Address</label>
-                            <input name="spaaddress" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 dark:placeholder-white/30" placeholder="a">
-                        </div>
-
-                        <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Phone Number</label>
-                            <input name="spaphonenumber" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" placeholder="09876543215" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center mt-6">
-    
-                        <!-- Back Button -->
-                        <button onclick="goToPage(5)" 
-                            class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                            
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                            Back
-                        </button>
-
-                        <div class="grid grid-cols-1 gap-4">
+                       <div class="grid grid-cols-1 gap-4">
                             <div class="flex justify-center">
                                 <button type="submit" name="btn-submit" id="btn-submit"
                                     class="btn bg-green-600 hover:bg-green-700 text-white rounded-md px-6 py-2 flex items-center gap-2">
@@ -951,12 +836,3 @@ if (!$prequalID) {
         </div>
     </div>
 </div>
-
-
-
-                    <!-- House No. / Unit No.
-Street Name
-Subdivision / Village
-Barangay
-City / Municipality
-Province / State -->

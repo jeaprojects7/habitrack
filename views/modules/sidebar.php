@@ -246,7 +246,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
             
 
             <!-- User Profile -->
-            <?php if ($role !== 'Guest'): ?>
+            <!-- <?php if ($role !== 'Guest'): ?>
                 <li>
                     <!-- <button class="sidebar-btn" onclick="toggleSubmenu('profile-submenu', this)">
                         <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
@@ -258,7 +258,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                         <li><a href="#">Settings</a></li>
                     </ul> -->
                 </li>
-            <?php endif; ?>
+            <?php endif; ?> -->
 
               <!-- Pre-Qual Studd -->
             <?php if ($role === 'Agent'): ?>

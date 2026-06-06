@@ -101,6 +101,19 @@ class ModelClient{
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+    public static function mdlCheckClientInfo($prequalID){
+		$stmt = (new Connection)->connect()->prepare("
+			SELECT * FROM client_information 
+			WHERE prequalID = :prequalID 
+			LIMIT 1
+		");
+
+		$stmt->bindParam(":prequalID", $prequalID);
+		$stmt->execute();
+
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
+
     static public function mdlSaveClientInfo($data){
 
         $db = new Connection();
@@ -111,6 +124,21 @@ class ModelClient{
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
+            // Check if this prequalID already has client information
+            $checkPrequal = $pdo->prepare("
+                SELECT prequalID
+                FROM client_information
+                WHERE prequalID = :prequalID
+                LIMIT 1
+            ");
+
+            $checkPrequal->bindParam(":prequalID", $data["prequalID"], PDO::PARAM_STR);
+            $checkPrequal->execute();
+
+            if($checkPrequal->fetch()){
+                $pdo->rollBack();
+                return "already_exists";
+            }
             
             // Generate ID
             $cis_id = $pdo->prepare("
@@ -137,6 +165,7 @@ class ModelClient{
                 INSERT INTO client_information(
 
                     clientCISID,
+                    prequalID,
 
                     clientCitizenship,
                     clientGender,
@@ -182,6 +211,7 @@ class ModelClient{
                 ) VALUES (
 
                     :clientCISID,
+                    :prequalID,
 
                     :clientCitizenship,
                     :clientGender,
@@ -227,7 +257,7 @@ class ModelClient{
                 )
 
             ");
-
+            $stmt->bindParam(":prequalID", $data["prequalID"], PDO::PARAM_STR);
             $stmt->bindParam(":clientCISID", $ciscode, PDO::PARAM_STR);
             $stmt->bindParam(":clientCitizenship", $data["clientCitizenship"], PDO::PARAM_STR);
             $stmt->bindParam(":clientGender", $data["clientGender"], PDO::PARAM_STR);
@@ -289,168 +319,7 @@ class ModelClient{
         }
     }
 
-    static public function mdlGetSpouseInfo($tableUsers, $item, $value){
-		$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");
-		$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-		$stmt -> execute();
-		return $stmt->fetch(PDO::FETCH_ASSOC);
-	}
-
-    static public function mdlSaveSpouseInfo($data){
-
-        $db = new Connection();
-        $pdo = $db->connect();
-
-        try{
-
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->beginTransaction();
-
-            
-            // Generate ID
-            $sis_id = $pdo->prepare("
-                SELECT CONCAT('SIS', LPAD((COUNT(id)+1),4,'0')) as gen_id 
-                FROM spouse_information
-            ");
-            $sis_id->execute();
-            $sisID = $sis_id->fetch(PDO::FETCH_ASSOC);
-            $siscode = $sisID['gen_id'];
-
-            // OPTIONAL: Manual check (extra safety)
-            $check = $pdo->prepare("SELECT spouseISID FROM spouse_information WHERE spouseISID = :spouseISID");
-            $check->bindParam(":spouseISID", $siscode, PDO::PARAM_STR);
-            $check->execute();
-
-            /*  */
-            if($check->rowCount() > 0){
-                $pdo->rollBack();
-                return "existing";
-            }/*  */
-
-            $stmt = $pdo->prepare("
-
-                INSERT INTO spouse_information(
-
-                    spouseISID,
-
-                    spouseCitizenship,
-                    spouseGender,
-                    spouseReligion,
-                    spouseBirthdate,
-                    spousePlaceOfBirth,
-
-                    spouseAddress,
-                    spouseProvinceAddress,
-
-                    spouseTaxIdenNum,
-                    spouseSSS_GSISnumber,
-
-                    spouseSourceOfIncome,
-                    spouseEmployerBusinessName,
-                    spouseNatureOfBusiness,
-                    spouseBusinessAddress,
-
-                    spousePosition,
-                    spouseDepartment,
-                    spouseDateHired,
-                    spouseAppointment,
-                    spousePlaceOfWork,
-
-                    spouseEmpPhoneNum,
-                    spouseEmployerEmail,
-
-                    spouseFathersName,
-                    spouseMothersMaidenName,
-
-                    spouseParentsAddress,
-                    spouseParentsPhoneNum
-
-                ) VALUES (
-
-                    :spouseISID,
-
-                    :spouseCitizenship,
-                    :spouseGender,
-                    :spouseReligion,
-                    :spouseBirthdate,
-                    :spousePlaceOfBirth,
-
-                    :spouseAddress,
-                    :spouseProvinceAddress,
-
-                    :spouseTaxIdenNum,
-                    :spouseSSS_GSISnumber,
-
-                    :spouseSourceOfIncome,
-                    :spouseEmployerBusinessName,
-                    :spouseNatureOfBusiness,
-                    :spouseBusinessAddress,
-
-                    :spousePosition,
-                    :spouseDepartment,
-                    :spouseDateHired,
-                    :spouseAppointment,
-                    :spousePlaceOfWork,
-
-                    :spouseEmpPhoneNum,
-                    :spouseEmployerEmail,
-
-                    :spouseFathersName,
-                    :spouseMothersMaidenName,
-
-                    :spouseParentsAddress,
-                    :spouseParentsPhoneNum
-
-                )
-
-            ");
-
-            $stmt->bindParam(":spouseISID", $siscode, PDO::PARAM_STR);
-            $stmt->bindParam(":spouseCitizenship", $data["spouseCitizenship"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseGender", $data["spouseGender"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseReligion", $data["spouseReligion"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseBirthdate", $data["spouseBirthdate"], PDO::PARAM_STR);
-            $stmt->bindParam(":spousePlaceOfBirth", $data["spousePlaceOfBirth"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spouseAddress", $data["spouseAddress"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseProvinceAddress", $data["spouseProvinceAddress"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spouseTaxIdenNum", $data["spouseTaxIdenNum"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseSSS_GSISnumber", $data["spouseSSS_GSISnumber"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spouseSourceOfIncome", $data["spouseSourceOfIncome"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseEmployerBusinessName", $data["spouseEmployerBusinessName"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseNatureOfBusiness", $data["spouseNatureOfBusiness"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseBusinessAddress", $data["spouseBusinessAddress"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spousePosition", $data["spousePosition"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseDepartment", $data["spouseDepartment"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseDateHired", $data["spouseDateHired"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseAppointment", $data["spouseAppointment"], PDO::PARAM_STR);
-            $stmt->bindParam(":spousePlaceOfWork", $data["spousePlaceOfWork"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spouseEmpPhoneNum", $data["spouseEmpPhoneNum"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseEmployerEmail", $data["spouseEmployerEmail"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spouseFathersName", $data["spouseFathersName"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseMothersMaidenName", $data["spouseMothersMaidenName"], PDO::PARAM_STR);
-
-            $stmt->bindParam(":spouseParentsAddress", $data["spouseParentsAddress"], PDO::PARAM_STR);
-            $stmt->bindParam(":spouseParentsPhoneNum", $data["spouseParentsPhoneNum"], PDO::PARAM_STR);
-
-            $stmt->execute();
-
-            $pdo->commit();
-            return "success";
-
     
-        }catch (PDOException $e){
-
-            $pdo->rollBack();
-
-            return $e->getMessage();
-        }
-    }
 
     static public function mdlGetClient($clientID){
 
@@ -473,44 +342,120 @@ class ModelClient{
 
     static public function mdlClientChangePassword($oldpassword, $newpassword){
 
-    $clientID = $_SESSION["clientID"];
+        $clientID = $_SESSION["clientID"];
 
-    // CHECK OLD PASSWORD
-    $stmt = (new Connection)->connect()->prepare("
-        SELECT * 
-        FROM client 
-        WHERE clientID = :clientID 
-        AND clientPass = :oldpassword
-    ");
-
-    $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
-    $stmt->bindParam(":oldpassword", $oldpassword, PDO::PARAM_STR);
-
-    $stmt->execute();
-
-    $answer = $stmt->fetch();
-
-    // IF OLD PASSWORD IS CORRECT
-    if(!empty($answer)){
-
+        // CHECK OLD PASSWORD
         $stmt = (new Connection)->connect()->prepare("
-            UPDATE client 
-            SET clientPass = :newpassword 
-            WHERE clientID = :clientID
+            SELECT * 
+            FROM client 
+            WHERE clientID = :clientID 
+            AND clientPass = :oldpassword
         ");
 
-        $stmt->bindParam(":newpassword", $newpassword, PDO::PARAM_STR);
+        $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+        $stmt->bindParam(":oldpassword", $oldpassword, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $answer = $stmt->fetch();
+
+        // IF OLD PASSWORD IS CORRECT
+        if(!empty($answer)){
+
+            $stmt = (new Connection)->connect()->prepare("
+                UPDATE client 
+                SET clientPass = :newpassword 
+                WHERE clientID = :clientID
+            ");
+
+            $stmt->bindParam(":newpassword", $newpassword, PDO::PARAM_STR);
+            $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            return "success";
+
+        }else{
+
+            return "incorrect";
+
+        }
+
+    }
+
+    static public function mdlGetClientInfoByPrequalID($prequalID){
+
+        $stmt = (new Connection)->connect()->prepare("
+            SELECT
+                ci.*,
+                p.*,
+                c.clientID,
+                c.clientFName,
+                c.clientMName,
+                c.clientLName,
+                c.clientSuffix,
+                c.clientEmail,
+                c.clientPhoneNum
+            FROM client_information ci
+            INNER JOIN prequal p
+                ON ci.prequalID = p.prequalID
+            INNER JOIN client c
+                ON p.clientID = c.clientID
+            WHERE ci.prequalID = :prequalID
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":prequalID", $prequalID, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    static public function mdlGetLatestClientInfoByClientID($clientID){
+
+        $stmt = (new Connection)->connect()->prepare("
+
+            SELECT ci.*,
+            p.clientCivilStatus AS clientCivilStatus,
+            p.clientMonthlyIncome AS clientMonthlyIncome
+
+            FROM client_information ci
+
+            INNER JOIN prequal p
+                ON ci.prequalID = p.prequalID
+
+            WHERE p.clientID = :clientID
+
+            ORDER BY ci.id DESC
+            LIMIT 1
+
+        ");
+
         $stmt->bindParam(":clientID", $clientID, PDO::PARAM_STR);
 
         $stmt->execute();
 
-        return "success";
-
-    }else{
-
-        return "incorrect";
-
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-}
+    // static public function mdlGetCoOwnerInfo($tableUsers, $item, $value){
+	// 	$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");
+	// 	$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
+	// 	$stmt -> execute();
+	// 	return $stmt->fetch(PDO::FETCH_ASSOC);
+	// }
+
+    // static public function mdlGetClientCoOwnerInfoByPrequalID($prequalID){
+    //     $stmt = (new Connection)->connect()->prepare("
+    //         SELECT *
+    //         FROM clientcoprequal
+    //         WHERE prequalID = :prequalID
+    //         LIMIT 1
+    //     ");
+
+    //     $stmt->bindParam(":prequalID", $prequalID, PDO::PARAM_STR);
+    //     $stmt->execute();
+
+    //     return $stmt->fetch(PDO::FETCH_ASSOC);
+    // } ari na ni sa coowner model
 }

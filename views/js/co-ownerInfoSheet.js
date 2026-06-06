@@ -1,31 +1,24 @@
 $(document).ready(function () {
-    loadSpouseInfo();
+    loadCoOwnerInfo();
 });
 
-function saveSpouseInfo() {
+function saveCoOwnerInfo() {
 
-    let spouse = new FormData();
+    let coowner = new FormData();
 
     // ================= PAGE 1 =================
-    spouse.append("clientCISID", $("#clientCISID").val());
+    coowner.append("coOwnerID", $("#coOwnerID").val());
 
-    spouse.append("spouseFName", $("input[name=firstname]").val());
-    spouse.append("spouseMName", $("input[name=middlename]").val());
-    spouse.append("spouseLName", $("input[name=lastname]").val());
-    spouse.append("spouseSuffix", $("input[name=suffix]").val());
+    coowner.append("civilstatus", $("#civilstatus").val());
+    coowner.append("gender", $("#gender").val());
+    coowner.append("birthdate", $("#birthdate").val());
 
-    spouse.append("spouseEmail", $("input[name=email]").val());
-    spouse.append("spousePhoneNum", $("input[name=phonenumber]").val());
-
-    // spouse.append("civilstatus", $("#civilstatus").val());
-    spouse.append("spouseGender", $("#gender").val());
-    spouse.append("spouseBirthdate", $("#birthdate").val());
-
-    spouse.append("spouseCitizenship", $("input[name=citizenship]").val());
-    spouse.append("spouseReligion", $("input[name=religion]").val());
-    spouse.append("spousePlaceOfBirth", $("input[name=placeofbirth]").val());
+    coowner.append("citizenship", $("input[name=citizenship]").val());
+    coowner.append("religion", $("input[name=religion]").val());
+    coowner.append("placeofbirth", $("input[name=placeofbirth]").val());
 
     // ================= PAGE 2 =================
+
     let parts = [
         $("input[name=unitno]").val(),
         $("input[name=street]").val(),
@@ -35,10 +28,12 @@ function saveSpouseInfo() {
         $("input[name=province]").val()
     ];
 
-    spouse.append(
-        "spouseAddress",
-        parts.filter(v => v && v.trim() !== "").join(", ")
-    );
+    let fullAddress = parts
+        .filter(v => v && v.trim() !== "")
+        .join(", ");
+
+    coowner.append("address", fullAddress);
+
 
     let provParts = [
         $("input[name=prov_unitno]").val(),
@@ -49,40 +44,38 @@ function saveSpouseInfo() {
         $("input[name=prov_province]").val()
     ];
 
-    spouse.append(
-        "spouseProvinceAddress",
-        provParts.filter(v => v && v.trim() !== "").join(", ")
-    );
+    let provAddress = provParts
+        .filter(v => v && v.trim() !== "")
+        .join(", ");
+
+    coowner.append("prov_address", provAddress);
 
     // ================= PAGE 3 =================
-    spouse.append("spouseTaxIdenNum", $("input[name=tin]").val());
-    spouse.append("spouseSSS_GSISnumber", $("input[name=sss_gsis]").val());
+    coowner.append("tin", $("input[name=tin]").val());
+    coowner.append("sss_gsis", $("input[name=sss_gsis]").val());
 
-    spouse.append("spouseDependentsElem", $("input[name=elem]").val());
-    spouse.append("spouseDependentsHS", $("input[name=highschool]").val());
-    spouse.append("spouseDependentsC", $("input[name=college]").val());
-    spouse.append("spouseDependentsNotStud", $("input[name=notstudying]").val());
-
+    coowner.append("elem", $("input[name=elem]").val());
+    coowner.append("highschool", $("input[name=highschool]").val());
+    coowner.append("college", $("input[name=college]").val());
+    coowner.append("notstudying", $("input[name=notstudying]").val());
     // ================= PAGE 4 =================
-    spouse.append("spouseMonthlyIncome", $("input[name=gmi]").val());
+    coowner.append("sourceofincome", $("#sourceofincome").val());
+    coowner.append("empbusinessname", $("input[name=empbusinessname]").val());
+    coowner.append("natureofbusiness", $("input[name=natureofbusiness]").val());
+    coowner.append("businessaddress", $("input[name=businessaddress]").val());
 
-    spouse.append("spouseSourceOfIncome", $("#sourceofincome").val());
-    spouse.append("spouseEmployerBusinessName", $("input[name=empbusinessname]").val());
-    spouse.append("spouseNatureOfBusiness", $("input[name=natureofbusiness]").val());
-    spouse.append("spouseBusinessAddress", $("input[name=businessaddress]").val());
+    coowner.append("appointment", $("#appointment").val());
+    coowner.append("placeofwork", $("#placeofwork").val());
+    coowner.append("datehired", $("#datehired").val());
 
-    spouse.append("spouseAppointment", $("#appointment").val());
-    spouse.append("spousePlaceOfWork", $("#placeofwork").val());
-    spouse.append("spouseDateHired", $("#datehired").val());
-
-    spouse.append("spousePosition", $("input[name=position]").val());
-    spouse.append("spouseDepartment", $("input[name=department]").val());
-    spouse.append("spouseEmpPhoneNum", $("input[name=employerphonenumber]").val());
-    spouse.append("spouseEmployerEmail", $("input[name=employeremail]").val());
+    coowner.append("position", $("input[name=position]").val());
+    coowner.append("department", $("input[name=department]").val());
+    coowner.append("employerphonenumber", $("input[name=employerphonenumber]").val());
+    coowner.append("employeremail", $("input[name=employeremail]").val());
 
     // ================= PAGE 5 =================
-    spouse.append("spouseParentsAddress", $("input[name=parentsaddress]").val());
-    spouse.append("spouseParentsPhoneNum", $("input[name=parentsphonenumber]").val());
+    coowner.append("parentsaddress", $("input[name=parentsaddress]").val());
+    coowner.append("parentsphonenumber", $("input[name=parentsphonenumber]").val());
 
     let fatherParts = [
         $("input[name=fathersfirstname]").val(),
@@ -91,10 +84,12 @@ function saveSpouseInfo() {
         $("input[name=fatherssuffix]").val()
     ];
 
-    spouse.append(
-        "spouseFathersName",
-        fatherParts.filter(v => v && v.trim() !== "").join(" ")
-    );
+    let fathersFullName = fatherParts
+        .filter(v => v && v.trim() !== "")
+        .join(" ");
+
+    coowner.append("fathersfullname", fathersFullName);
+
 
     let motherParts = [
         $("input[name=mothersfirstname]").val(),
@@ -102,16 +97,18 @@ function saveSpouseInfo() {
         $("input[name=motherslastname]").val()
     ];
 
-    spouse.append(
-        "spouseMothersMaidenName",
-        motherParts.filter(v => v && v.trim() !== "").join(" ")
-    );
+    let mothersFullName = motherParts
+        .filter(v => v && v.trim() !== "")
+        .join(" ");
+
+    coowner.append("mothersfullname", mothersFullName);
+
 
     // ================= AJAX =================
     $.ajax({
-        url: "/habitrack/ajax/spouseInfoSheet.save.ajax.php",
+        url: "/habitrack/ajax/coownerInfoSheet.save.ajax.php",
         method: "POST",
-        data: spouse,
+        data: coowner,
         cache: false,
         contentType: false,
         processData: false,
@@ -123,22 +120,27 @@ function saveSpouseInfo() {
             Swal.fire({
                 icon: "success",
                 title: "<span style='font-size:35px;'>Success</span>",
-                html: "<span style='font-size:25px;'>Information Sheet saved successfully!</span>",
+                html: "<span style='font-size:25px;'>Co-owner Information Sheet saved successfully!</span>",
                 showConfirmButton: true
             }).then(() => {
-                window.location = "home";
+                window.location = "reservations";
             });
 
         },
         error: function () {
+
             Swal.fire({
                 icon: "error",
                 title: "Error",
                 text: "Something went wrong"
             });
+
         }
     });
+
+
 }
+
 
 // ================= SUBMIT BUTTON =================
 
@@ -157,7 +159,7 @@ $("#btn-submit").click(function (e) {
         cancelButtonText: "Cancel"
     }).then((result) => {
         if (result.isConfirmed) {
-            saveSpouseInfo();
+            saveCoOwnerInfo();
         }
     });
 });
@@ -230,6 +232,10 @@ function validatePage(page) {
         let required = [
             "input[name=tin]",
             "input[name=sss_gsis]",
+            "input[name=elem]",
+            "input[name=highschool]",
+            "input[name=college]",
+            "input[name=notstudying]"
         ];
 
         required.forEach(el => {
@@ -328,40 +334,91 @@ function validatePage(page) {
 }
 
 
-function loadSpouseInfo() {
+// function loadCoOwnerInfo() {
 
-    let prequal = new FormData();
-    prequal.append("prequalID", $("#prequalID").val());
+//     $.ajax({
+//         url: "/habitrack/ajax/coownerinfosheet.get.ajax.php",
+//         method: "POST",
+//         dataType: "json",
+//         success: function (data) {
+//             console.log("DATA TYPE:", typeof data);
+//             console.log("DATA:", data);
+//             if (!data) return;
+
+//             $("input[name=firstname]").val(data.coOwnerFName);
+//             $("input[name=middlename]").val(data.coOwnerMName);
+//             $("input[name=lastname]").val(data.coOwnerLName);
+//             $("input[name=suffix]").val(data.coOwnerSuffix ? data.coOwnerSuffix : " ") ;
+//             $("input[name=email]").val(data.coOwnerEmail);
+//             $("input[name=phonenumber]").val(data.coOwnerPhoneNum);
+//         },
+
+//         error: function () {
+//             Swal.fire({
+//                 icon: "error",
+//                 title: "Error",
+//                 text: "Failed to load coowner information"
+//             });
+//         }
+//     });
+// }
+
+// function loadCoOwnerInfo() {
+
+//     $.ajax({
+//         url: "/habitrack/ajax/coownerinfosheet.get.ajax.php",
+//         method: "POST",
+//         dataType: "json",
+//         success: function (res) {
+
+//             if (!res || res.status !== "found") return;
+
+//             const d = res.data;
+
+// // FIXED FIELD NAMES (MATCH YOUR DATABASE)
+// $("input[name=firstname]").val(d.coOwnerFName || "");
+// $("input[name=middlename]").val(d.coOwnerMName || "");
+// $("input[name=lastname]").val(d.coOwnerLName || "");
+// $("input[name=suffix]").val(d.coOwnerSuffix || "");
+
+// $("input[name=email]").val(d.coOwnerEmail || "");
+// $("input[name=phonenumber]").val(d.coOwnerPhoneNum || "");
+
+//         }
+//     });
+// }
+//2nd ni ^
+
+function loadCoOwnerInfo() {
+
+    const reservationID = new URLSearchParams(window.location.search).get("id");
+
     $.ajax({
-        url: "/habitrack/ajax/spouseinfosheet.get.ajax.php",
-        method: "POST",
+        url: "/habitrack/ajax/coownerinfosheet.get.ajax.php?id=" + reservationID,
+        method: "GET",
         dataType: "json",
-        data: prequal,
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            console.log("DATA TYPE:", typeof data);
-            console.log("DATA:", data);
-            if (!data) return;
+        success: function (res) {
 
-            $("input[name=firstname]").val(data.coOwnerFName);
-            $("input[name=middlename]").val(data.coOwnerMName);
-            $("input[name=lastname]").val(data.coOwnerLName);
-            $("input[name=suffix]").val(data.coOwnerSuffix ? data.coOwnerSuffix : " ") ;
-            $("input[name=email]").val(data.coOwnerEmail);
-            $("input[name=phonenumber]").val(data.coOwnerPhoneNum);
-            $("input[name=gmi]").val(data.coOwnerMonthlyIncome);
-            $("#civilstatus").val("Married");
-            console.log($("#civilstatus").val());
-            
-        },
+            if (!res || res.status !== "success") return;
 
-        error: function () {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Failed to load spouse information"
-            });
+            const d = res.data;
+
+            console.log(d);
+
+             // ================= PAGE 1 =================
+            $("input[name=firstname]").val(d.coOwnerFName || "");
+            $("input[name=middlename]").val(d.coOwnerMName || "");
+            $("input[name=lastname]").val(d.coOwnerLName || "");
+            $("input[name=suffix]").val(d.coOwnerSuffix || "");
+
+            $("input[name=email]").val(d.coOwnerEmail || "");
+            $("input[name=phonenumber]").val(d.coOwnerPhoneNum || "");
+
+            // ================= PAGE 4 (EXAMPLE YOU ALREADY HAVE DATA FOR) =================
+            $("input[name=gmi]").val(d.coOwnerMonthlyIncome || "");
+
+            // dropdown hidden fields
+            $("#sourceofincome").val(d.coOwnerEmpStatus || "");
         }
     });
 }

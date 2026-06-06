@@ -68,6 +68,12 @@ class ControllerClient{
 	static public function ctrSaveClientInfo($data){
 
 		$answer = (new ModelClient)->mdlSaveClientInfo($data);
+		if($answer == "already_exists"){
+			echo "<script>
+				alert('You already filled up this form.');
+			</script>";
+			return;
+		}
 
 		return $answer;
 	}
@@ -79,7 +85,7 @@ class ControllerClient{
 
 	static public function ctrSaveSpouseInfo($data){
 
-		$answer = (new ModelClient)->mdlSaveSpouseInfo($data);
+		$answer = (new ModelSpouse)->mdlSaveSpouseInfo($data);
 
 		return $answer;
 	}
@@ -95,6 +101,22 @@ class ControllerClient{
 		$answer = (new ModelClient)->mdlClientChangePassword($oldpassword, $newpassword);
 
 		return $answer;
+
+	}
+
+	public static function ctrCheckClientInfo($prequalID){
+		return (new ModelClient)->mdlCheckClientInfo($prequalID);
+	}
+
+	static public function ctrGetClientInfoByPrequalID($prequalID){
+
+		return (new ModelClient)->mdlGetClientInfoByPrequalID($prequalID);
+
+	}
+
+	static public function ctrGetLatestClientInfoByClientID($clientID){
+
+		return (new ModelClient)->mdlGetLatestClientInfoByClientID($clientID);
 
 	}
 }

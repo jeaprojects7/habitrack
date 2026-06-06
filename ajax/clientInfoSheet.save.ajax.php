@@ -8,6 +8,7 @@ class ClientInfoSheet {
 
     // ===== PAGE 1 =====
     // public $civilstatus;
+    public $prequalID;
     public $gender;
     public $birthdate;
 
@@ -66,6 +67,7 @@ class ClientInfoSheet {
             "clientID" => $_SESSION["clientID"],
             // ===== PAGE 1 =====
             // "clientCitizenship" => $this->civilstatus,
+            "prequalID" => $this->prequalID,
             "clientGender" => $this->gender,
             "clientBirthdate" => $this->birthdate,
 
@@ -131,6 +133,7 @@ $save_client_info = new ClientInfoSheet();
 
 // ===== PAGE 1 =====
 // $save_client_info->civilstatus = $_POST["civilstatus"];
+$save_client_info->prequalID = $_POST["prequalID"];
 $save_client_info->gender = $_POST["gender"];
 // $save_client_info->birthdate = $_POST["birthdate"];
 $date = DateTime::createFromFormat('m-d-Y', $_POST["birthdate"]);

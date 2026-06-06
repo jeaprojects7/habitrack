@@ -1,3 +1,38 @@
+<?php
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$prequalID = $_GET['id'] ?? null;
+require_once __DIR__ . '/../../../models/spouse.model.php';
+$res = ModelSpouse::mdlGetSpouseInfo($prequalID);
+
+if (!$res) {
+    die("Reservation not found.");
+}
+
+if($res['clientCISID']){
+    $clientCISID = $res["clientCISID"];
+}else{
+    $clientCISID = null;
+}
+
+
+$loggedInClientID = $_SESSION['clientID'] ?? null;
+
+// if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
+//     http_response_code(403);
+//     die("Access denied.");
+// }
+
+// if (empty($res['spouseID'])) {
+//     http_response_code(403);
+//     die("No spouse assigned.");
+// }
+?>
+<input type="hidden" id="prequalID" value="<?= $res['prequalID']?>">
+<input type="hidden" id="clientCISID" value="<?= $res['clientCISID']?>">
 <div
     id="main-area"
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
@@ -82,8 +117,11 @@
                         </div>
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Civil Status</label>
-                            <div class="relative mt-3" id="civstat-wrapper">
-                                <input type="hidden" name="civilstatus" id="civilstatus" required>
+                            <!-- <input type="hidden" name="civilstatus" id="civilstatus" required> -->
+                            <input type="text" name="civilstatus" id="civilstatus" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
+                            dark:placeholder-white/30" placeholder="Married" readonly>
+                            <!-- <div class="relative mt-3" id="civstat-wrapper">
                                 <div id="civstat-display" onclick="toggleCivilStatusDropdown()" 
                                 class="form-input w-full font-normal text-gray-400 dark:text-white/30 cursor-pointer flex justify-between items-center select-none bg-white 
                                 dark:bg-slate-800 border-gray-200 dark:border-slate-700">
@@ -102,7 +140,7 @@
                                     <div onclick="selectCivilStatus('divorced', 'Divorced')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 
                                     dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Divorced</div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Gender</label>
@@ -162,14 +200,25 @@
                         </div>
                     </div>
                     
-                    <!-- Next Button -->
-                    <div class="flex justify-end mt-6">
-                        <button onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
-                            Next
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
+
+                    
+                    <div class="flex justify-between items-center mt-6">
+                        <a href="index.php?route=reservation-view&id=<?= urlencode($reservationID) ?>"
+                                class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                                Back to Reservation View
+                            </a>
+                        <!-- Next Button -->
+                        <div class="flex justify-end mt-6">
+                            <button onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                                Next
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -333,6 +382,60 @@
                             </div>
                         </div>
 
+
+                        <!-- RIGHT SIDE -->
+                        <div>
+                            <h2 class="text-gray-800 dark:text-white font-bold text-lg">
+                                Total Number of Dependents
+                            </h2>
+
+                            <div class="grid grid-cols-8 gap-4 mt-4">
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        In Elementary
+                                    </label>
+
+                                    <input name="elem" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        In Highschool
+                                    </label>
+
+                                    <input name="highschool" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        In College
+                                    </label>
+
+                                    <input name="college" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        Not yet studying
+                                    </label>
+
+                                    <input name="notstudying" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     
@@ -391,11 +494,11 @@
                                     </svg>
                                 </div>
                                 <div id="sourceofincome-options" class="hidden absolute z-50 w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg mt-1 overflow-hidden">
-                                    <div onclick="selectSourceOfIncome('employed', 'Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Employed</div>
-                                    <div onclick="selectSourceOfIncome('professional', 'Professional')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Professional</div>
-                                    <div onclick="selectSourceOfIncome('selfemployed', 'Self-Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Self-Employed</div>
-                                    <div onclick="selectSourceOfIncome('soleproprietorship', 'Sole Proprietorship')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Sole Proprietorship</div>
-                                    <div onclick="selectSourceOfIncome('partnershipcorporation', 'Partnership Corporation')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Partnership Corporation</div>
+                                    <div onclick="selectSourceOfIncome('Employed', 'Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Employed</div>
+                                    <div onclick="selectSourceOfIncome('Professional', 'Professional')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Professional</div>
+                                    <div onclick="selectSourceOfIncome('Self-Employed', 'Self-Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Self-Employed</div>
+                                    <div onclick="selectSourceOfIncome('Sole Proprietorship', 'Sole Proprietorship')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Sole Proprietorship</div>
+                                    <div onclick="selectSourceOfIncome('Partnership corporation', 'Partnership Corporation')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Partnership Corporation</div>
                                 </div>
                             </div>
                         </div>
