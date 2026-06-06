@@ -89,21 +89,25 @@ $printQuery = http_build_query([
 </div>
 </div>
 </form> -->
-<form method="GET" action="/habitrack/index.php" class="flex flex-wrap gap-3 items-end">
+<form method="GET" action="/habitrack/index.php" class="flex flex-wrap gap-3 items-end mt-6">
 
     <input type="hidden" name="route" value="exploreproperty">
 
     <!-- TYPE -->
     <select name="type"
-        class="px-4 py-3 text-lg rounded-full border border-gray-300 bg-white text-black focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[180px]">
+        class="px-4 py-4 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
         <option value="">All Types</option>
         <option value="House" <?= ($selectedType == 'House') ? 'selected' : '' ?>>House</option>
         <option value="Lot" <?= ($selectedType == 'Lot') ? 'selected' : '' ?>>Lot</option>
     </select>
 
-      <!-- STATUS (ADD LNG NI) -->
+    <!-- STATUS -->
     <select name="status"
-        class="px-4 py-3 text-lg rounded-full border border-gray-300 bg-white text-black focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[180px]">
+        class="px-4 py-4  rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
         <option value="">Status</option>
         <option value="Available" <?= ($selectedStatus == 'Available') ? 'selected' : '' ?>>Available</option>
         <option value="Reserved" <?= ($selectedStatus == 'Reserved') ? 'selected' : '' ?>>Reserved</option>
@@ -115,23 +119,32 @@ $printQuery = http_build_query([
         name="city"
         placeholder="City"
         value="<?= htmlspecialchars($selectedCity) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           placeholder-gray-400 dark:placeholder-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
     <!-- MIN PRICE -->
     <input type="number"
         name="minPrice"
         placeholder="Min Price"
         value="<?= htmlspecialchars($selectedMinPrice) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-gray-200 
+               placeholder-gray-400 dark:placeholder-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
     <!-- MAX PRICE -->
     <input type="number"
         name="maxPrice"
         placeholder="Max Price"
         value="<?= htmlspecialchars($selectedMaxPrice) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-gray-200 
+               placeholder-gray-400 dark:placeholder-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
-    <!-- FILTER BUTTON (Blue like your upload button) -->
+    <!-- FILTER BUTTON -->
     <button type="submit"
         class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
         Filter
@@ -139,7 +152,8 @@ $printQuery = http_build_query([
 
     <!-- PRINT -->
     <a href="/habitrack/index.php?<?= htmlspecialchars($printQuery) ?>" target="_blank"
-        class="px-4 py-3 rounded-full border border-gray-300 text-black hover:bg-gray-100 transition">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           text-black dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition">
         Print PDF
     </a>
 

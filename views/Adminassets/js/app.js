@@ -231,23 +231,38 @@ feather.replace();
 /* Dark & Light Mode */
 /*********************/
 try {
-    function changeTheme(e){
-        e.preventDefault()
-        const htmlTag = document.getElementsByTagName("html")[0]
-        
-        if (htmlTag.className.includes("dark")) {
-            htmlTag.className = 'light'
-        } else {
-            htmlTag.className = 'dark'
+    const themeStorageKey = 'habitrackTheme';
+    const htmlTag = document.getElementsByTagName("html")[0];
+
+    function setTheme(theme) {
+        const isDark = theme === 'dark';
+
+        htmlTag.classList.toggle('dark', isDark);
+        htmlTag.classList.toggle('light', !isDark);
+
+        const chk = document.getElementById('chk');
+        if (chk) {
+            chk.checked = isDark;
         }
+    }
+
+    const savedTheme = localStorage.getItem(themeStorageKey);
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+        setTheme(savedTheme);
+    }
+
+    function changeTheme(e) {
+        e.preventDefault();
+        const nextTheme = htmlTag.classList.contains('dark') ? 'light' : 'dark';
+        localStorage.setItem(themeStorageKey, nextTheme);
+        setTheme(nextTheme);
     }
 
     const switcher = document.getElementById("theme-mode")
     switcher?.addEventListener("click" ,changeTheme )
     
     const chk = document.getElementById('chk');
-
-    chk.addEventListener('change',changeTheme);
+    chk?.addEventListener('change', changeTheme);
 } catch (err) {
     
 }

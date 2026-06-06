@@ -118,7 +118,9 @@ $printQuery = http_build_query([
 
         <!-- STATUS (ADD LNG NI) -->
     <select name="status"
-        class="px-4 py-3 text-lg rounded-full border border-gray-300 bg-white text-black focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[180px]">
+        class="px-4 py-4  rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
         <option value="">Status</option>
         <option value="Active" <?= ($selectedAgentStatus == 'Active') ? 'selected' : '' ?>>Active</option>
         <option value="Archived" <?= ($selectedAgentStatus == 'Archived') ? 'selected' : '' ?>>Archived</option>
@@ -129,21 +131,30 @@ $printQuery = http_build_query([
         name="agent"
         placeholder="Search Agent ID or Name"
         value="<?= htmlspecialchars($search) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           placeholder-gray-400 dark:placeholder-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
     <!-- MIN SOLD -->
     <input type="number"
         name="minSoldUnits"
         placeholder="Min Sold Units"
         value="<?= htmlspecialchars($selectedMinSoldUnits) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           placeholder-gray-400 dark:placeholder-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
      <!-- MAX SOLD -->
     <input type="number"
         name="maxSoldUnits"
         placeholder="Max Sold Units"
         value="<?= htmlspecialchars($selectedMaxSoldUnits) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           placeholder-gray-400 dark:placeholder-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
 
 <!-- Filter    -->
@@ -154,7 +165,8 @@ $printQuery = http_build_query([
 
     <!-- PRINT -->
     <a href="/habitrack/index.php?<?= htmlspecialchars($printQuery) ?>" target="_blank"
-        class="px-4 py-3 rounded-full border border-gray-300 text-black hover:bg-gray-100 transition">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           text-black dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition">
         Print PDF
     </a> 
 

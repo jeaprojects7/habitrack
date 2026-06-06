@@ -43,6 +43,14 @@ if (($_GET['route'] ?? '') === 'print-agents') {
 
 <head>
     <script>
+        (function () {
+            if (localStorage.getItem('habitrackTheme') === 'dark') {
+                document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
     window.USER_ROLE = "<?= $_SESSION['role'] ?? 'guest' ?>";
     window.IS_LOGGED_IN = <?= isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === 'ok' ? 'true' : 'false' ?>;
 </script>
