@@ -4,35 +4,43 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$prequalID = $_GET['id'] ?? null;
-require_once __DIR__ . '/../../../models/spouse.model.php';
-$res = ModelSpouse::mdlGetSpouseInfo($prequalID);
+
+
+$reservationID = $_GET['id'] ?? null;
+
+require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+require_once __DIR__ . '/../../../controllers/coowner.controller.php';
+
+$res = ReservationController::ctrGetReservationById($reservationID);
 
 if (!$res) {
     die("Reservation not found.");
 }
 
-if($res['clientCISID']){
-    $clientCISID = $res["clientCISID"];
-}else{
-    $clientCISID = null;
+$loggedInClientID = $_SESSION['clientID'] ?? null;
+
+if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
+    http_response_code(403);
+    die("Access denied.");
+}
+
+if (empty($res['coOwnerID'])) {
+    http_response_code(403);
+    die("No co-owner assigned.");
 }
 
 
-$loggedInClientID = $_SESSION['clientID'] ?? null;
 
-// if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
-//     http_response_code(403);
-//     die("Access denied.");
-// }
+$coOwnerID = $res['coOwnerID'];
 
-// if (empty($res['spouseID'])) {
-//     http_response_code(403);
-//     die("No spouse assigned.");
-// }
+
+$coOwner = ControllerCoOwner::ctrGetCoOwnerByID($coOwnerID);
+if (!$coOwner) {
+    die("Co-owner not found.");
+}
+
 ?>
-<input type="hidden" id="prequalID" value="<?= $res['prequalID']?>">
-<input type="hidden" id="clientCISID" value="<?= $res['clientCISID']?>">
+
 <div
     id="main-area"
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
@@ -41,7 +49,7 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
     <div class="layout-spacing">
         <!-- Header -->
         <div class="md:flex justify-between items-center">
-            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Spouse Information Sheet</h5>
+            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Co-owner Information Sheet</h5>
             <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
                 <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-blue-600 dark:hover:text-white"><a href="home">Habitrack</a></li>
                 <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5"><i class="mdi mdi-chevron-right"></i></li>
@@ -60,9 +68,7 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
             <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
             <div id="step-4-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">4</div>
             <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
-            <div id="step-5-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">5</div>
-            <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
-            <div id="step-6-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">6</div>
+            <div id="step-5-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">5</div>            
         </div>
 
         <div class="grid grid-cols-1 mt-4">
@@ -75,6 +81,7 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
 
                     <!-- Row 1: Name -->
                     <div class="grid grid-cols-4 gap-4 mt-4">
+                        <input type="hidden" id="coOwnerID" value="<?= htmlspecialchars($coOwnerID ?? '') ?>">
                         <div class="mb-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">First Name</label>
                             <input name="firstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -117,11 +124,8 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
                         </div>
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Civil Status</label>
-                            <!-- <input type="hidden" name="civilstatus" id="civilstatus" required> -->
-                            <input type="text" name="civilstatus" id="civilstatus" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
-                            dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
-                            dark:placeholder-white/30" placeholder="Married" readonly>
-                            <!-- <div class="relative mt-3" id="civstat-wrapper">
+                            <div class="relative mt-3" id="civstat-wrapper">
+                                <input type="hidden" name="civilstatus" id="civilstatus" required>
                                 <div id="civstat-display" onclick="toggleCivilStatusDropdown()" 
                                 class="form-input w-full font-normal text-gray-400 dark:text-white/30 cursor-pointer flex justify-between items-center select-none bg-white 
                                 dark:bg-slate-800 border-gray-200 dark:border-slate-700">
@@ -140,7 +144,7 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
                                     <div onclick="selectCivilStatus('divorced', 'Divorced')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 
                                     dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Divorced</div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Gender</label>
@@ -382,7 +386,6 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
                             </div>
                         </div>
 
-
                         <!-- RIGHT SIDE -->
                         <div>
                             <h2 class="text-gray-800 dark:text-white font-bold text-lg">
@@ -436,6 +439,7 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     
@@ -494,11 +498,11 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
                                     </svg>
                                 </div>
                                 <div id="sourceofincome-options" class="hidden absolute z-50 w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg mt-1 overflow-hidden">
-                                    <div onclick="selectSourceOfIncome('Employed', 'Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Employed</div>
-                                    <div onclick="selectSourceOfIncome('Professional', 'Professional')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Professional</div>
-                                    <div onclick="selectSourceOfIncome('Self-Employed', 'Self-Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Self-Employed</div>
-                                    <div onclick="selectSourceOfIncome('Sole Proprietorship', 'Sole Proprietorship')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Sole Proprietorship</div>
-                                    <div onclick="selectSourceOfIncome('Partnership corporation', 'Partnership Corporation')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Partnership Corporation</div>
+                                    <div onclick="selectSourceOfIncome('employed', 'Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Employed</div>
+                                    <div onclick="selectSourceOfIncome('professional', 'Professional')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Professional</div>
+                                    <div onclick="selectSourceOfIncome('selfemployed', 'Self-Employed')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Self-Employed</div>
+                                    <div onclick="selectSourceOfIncome('soleproprietorship', 'Sole Proprietorship')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Sole Proprietorship</div>
+                                    <div onclick="selectSourceOfIncome('partnershipcorporation', 'Partnership Corporation')" class="px-4 py-2.5 text-gray-700 dark:text-white/70 font-normal hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors duration-150">Partnership Corporation</div>
                                 </div>
                             </div>
                         </div>

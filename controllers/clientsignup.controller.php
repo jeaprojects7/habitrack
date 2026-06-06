@@ -85,7 +85,7 @@ class ControllerClient{
 
 	static public function ctrSaveSpouseInfo($data){
 
-		$answer = (new ModelClient)->mdlSaveSpouseInfo($data);
+		$answer = (new ModelSpouse)->mdlSaveSpouseInfo($data);
 
 		return $answer;
 	}
@@ -111,6 +111,12 @@ class ControllerClient{
 	static public function ctrGetClientInfoByPrequalID($prequalID){
 
 		return (new ModelClient)->mdlGetClientInfoByPrequalID($prequalID);
+
+	}
+
+	static public function ctrGetLatestClientInfoByClientID($clientID){
+
+		return (new ModelClient)->mdlGetLatestClientInfoByClientID($clientID);
 
 	}
 }

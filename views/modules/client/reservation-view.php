@@ -3,18 +3,29 @@ $static_url = '/habitrack/views/Adminassets';
 $reservationID = $_GET['id'] ?? null;
 
 require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+require_once __DIR__ . '/../../../controllers/coowner.controller.php';
+require_once __DIR__ . '/../../../models/spouse.model.php';
 
 if (!$reservationID) {
     die("Invalid reservation ID");
 }
 
 $res = ReservationController::ctrGetReservationById($reservationID);
+
 if (!$res) {
     http_response_code(404);
     die("Reservation not found.");
 }
 
 $prequalID = $res['prequalID'] ?? null;
+$coOwnerID = $res['coOwnerID'] ?? null; // if already joined in query
+$hasCoOwner = !empty((new ControllerCoOwner)::ctrGetCoOwnerByID($res['coOwnerID']));
+$spouse = ModelSpouse::mdlGetSpouseInfo($prequalID);
+$hasSpouse = $spouse["clientCISID"] ?? false;
+// echo "<pre>";
+// print_r(ModelSpouse::mdlGetSpouseInfo($prequalID));
+// echo "</pre>";
+// die();
 
 
 require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
@@ -387,11 +398,86 @@ $prequalColor = match($prequalStatus) {
                                     </a>
                                 <?php else: ?>
                                     <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-blue-700' ?>">
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-blue-700' ?>" id=fillUpBtn >
                                         Fill Up
                                     </a>
                                 <?php endif; ?>
                             </div>
+
+
+                            <div class="flex flex-col">
+                                <label class="form-label font-medium">Spouse</label>
+                                <?php if ($hasSpouse): ?>
+                                    <a href="index.php?route=spouseInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
+                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                        View
+                                    </a>
+                                <?php else: ?>
+                                    <a href="index.php?route=spouseInfoSheet&id=<?= urlencode($prequalID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                        id=fillUpBtnSpouse>
+                                            Fill Up
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                                    
+                            <div class="flex flex-col">
+                                <label class="form-label font-medium">Co-owner</label>
+                                <?php if ($hasCoOwner): ?>
+                                    <a href="index.php?route=co-ownerInfoSheet-view&id=<?= urlencode($prequalID) ?>"
+                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                        View
+                                    </a>
+                                <?php else: ?>
+                                <div class="flex flex-col">
+                                    <a href="index.php?route=co-ownerInfoSheet&id=<?= urlencode($reservationID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                        id=fillUpBtnCo>
+                                            Fill Up
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                            <!-- CoOwner Information Sheet -->
+                            <!-- <div class="flex flex-col">
+                                <label class="form-label font-medium">Co-owner</label> -->
+
+                                <!-- <?php if (!$hasCoOwner): ?> -->
+
+                                    <!-- <button
+                                        type="button"
+                                        
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg ">
+                                        Fill Up
+                                    </button> -->
+
+
+                                <!-- <?php else: ?> -->
+
+                                    <!-- <?php
+                                    // $existingCoOwner = ControllerClient::ctrCheckCoOwnerInfo($prequalID);
+                                    // $hasCoOwnerFilled = !empty($existingCoOwner);
+                                    ?>
+
+                                    <?php if ($hasCoOwnerFilled): ?>
+
+                                        <a href="index.php?route=coOwnerInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                            View
+                                        </a>
+
+                                    <?php else: ?>
+
+                                        <a href="index.php?route=coOwnerInfoSheet&id=<?= urlencode($reservationID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
+                                        id="cofillUpBtn">
+                                            Fill Up
+                                        </a>
+
+                                    <?php endif; ?>
+
+                                <?php endif; ?> -->
+                            <!-- </div> -->
+
 
                             <!-- 2. Upload Valid ID -->
                             <div class="flex flex-col">
@@ -586,6 +672,18 @@ $prequalColor = match($prequalStatus) {
 
 function submitValidID() {
 
+if (!hasValidID && !hasFilled) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Requirements',
+            html: `
+                Please complete the Information Sheet<br>
+                and upload a Valid ID first.
+            `
+        });
+        return;
+    }
+
     if (!hasValidID) {
         Swal.fire({
             icon: 'warning',
@@ -634,7 +732,9 @@ function submitValidID() {
                 Swal.fire({
                     icon: "success",
                     title: "Success",
-                    text: "Valid ID uploaded successfully."
+                    text: "Reservation requirements uploaded successfully."
+                }).then(() => {
+                    location.reload();
                 });
 
             }else{

@@ -1,12 +1,13 @@
 <?php
 session_start();
 
-require_once "../models/clientsignup.model.php";
-require_once "../controllers/clientsignup.controller.php";
+require_once "../models/spouse.model.php";
 
-$clientID = $_SESSION["clientID"];
 
-$answer = (new ModelClient)->mdlGetSpouseInfo('spouse', "spouseID", $spouseID);
+
+$prequalID = $_POST["prequalID"];
+
+$answer = (new ModelSpouse)->mdlGetSpouseInfo($prequalID);
 
 if (!empty($answer)) { 
     echo json_encode($answer);

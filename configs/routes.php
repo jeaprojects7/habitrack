@@ -44,6 +44,9 @@ return [
         'dashboard',
         'calendar',
         'pre-qual',
-        'clientInfoSheet-view'
+        'clientInfoSheet-view',
+        'co-ownerInfoSheet',
+        'spouseInfoSheet-view',
+        'co-ownerInfoSheet-view'
     ],
 ];
