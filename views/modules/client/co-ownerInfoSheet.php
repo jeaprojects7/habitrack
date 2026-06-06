@@ -4,8 +4,13 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+
+
 $reservationID = $_GET['id'] ?? null;
+
 require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+require_once __DIR__ . '/../../../controllers/coowner.controller.php';
+
 $res = ReservationController::ctrGetReservationById($reservationID);
 
 if (!$res) {
@@ -19,10 +24,21 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
     die("Access denied.");
 }
 
-// if (empty($res['spouseID'])) {
-//     http_response_code(403);
-//     die("No spouse assigned.");
-// }
+if (empty($res['coOwnerID'])) {
+    http_response_code(403);
+    die("No co-owner assigned.");
+}
+
+
+
+$coOwnerID = $res['coOwnerID'];
+
+
+$coOwner = ControllerCoOwner::ctrGetCoOwnerByID($coOwnerID);
+if (!$coOwner) {
+    die("Co-owner not found.");
+}
+
 ?>
 
 <div
@@ -33,7 +49,7 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
     <div class="layout-spacing">
         <!-- Header -->
         <div class="md:flex justify-between items-center">
-            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Spouse Information Sheet</h5>
+            <h5 class="text-lg font-semibold text-gray-800 dark:text-white">Co-owner Information Sheet</h5>
             <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
                 <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-blue-600 dark:hover:text-white"><a href="home">Habitrack</a></li>
                 <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5"><i class="mdi mdi-chevron-right"></i></li>
@@ -52,9 +68,7 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
             <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
             <div id="step-4-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">4</div>
             <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
-            <div id="step-5-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">5</div>
-            <div class="h-1 w-10 bg-gray-200 dark:bg-slate-700 rounded"></div>
-            <div id="step-6-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">6</div>
+            <div id="step-5-indicator" class="w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-white/30 text-sm flex items-center justify-center font-medium transition-colors duration-300">5</div>            
         </div>
 
         <div class="grid grid-cols-1 mt-4">
@@ -67,6 +81,7 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
 
                     <!-- Row 1: Name -->
                     <div class="grid grid-cols-4 gap-4 mt-4">
+                        <input type="hidden" id="coOwnerID" value="<?= htmlspecialchars($coOwnerID ?? '') ?>">
                         <div class="mb-4">
                             <label class="font-medium text-gray-800 dark:text-white/70">First Name</label>
                             <input name="firstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -368,6 +383,60 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
                                     placeholder-gray-400 dark:placeholder-white/30"placeholder="SSS / GSIS Number">
                                 </div>
 
+                            </div>
+                        </div>
+
+                        <!-- RIGHT SIDE -->
+                        <div>
+                            <h2 class="text-gray-800 dark:text-white font-bold text-lg">
+                                Total Number of Dependents
+                            </h2>
+
+                            <div class="grid grid-cols-8 gap-4 mt-4">
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        In Elementary
+                                    </label>
+
+                                    <input name="elem" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        In Highschool
+                                    </label>
+
+                                    <input name="highschool" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        In College
+                                    </label>
+
+                                    <input name="college" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
+
+                                <div class="mb-4 col-span-2">
+                                    <label class="font-medium text-gray-800 dark:text-white/70">
+                                        Not yet studying
+                                    </label>
+
+                                    <input name="notstudying" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                                    dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 
+                                    placeholder-gray-400 dark:placeholder-white/30" 
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="0">
+                                </div>
                             </div>
                         </div>
 

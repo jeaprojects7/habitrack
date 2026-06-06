@@ -30,5 +30,6 @@ return [
     'logout'            => 'modules/logout.php',
     'calendar'          => 'modules/client/calendar.php',
     'pre-qual'          => 'modules/client/pre-qual.php',
-    'clientInfoSheet-view'          => 'modules/client/clientInfoSheet-view.php'
+    'clientInfoSheet-view'          => 'modules/client/clientInfoSheet-view.php',
+    'co-ownerInfoSheet'          => 'modules/client/co-ownerInfoSheet.php'
 ];

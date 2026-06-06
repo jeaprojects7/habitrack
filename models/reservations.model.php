@@ -57,6 +57,13 @@ class ModelReservation {
 
         pq.prequalID,
         pq.prequalStatus,
+        pq.coOwnerID,
+
+        cc.coOwnerFName,
+        cc.coOwnerMName,
+        cc.coOwnerLName,
+        cc.coOwnerEmail,
+        cc.coOwnerPhoneNum,
 
         p.propertyID,
         p.propertyName,
@@ -80,6 +87,9 @@ class ModelReservation {
 
     JOIN client c
         ON pq.clientID = c.clientID
+
+    LEFT JOIN clientcoprequal cc
+        ON pq.prequalID = cc.prequalID
 
     JOIN properties p
         ON pq.propertyID = p.propertyID

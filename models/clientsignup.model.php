@@ -598,4 +598,25 @@ class ModelClient{
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    // static public function mdlGetCoOwnerInfo($tableUsers, $item, $value){
+	// 	$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");
+	// 	$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
+	// 	$stmt -> execute();
+	// 	return $stmt->fetch(PDO::FETCH_ASSOC);
+	// }
+
+    // static public function mdlGetClientCoOwnerInfoByPrequalID($prequalID){
+    //     $stmt = (new Connection)->connect()->prepare("
+    //         SELECT *
+    //         FROM clientcoprequal
+    //         WHERE prequalID = :prequalID
+    //         LIMIT 1
+    //     ");
+
+    //     $stmt->bindParam(":prequalID", $prequalID, PDO::PARAM_STR);
+    //     $stmt->execute();
+
+    //     return $stmt->fetch(PDO::FETCH_ASSOC);
+    // } ari na ni sa coowner model
 }

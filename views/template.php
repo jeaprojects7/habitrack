@@ -489,6 +489,13 @@ span.flatpickr-weekday {
         "spouseInfoSheet" => [
             "spouseInfoSheet.js"
         ],
+        
+        "co-ownerInfoSheet" => [
+            "co-ownerInfoSheet.js"
+        ],
+        "co-ownerInfoSheet" => [
+            "co-ownerInfoSheet.js"
+        ],
 
         "clientprofile" => [
             "clientprofile.js"
