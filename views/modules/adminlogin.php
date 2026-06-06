@@ -47,7 +47,7 @@ require_once __DIR__ . "/../../controllers/admin.controller.php"; //added 51626
                 Login / Sign in
             </button> changed this ^ to this v 51626 -->
             <button type="button" id="btn-admin-login"
-            class="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">
+            class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md w-full">
                 Login
             </button>
         </div>

@@ -47,7 +47,7 @@ require_once __DIR__ . "/../../controllers/clientsignup.controller.php";
                 Login / Sign in
             </button> changd this ^ to this v -->
             <button type="button" id="btn-client-login"
-            class="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">
+            class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md w-full">
                 Login
             </button>
         </div>
@@ -64,6 +64,9 @@ require_once __DIR__ . "/../../controllers/clientsignup.controller.php";
                        <!--  </form> -->
                     </div>
                 </div>
+            </div>
+            <div class="fixed bottom-3 end-3 z-10">
+                <a href="dashboard" class="btn btn-icon bg-blue-600 hover:bg-blue-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
             </div>
         </section><!--end section -->
 

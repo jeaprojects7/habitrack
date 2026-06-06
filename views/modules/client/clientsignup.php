@@ -70,7 +70,7 @@ $logo_url = '/habitrack/views/assets';
                             <div class="grid grid-cols-1 gap-4">
                                 <div class="flex justify-center">
                                     <button type="button" name="btn-signup" id="btn-signup"
-                                    class="btn bg-green-600 hover:bg-green-700 text-white rounded-md px-6 py-2">
+                                    class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md px-6 py-2">
                                         Sign Up
                                     </button>
                                 </div>
@@ -81,7 +81,7 @@ $logo_url = '/habitrack/views/assets';
                        <!--  </form> -->
 
                         <div class="fixed bottom-3 end-3 z-10">
-                            <a href="clientlogin" class="back-button btn btn-icon bg-green-600 hover:bg-green-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
+                            <a href="clientlogin" class="back-button btn btn-icon bg-blue-600 hover:bg-blue-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
                         </div>
                     </div>
                 </div>
