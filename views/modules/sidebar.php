@@ -61,11 +61,11 @@ $sidebarMenus = [
             'icon'  => 'grid'
         ],
 
-        [
+        /* [
             'title' => 'Explore Properties',
             'route' => 'exploreproperty',
             'icon'  => 'home'
-        ],
+        ], */
 
         // [
         //     'title' => 'Information Sheet',
@@ -73,11 +73,11 @@ $sidebarMenus = [
         //     'icon'  => 'heart'
         // ],
        
-        [
+       /*  [
             'title' => 'Spouse Information Sheet',
             'route' => 'spouseInfoSheet',
             'icon'  => 'heart'
-        ],
+        ], */
         
         [
             'title' => 'Reservations',
@@ -248,15 +248,15 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
             <!-- User Profile -->
             <?php if ($role !== 'Guest'): ?>
                 <li>
-                    <button class="sidebar-btn" onclick="toggleSubmenu('profile-submenu', this)">
+                    <!-- <button class="sidebar-btn" onclick="toggleSubmenu('profile-submenu', this)">
                         <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
                         <span>User Profile</span>
                         <i data-feather="chevron-right" class="submenu-arrow"></i>
-                    </button>
-                    <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                    </button> -->
+                   <!--  <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
                         <li><a href="userprofile">My Profile</a></li>
                         <li><a href="#">Settings</a></li>
-                    </ul>
+                    </ul> -->
                 </li>
             <?php endif; ?>
 

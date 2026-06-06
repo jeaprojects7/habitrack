@@ -230,9 +230,9 @@ if ($reservationID && !$agentID) {
 
     <!-- Principal buyer Co-Owner? — always visible -->
     <div id="ownership-section" class="section-box">
-      <span class="yn-label">Principal buyer Co-Owner?</span>
+      <span class="yn-label">Buyer Type</span>
       <div class="radio-row">
-        <label><input type="radio" name="co_owner" value="yes" onchange="toggleCoOwnerDetails()" /> co-owner</label>
+        <label><input type="radio" name="co_owner" value="yes" onchange="toggleCoOwnerDetails()" /> Co-owner</label>
         <label><input type="radio" name="co_owner" value="no"  onchange="toggleCoOwnerDetails()" /> Principal buyer</label>
       </div>
     </div>
