@@ -126,7 +126,7 @@ function saveSpouseInfo() {
                 html: "<span style='font-size:25px;'>Information Sheet saved successfully!</span>",
                 showConfirmButton: true
             }).then(() => {
-                window.location = "home";
+                window.location = "reservations";
             });
 
         },
