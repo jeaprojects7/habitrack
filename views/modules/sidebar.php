@@ -34,7 +34,6 @@ $sidebarMenus = [
             'route' => 'agentdisplay',
             'icon'  => 'user'
         ],
-        
 
     ],
 

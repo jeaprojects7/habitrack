@@ -275,7 +275,7 @@ $prequalColor = match($prequalStatus) {
                                 </label>
 
                                 <input
-                                    value="<?= $res['reserveDate'] ?>"
+                                    value="<?= $resStatus === 'reserved' ? $res['reserveDate'] : '' ?>"
                                     class="form-input w-full"
                                     disabled
                                 >
@@ -287,7 +287,7 @@ $prequalColor = match($prequalStatus) {
                                 </label>
 
                                 <input
-                                    value="<?= $res['reserveTime'] ?>"
+                                    value="<?= $resStatus === 'reserved' ? $res['reserveTime'] : '' ?>"
                                     class="form-input w-full"
                                     disabled
                                 >
