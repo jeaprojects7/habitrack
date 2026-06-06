@@ -39,6 +39,9 @@ class AgentController {
             case 'getBookedVisitDetails':
                 $this->getBookedVisitDetails();
                 break;
+            case 'getReservationDetails':
+                $this->getReservationDetails();
+                break;
             case 'saveSiteVisit':
                 $this->saveSiteVisit();
                 break;
@@ -114,6 +117,59 @@ class AgentController {
     private function getBookedVisitDetails(): void {
         $details = $this->agentModel->getBookedVisitDetails();
         $this->jsonResponse(['success' => true, 'details' => $details]);
+    }
+
+    /**
+     * Return reservation details (agent and property info) for auto-fill.
+     * Expects: reservationID in GET/POST
+     */
+    private function getReservationDetails(): void {
+        $reservationID = isset($_GET['reservationID']) ? $_GET['reservationID'] : (isset($_POST['reservationID']) ? $_POST['reservationID'] : null);
+
+        if (!$reservationID) {
+            $this->jsonResponse(['success' => false, 'message' => 'Missing reservationID.'], 400);
+            return;
+        }
+
+        require_once __DIR__ . '/../models/reservations.model.php';
+        $reservation = ModelReservation::mdlGetReservationById($reservationID);
+
+        if (!$reservation) {
+            $this->jsonResponse(['success' => false, 'message' => 'Reservation not found.'], 404);
+            return;
+        }
+
+        // Get agent details - handle both numeric ID and agentID string
+        $agent = null;
+        $agentID = $reservation['agentID'];
+        
+        // Try to get agent by numeric ID first
+        if (is_numeric($agentID)) {
+            $agent = $this->agentModel->getAgentById((int)$agentID);
+        }
+        
+        // If not found, try to get by agentID string
+        if (!$agent) {
+            $agents = $this->agentModel->getAllAgents();
+            foreach ($agents as $a) {
+                if ($a['agentID'] === $agentID) {
+                    $agent = $a;
+                    break;
+                }
+            }
+        }
+        
+        $agentName = $agent ? AgentModel::buildFullName($agent) : '';
+        $agentDbId = $agent ? $agent['id'] : $agentID;
+
+        $this->jsonResponse([
+            'success' => true,
+            'agentID' => $agentDbId,
+            'agentCode' => $agentID,
+            'agentName' => $agentName,
+            'propertyID' => $reservation['propertyID'],
+            'propertyName' => $reservation['propertyName'],
+        ]);
     }
 
     /**

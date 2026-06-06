@@ -1,3 +1,19 @@
+<?php
+require_once __DIR__ . '/../../../controllers/reservations.controller.php';
+
+$reservationID = $_GET['id'] ?? null;
+$agentID = $_GET['agent_id'] ?? null;
+$propertyID = $_GET['property_id'] ?? null;
+
+// If accessed from reservation, fetch the details
+if ($reservationID && !$agentID) {
+    $res = ReservationController::ctrGetReservationById($reservationID);
+    if ($res) {
+        $agentID = $res['agentID'] ?? null;
+        $propertyID = $res['propertyID'] ?? null;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -277,6 +293,59 @@
           <input type="number" id="co-owner-income" name="co-owner_monthly_income" placeholder="0.00" min="0" step="0.01" />
         </div>
       </div>
+
+      <!-- Co-Owner Financing type -->
+      <div class="row" style="grid-template-columns:240px; margin-top:8px;">
+        <div class="field">
+          <label for="co-financing-type">Financing type</label>
+          <select id="co-financing-type" name="co_financing_type" onchange="toggleCoOwnerFinancing()">
+            <option value="">— select —</option>
+            <option value="bank">Bank</option>
+            <option value="pagibig">Pag-Ibig</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Co-Owner Bank Section -->
+      <div id="co-bank-section" class="section-box hidden">
+        <div class="three-col">
+          <div class="field">
+            <label for="co-bank-name">Bank name</label>
+            <input type="text" id="co-bank-name" name="co_bank_name" />
+          </div>
+          <div class="yn-group">
+            <span class="yn-label">Do you have existing house loan?</span>
+            <div class="radio-row">
+              <label><input type="radio" name="co_existing_house_loan" value="yes" /> YES</label>
+              <label><input type="radio" name="co_existing_house_loan" value="no"  /> No</label>
+            </div>
+          </div>
+          <div class="yn-group">
+            <span class="yn-label">Do you have cancelled house loan?</span>
+            <div class="radio-row">
+              <label><input type="radio" name="co_cancelled_house_loan" value="yes" /> YES</label>
+              <label><input type="radio" name="co_cancelled_house_loan" value="no"  /> No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Co-Owner Pag-Ibig Section -->
+      <div id="co-pagibig-section" class="section-box hidden">
+        <div class="row row-2" style="max-width:480px">
+          <div class="field">
+            <label for="co-contribution-date">Contribution start date</label>
+            <input type="date" id="co-contribution-date" name="co_contribution_start_date" />
+          </div>
+          <div class="yn-group" style="padding-top:4px">
+            <span class="yn-label">Do you have current loan?</span>
+            <div class="radio-row">
+              <label><input type="radio" name="co_current_loan" value="yes" /> YES</label>
+              <label><input type="radio" name="co_current_loan" value="no"  /> No</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Financing type -->
@@ -344,6 +413,11 @@
   </div>
 </div>
 
+<script>
+// Initialize agent and property data for prequalification loading
+window._htPrequalAgentId     = <?php echo json_encode($agentID    ?? null); ?>;
+window._htSelectedPropertyID = <?php echo json_encode($propertyID ?? null); ?>;
+</script>
 <script src="pre-qual.js"></script>
 <script>
 (function () {

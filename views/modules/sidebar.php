@@ -90,9 +90,9 @@ $sidebarMenus = [
         // [
         //     'title' => 'Site Visit',
         //     'route' => 'calendar',
-        //     'icon'  => 'calendar'
+        //     'icon'  => 'calendar' from current
         // ],
-        [
+        [//from current
             'title' => 'Pre-Qualification',
             'route' => 'pre-qual',
             'icon'  => 'calendar'

@@ -1,10 +1,20 @@
 <link rel="stylesheet" href="/habitrack/views/Adminassets/css/calendar.css" />
 
+<?php
+// Extract reservation ID from URL parameter
+$reservationID = $_GET['id'] ?? null;
+?>
+
 <div class="mx-auto max-w-5xl px-4 py-6 lg:px-6">
     <div class="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
         <div class="space-y-6">
             <div class="calendar-wrapper rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700/60 dark:bg-slate-900">
 
+            <div class="mt-4 px-4">
+                <button onclick="history.back()" style="border: none; background: #0f6a94; color: white; border-radius: 24px; padding: 6px 18px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#005d8b';" onmouseout="this.style.background='#0a86c0';">
+                    <i class="ti ti-arrow-left" aria-hidden="true"></i> Back
+                </button>
+            </div>
                 <!-- Header -->
                 <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                     <div class="flex items-center gap-4">
@@ -72,45 +82,39 @@
 
                             </div>
                         </div>
+                        
                         <!-- END TIME STEPPER -->
 
-                        <!-- CHANGED: added data-type="property" -->
-                        <label class="dropdown block rounded-3xl bg-white/10 px-4 py-3" data-type="property">
+                        <!-- Property Input (Read-only) -->
+                        <div class="rounded-3xl bg-white/10 px-4 py-3">
                             <span class="block text-xs uppercase tracking-[0.2em] text-white/70">Property to Visit</span>
-                            <div class="mt-2 flex items-center gap-2 rounded-2xl border border-white/20 bg-slate-950/20 px-2 py-2">
-                                <button type="button" class="dropdown-toggle flex-1 flex items-center text-left text-sm font-medium text-white transition focus:outline-none" aria-haspopup="true" aria-expanded="false">
-                                    <span class="dropdown-value">Select property</span>
-                                </button>
-                                <button type="button" class="dropdown-close hidden rounded-full bg-white/10 px-2 py-1 text-white transition hover:bg-white/20" aria-label="Close dropdown">×</button>
-                                <span class="dropdown-caret text-white/70">v</span>
-                            </div>
-                            <div class="dropdown-menu hidden mt-2 rounded-3xl border border-white/10 bg-slate-950/95 p-3 shadow-xl">
-                                <input type="text" class="dropdown-search w-full rounded-2xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white outline-none transition focus:border-white/40 focus:ring-2 focus:ring-white/20" placeholder="Search property" />
-                                <div class="mt-2 space-y-1">
-                                    <!-- Items will be populated dynamically by properties.js -->
-                                </div>
-                            </div>
-                        </label>
+                            <input 
+                                type="text" 
+                                id="property-input" 
+                                class="mt-2 w-full rounded-2xl border border-white/20 bg-slate-950/20 px-3 py-2 text-sm text-white outline-none" 
+                                placeholder="Loading property..." 
+                                readonly 
+                                data-selected-code="" 
+                                data-selected-id=""
+                            />
+                        </div>
 
-                        <!-- CHANGED: added data-type="agent" -->
-                        <label class="dropdown block rounded-3xl bg-white/10 px-4 py-3" data-type="agent">
+                        <!-- Agent Input (Read-only) -->
+                        <div class="rounded-3xl bg-white/10 px-4 py-3">
                             <span class="block text-xs uppercase tracking-[0.2em] text-white/70">Agent</span>
-                            <div class="mt-2 flex items-center gap-2 rounded-2xl border border-white/20 bg-slate-950/20 px-2 py-2">
-                                <button type="button" class="dropdown-toggle flex-1 flex items-center text-left text-sm font-medium text-white transition focus:outline-none" aria-haspopup="true" aria-expanded="false">
-                                    <span class="dropdown-value">Agent name</span>
-                                </button>
-                                <button type="button" class="dropdown-close hidden rounded-full bg-white/10 px-2 py-1 text-white transition hover:bg-white/20" aria-label="Close dropdown">×</button>
-                                <span class="dropdown-caret text-white/70">v</span>
-                            </div>
-                            <div class="dropdown-menu hidden mt-2 rounded-3xl border border-white/10 bg-slate-950/95 p-3 shadow-xl">
-                                <input type="text" class="dropdown-search w-full rounded-2xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-white outline-none transition focus:border-white/40 focus:ring-2 focus:ring-white/20" placeholder="Search agent" />
-                                <div class="mt-2 space-y-1">
-                                    <!-- Items will be populated dynamically by calendar.js -->
-                                </div>
-                            </div>
-                        </label>
+                            <input 
+                                type="text" 
+                                id="agent-input" 
+                                class="mt-2 w-full rounded-2xl border border-white/20 bg-slate-950/20 px-3 py-2 text-sm text-white outline-none" 
+                                placeholder="Loading agent..." 
+                                readonly 
+                                data-selected-code="" 
+                                data-selected-id=""
+                            />
+                        </div>
 
                         <button type="button" id="book-visit-btn" class="mt-2 w-full rounded-3xl bg-white/15 px-4 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white/30">Book Visit</button>
+
                     </div>
                 </div>
             </div>
@@ -422,7 +426,10 @@
 })();
 </script>
 
-<!-- CHANGED: load agent and properties dropdown AJAX scripts -->
-<script src="/habitrack/views/js/calendar.js"></script>
-<script src="/habitrack/views/js/properties.js"></script>
+<!-- Pass reservation ID to JavaScript -->
+<script>
+    window.RESERVATION_ID = '<?php echo htmlspecialchars($reservationID, ENT_QUOTES); ?>';
+</script>
+
+<!-- Load booking script -->
 <script src="/habitrack/views/js/bookVisit.js"></script>

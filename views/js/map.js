@@ -544,7 +544,7 @@ async function loadPropertiesByType(propertyType, selectId) {
                             style="width:100%;padding:11px;background:#2151cc;color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-top:4px;"
                             onmouseover="this.style.background='#1a42a8'"
                             onmouseout="this.style.background='#2151cc'"
-                            onclick="htOpenAgentModal()">
+                            onclick="htHandleReserveClick()">
                             Reserve
                         </button>
                         ` : `
@@ -773,55 +773,146 @@ async function loadPropertiesByType(propertyType, selectId) {
     }
 
     // ────────────────────────────────────────────────────────────────
+    //  PRICE VALIDATION
+    // ────────────────────────────────────────────────────────────────
+    function validatePriceRange(priceStart, priceEnd) {
+        const errors = [];
+
+        // Check if priceStart is provided and valid
+        if (priceStart !== '') {
+            if (isNaN(priceStart) || priceStart < 0) {
+                errors.push('Price Start must be a valid non-negative number');
+            }
+        }
+
+        // Check if priceEnd is provided and valid
+        if (priceEnd !== '') {
+            if (isNaN(priceEnd) || priceEnd < 0) {
+                errors.push('Price End must be a valid non-negative number');
+            }
+        }
+
+        // Check if both are provided and priceStart > priceEnd
+        if (priceStart !== '' && priceEnd !== '' && !isNaN(priceStart) && !isNaN(priceEnd)) {
+            if (parseFloat(priceStart) > parseFloat(priceEnd)) {
+                errors.push('Price Start cannot be greater than Price End');
+            }
+        }
+
+        return errors;
+    }
+
+    function showPriceError(errors) {
+        const errorMsg = errors.join('\n');
+        alert('Price Filter Error:\n\n' + errorMsg);
+    }
+
+    // ────────────────────────────────────────────────────────────────
     //  FILTER SEARCH - Called from dashboard search button
     // ────────────────────────────────────────────────────────────────
     window.filterProperties = async function () {
         console.log('Filter Properties called!');
         try {
-            // Collect all filter values
-            const filters = new FormData();
-            
+            const params = new URLSearchParams();
+            params.append('action', 'search');
+
             // Property type
             const typeVal = document.getElementById('f-type')?.value;
-            if (typeVal) filters.append('type', typeVal);
-            
-            // Location (house or lot)
-            const locHouse = document.getElementById('f-location-house')?.value;
-            const locLot = document.getElementById('f-location-lot')?.value;
-            if (locHouse) filters.append('location', locHouse);
-            if (locLot) filters.append('location', locLot);
-            
-            // House specs
-            const storeyVal = document.getElementById('f-storey')?.value;
-            if (storeyVal) filters.append('storey', storeyVal);
-            
-            const bedroomVal = document.getElementById('f-bedroom')?.value;
-            if (bedroomVal) filters.append('bedroom', bedroomVal);
-            
-            const tbVal = document.getElementById('f-tb')?.value;
-            if (tbVal) filters.append('tb', tbVal);
-            
-            const floorAreaVal = document.getElementById('f-floor-area')?.value;
-            if (floorAreaVal) filters.append('floorArea', floorAreaVal);
-            
-            const lotAreaVal = document.getElementById('f-lot-area-house')?.value;
-            if (lotAreaVal) filters.append('lotAreaHouse', lotAreaVal);
-            
-            // Send AJAX request to controller
-            const queryString = new URLSearchParams(filters).toString();
-            console.log('Sending filter search:', queryString);
-            
+            if (typeVal) params.append('type', typeVal);
+
+            const isHouse = typeVal === 'house';
+            const isLot   = typeVal === 'lot';
+
+            // Location — only read from the visible panel
+            if (isHouse) {
+                const loc = document.getElementById('f-location-house')?.value;
+                if (loc) params.append('location', loc);
+            } else if (isLot) {
+                const loc = document.getElementById('f-location-lot')?.value;
+                if (loc) params.append('location', loc);
+            }
+
+            // House-only specs
+            if (isHouse) {
+                const storeyVal = document.getElementById('f-storey')?.value;
+                if (storeyVal) params.append('storey', storeyVal);
+
+                const bedroomVal = document.getElementById('f-bedroom')?.value;
+                if (bedroomVal) params.append('bedroom', bedroomVal);
+
+                const tbVal = document.getElementById('f-tb')?.value;
+                if (tbVal) params.append('tb', tbVal);
+
+                const floorAreaVal = document.getElementById('f-floor-area')?.value;
+                if (floorAreaVal) params.append('floorArea', floorAreaVal);
+
+                const lotAreaHouseVal = document.getElementById('f-lot-area-house')?.value;
+                if (lotAreaHouseVal) params.append('lotAreaHouse', lotAreaHouseVal);
+
+                // Amenities
+                const amenitiesSelect = document.getElementById('f-amenities');
+                if (amenitiesSelect) {
+                    Array.from(amenitiesSelect.selectedOptions).forEach(opt => {
+                        if (opt.value) params.append('amenities[]', opt.value);
+                    });
+                }
+
+                const propNameHouse = document.getElementById('f-name-house')?.value;
+                if (propNameHouse) params.append('propertyName', propNameHouse);
+
+                // Price — read from house panel inputs by ID
+                const priceStart = document.getElementById('f-house-price-start')?.value || '';
+                const priceEnd   = document.getElementById('f-house-price-end')?.value || '';
+
+                // Validate price range
+                const priceErrors = validatePriceRange(priceStart, priceEnd);
+                if (priceErrors.length > 0) {
+                    showPriceError(priceErrors);
+                    return;
+                }
+
+                if (priceStart) params.append('priceStart', priceStart);
+                if (priceEnd)   params.append('priceEnd',   priceEnd);
+            }
+
+            // Lot-only specs
+            if (isLot) {
+                const sizeRangeVal = document.getElementById('f-size-range')?.value;
+                if (sizeRangeVal) params.append('sizeRange', sizeRangeVal);
+
+                const lotAreaVal = document.getElementById('f-lot-area')?.value;
+                if (lotAreaVal) params.append('lotArea', lotAreaVal);
+
+                const propNameLot = document.getElementById('f-name-lot')?.value;
+                if (propNameLot) params.append('propertyName', propNameLot);
+
+                // Price — read from lot panel inputs by ID
+                const priceStart = document.getElementById('f-lot-price-start')?.value || '';
+                const priceEnd   = document.getElementById('f-lot-price-end')?.value || '';
+
+                // Validate price range
+                const priceErrors = validatePriceRange(priceStart, priceEnd);
+                if (priceErrors.length > 0) {
+                    showPriceError(priceErrors);
+                    return;
+                }
+
+                if (priceStart) params.append('priceStart', priceStart);
+                if (priceEnd)   params.append('priceEnd',   priceEnd);
+            }
+
+            console.log('Sending filter search:', params.toString());
+
             const response = await fetch(
-                `/habitrack/controllers/dashboard.controller.php?action=search&${queryString}`
+                `/habitrack/controllers/dashboard.controller.php?${params.toString()}`
             );
             const result = await response.json();
-            
+
             console.log('Filter response:', result);
-            
+
             if (result.success && result.data) {
                 console.log('Got ' + result.count + ' properties');
-                
-                // Update markers with filtered results - WITH auto-zoom enabled
+
                 if (typeof window.addMarkers === 'function') {
                     window.addMarkers(result.data, true);
                     console.log('Markers updated and map zoomed!');
@@ -830,7 +921,9 @@ async function loadPropertiesByType(propertyType, selectId) {
                 }
             } else {
                 console.error('Search error:', result.error);
-                // Show all markers again if search fails
+                if (result.error) {
+                    alert('Search Error: ' + result.error);
+                }
                 if (typeof window.addMarkers === 'function' && typeof window.globalProperties !== 'undefined') {
                     window.addMarkers(window.globalProperties, false);
                 }

@@ -65,6 +65,7 @@ class ModelReservation {
         cc.coOwnerEmail,
         cc.coOwnerPhoneNum,
         cc.coOwnerRelationship,
+        pq.agentID,
 
         p.propertyID,
         p.propertyName,
