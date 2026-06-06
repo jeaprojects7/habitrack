@@ -51,7 +51,7 @@ function loginClient() {
                     showConfirmButton: true
                 }).then((result) => {
                     if(result.value){
-                        window.location = "home";
+                        window.location = "dashboard";
                     }
                 });
 

@@ -237,6 +237,7 @@ $static_url = '/habitrack/views/Adminassets';
 
 </div>
 
+
                 <!-- CHECKBOXES -->
     <!-- <div class="mt-6">
         <h4 class="font-semibold mb-3">Amenities</h4>

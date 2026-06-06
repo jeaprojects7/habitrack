@@ -45,8 +45,45 @@ document.addEventListener('DOMContentLoaded', function () {
             if (this.value === 'House') houseAmenities.style.display = 'block';
         });
     }
-    $("#btn-add").click(function(e) {
+ $("#btn-add").click(function(e) {
     e.preventDefault();  // Stop form submission
+     let requiredFields = [
+            { id: "#property_type", label: "Property Type" },
+            { id: "#propertyLat", label: "Latitude Coordinates" },
+            { id: "#propertyLng", label: "Longitude Coordinates" },
+            { id: "#propertyCity", label: "City" },
+            { id: "#propertyName", label: "Name/Model" },
+            { id: "#propertyLotArea", label: "Lot Area" },
+            { id: "#propertyPrice", label: "Price" },
+            
+        ];
+
+        let emptyFields = [];
+        requiredFields.forEach(function (field) {
+            let value = $(field.id).val();
+
+            if (!value || value.trim() === '') {
+                emptyFields.push(field.label);
+            }
+        });
+
+        if (emptyFields.length > 0) {
+            Swal.fire({
+                title: 'Required Fields Missing',
+                icon: 'warning',
+                html: '<div style="text-align:left;margin-left:20px;">' +
+                      '<p>The following fields are required:</p>' +
+                      '<ul>' +
+                      emptyFields.map(f => `<li>${f}</li>`).join('') +
+                      '</ul></div>',
+                confirmButtonText: 'OK'/* ,
+                customClass: {
+                    confirmButton: 'btn-primary'
+                },
+                buttonsStyling: false gaiss indi ko ka add sng color for some reason huhu */
+            });
+            return;
+        }
     Swal.fire({
         title: 'Add this property?',
         icon: 'question',

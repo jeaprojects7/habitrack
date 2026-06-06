@@ -9,7 +9,7 @@ $sidebarMenus = [
 
         [
             'title' => 'Dashboard',
-            'route' => 'adminDashboard',
+            'route' => 'dashboard',
             'icon'  => 'grid'
         ],
 
@@ -42,7 +42,7 @@ $sidebarMenus = [
 
         [
             'title' => 'Dashboard',
-            'route' => 'agentDashboard',
+            'route' => 'dashboard',
             'icon'  => 'grid'
         ],
          [
@@ -220,7 +220,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
         <!-- Logo -->
         <div style="padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-            <a href="home" style="
+            <a href="dashboard" style="
        display:flex;
        align-items:center;
        gap:12px;

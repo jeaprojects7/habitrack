@@ -1,7 +1,7 @@
 <?php
 return [
     'Admin' => [
-        'adminDashboard',
+        /* 'adminDashboard', */
         'add-property',
         'edit-property',
         'exploreproperty',
@@ -12,6 +12,7 @@ return [
         'agentprofile',
         'agentdisplay',
         'property-detail',
+        'dashboard',
         'clientReservation',
         'clientReservationDetails',
         'logout',
@@ -19,17 +20,19 @@ return [
     'Agent' => [
         'agentlogin',
         'agentuserProfile',
-        'agentDashboard',
+        /* 'agentDashboard', */
         'userprofile',
         'clientPreQual',
         'clientPreDetails',
         'exploreproperty',
+        'edit-property',
+        'dashboard',
         'print-properties',
         'logout'
     ],
     'Client' => [
         'clientsignup',
-        'home',
+        /* 'home', */
         'clientInfoSheet',
         'spouseInfoSheet',
         'reservations',

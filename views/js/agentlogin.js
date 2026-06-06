@@ -47,7 +47,7 @@ function loginAgent() {
                     title: "<span style='font-size:35px;'>Login Successful</span>",
                     showConfirmButton: true
                 }).then(() => {
-                    window.location = "agentDashboard";
+                    window.location = "dashboard";
                 });
 
             } else {

@@ -1,8 +1,45 @@
 document.addEventListener('DOMContentLoaded', function () {
 
  
-    $("#btn-register").click(function(e) {
+$("#btn-register").click(function(e) {
     e.preventDefault();  // Stop form submission
+     let requiredFields = [
+            { id: "#agentFName", label: "First Name" },
+            { id: "#agentLName", label: "Last Name" },
+            { id: "#agentAddress", label: "Address" },
+            { id: "#agentGender", label: "Gender" },
+            { id: "#agentBirthdate", label: "Birthdate" },
+            { id: "#agentPhoneNum", label: "Phone number" },
+            { id: "#agentEmail", label: "Email" },
+            
+        ];
+
+        let emptyFields = [];
+        requiredFields.forEach(function (field) {
+            let value = $(field.id).val();
+
+            if (!value || value.trim() === '') {
+                emptyFields.push(field.label);
+            }
+        });
+
+        if (emptyFields.length > 0) {
+            Swal.fire({
+                title: 'Required Fields Missing',
+                icon: 'warning',
+                html: '<div style="text-align:center;margin-center:20px;">' +
+                      '<p>The following fields are required:</p>' +
+                      '<ul>' +
+                      emptyFields.map(f => `<li>${f}</li>`).join('') +
+                      '</ul></div>',
+                confirmButtonText: 'OK'/* ,
+                customClass: {
+                    confirmButton: 'btn-primary'
+                },
+                buttonsStyling: false gaiss indi ko ka add sng color for some reason huhu */
+            });
+            return;
+        }
     Swal.fire({
         title: 'Update this agent?',
         icon: 'question',
