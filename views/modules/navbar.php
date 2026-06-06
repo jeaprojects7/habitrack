@@ -13,11 +13,11 @@ $navbarMenus = [
             'route' => 'userProfile',
             'icon'  => 'user'
         ],
-        [
-            'title' => 'Settings',
-            'route' => 'settings',
-            'icon'  => 'settings'
-        ],
+        // [
+        //     'title' => 'Settings',
+        //     'route' => 'settings',
+        //     'icon'  => 'settings'
+        // ],
         [
             'title' => 'Logout',
             'route' => 'logout',
@@ -29,14 +29,14 @@ $navbarMenus = [
     'Agent' => [
         [
             'title' => 'My Profile',
-            'route' => 'agentProfile',
+            'route' => 'agentuserProfile',
             'icon'  => 'user'
         ],
-        [
-            'title' => 'Settings',
-            'route' => 'settings',
-            'icon'  => 'settings'
-        ],
+        // [
+        //     'title' => 'Settings',
+        //     'route' => 'settings',
+        //     'icon'  => 'settings'
+        // ],
         [
             'title' => 'Logout',
             'route' => 'logout',
@@ -51,11 +51,11 @@ $navbarMenus = [
             'route' => 'clientprofile',
             'icon'  => 'user'
         ],
-        [
-            'title' => 'Settings',
-            'route' => 'edit-clientprofile',
-            'icon'  => 'settings'
-        ],
+        // [
+        //     'title' => 'Settings',
+        //     'route' => 'edit-clientprofile',
+        //     'icon'  => 'settings'
+        // ],
         [
             'title' => 'Logout',
             'route' => 'logout',
@@ -92,11 +92,11 @@ $currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
             <i data-feather="menu" class="w-5 h-5"></i>
         </button>
 
-        <div class="relative">
+        <!-- <div class="relative">
             <i data-feather="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             <input type="text" placeholder="Search..."
                 class="border border-gray-200 dark:border-gray-700 rounded-lg pl-9 pr-4 py-2 w-56 bg-transparent text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+        </div> -->
 
     </div>
 
@@ -115,9 +115,9 @@ $currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
             </span>
         </div>
 
-        <?php if (!$isGuest): ?>
+        <!-- <?php if (!$isGuest): ?> -->
         <!-- NOTIFICATION BELL — logged in only -->
-        <div class="relative" id="notif-wrapper">
+        <!-- <div class="relative" id="notif-wrapper">
             <button id="notif-btn" class="relative p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors">
                 <i data-feather="bell" class="w-5 h-5"></i>
                 <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -166,8 +166,8 @@ $currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
                 </div>
 
             </div>
-        </div>
-        <?php endif; ?>
+        </div> -->
+        <!-- <?php endif; ?> -->
 
         <!-- PROFILE -->
         <div class="relative" id="profile-wrapper">
@@ -191,43 +191,44 @@ $currentNavbarMenu = $navbarMenus[$role] ?? $navbarMenus['Guest'];
                     </p>
                 </div>
                  <ul class="py-1">
-                    <li>
+                    <!-- <li>
                         <a href="userprofile" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
                             <i data-feather="user" class="w-4 h-4"></i> My Profile
                         </a>
-                    </li>
-                    <li>
+                    </li> -->
+                    <ul class="py-1">
+
+                    <?php foreach ($currentNavbarMenu as $item): ?>
+
+                        <li>
+                            <a href="<?= $item['route']; ?>"
+                            class="flex items-center gap-3 px-4 py-2 text-sm
+                            <?= !empty($item['danger']) ? 'text-red-500 hover:bg-red-50 dark:hover:bg-slate-700'
+                                                        : 'text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700' ?>">
+
+                                <i data-feather="<?= $item['icon']; ?>" class="w-4 h-4"></i>
+
+                                <?= $item['title']; ?>
+
+                            </a>
+                        </li>
+
+                    <?php endforeach; ?>
+
+                </ul>
+                    <!-- <li>
                         <a href="?route=settings" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700">
                             <i data-feather="settings" class="w-4 h-4"></i> Settings
                         </a>
-                    </li>
-                    <li class="border-t border-gray-100 dark:border-slate-700">
+                    </li> -->
+                    <!-- <li class="border-t border-gray-100 dark:border-slate-700">
                         <a href="logout" class="flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-slate-700">
                             <i data-feather="log-out" class="w-4 h-4"></i> Logout
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
 
-                <!-- <ul class="py-1">
-
-                <?php foreach ($currentNavbarMenu as $item): ?>
-
-                    <li>
-                        <a href="<?= $item['route']; ?>"
-                        class="flex items-center gap-3 px-4 py-2 text-sm
-                        <?= !empty($item['danger']) ? 'text-red-500 hover:bg-red-50 dark:hover:bg-slate-700'
-                                                    : 'text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700' ?>">
-
-                            <i data-feather="<?= $item['icon']; ?>" class="w-4 h-4"></i>
-
-                            <?= $item['title']; ?>
-
-                        </a>
-                    </li>
-
-                <?php endforeach; ?>
-
-            </ul> -->
+                
 
                 <?php else: ?>
                 <!-- Guest -->
