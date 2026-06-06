@@ -16,6 +16,7 @@ if (!$res) {
 
 $prequalID = $res['prequalID'] ?? null;
 
+
 require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
 
 $existingInfo = ControllerClient::ctrCheckClientInfo($prequalID);
@@ -386,7 +387,7 @@ $prequalColor = match($prequalStatus) {
                                     </a>
                                 <?php else: ?>
                                     <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-blue-700' ?>">
                                         Fill Up
                                     </a>
                                 <?php endif; ?>
@@ -407,7 +408,7 @@ $prequalColor = match($prequalStatus) {
                                 <?php else: ?>
 
                                     <label for="valid-id-upload"
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>">
                                         Upload
                                     </label>
 
@@ -424,12 +425,12 @@ $prequalColor = match($prequalStatus) {
                                     </button>
                                 </div>
 
-                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden"
+                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden" <?= $requirementsDisabled ? 'disabled' : '' ?>
                                     onchange="handleValidIDChange(event)">
                             </div>
 
                             <!-- 3. Submit -->
-                            <div class="flex flex-col">
+                          <!--   <div class="flex flex-col">
 
                                 <label class="form-label font-medium">
                                     Valid ID
@@ -460,7 +461,7 @@ $prequalColor = match($prequalStatus) {
                                     onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'No file chosen'"
                                 >
 
-                            </div>
+                            </div> -->
                             <!-- Submit -->
                             <div class="flex flex-col">
 
@@ -468,6 +469,7 @@ $prequalColor = match($prequalStatus) {
                                 
                                 <label class="form-label font-medium invisible">Submit</label>
                                 <button type="button" id="submit-valid-id-btn"
+                                 <?= $requirementsDisabled ? 'disabled' : '' ?>
                                     class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= ($hasFilled && $hasValidIDSaved) ? 'opacity-50 cursor-not-allowed' : '' ?>"
                                     <?= ($hasFilled && $hasValidIDSaved) ? 'disabled' : '' ?>>
                                     Submit
