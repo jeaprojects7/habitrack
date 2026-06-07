@@ -25,7 +25,7 @@ require_once __DIR__ . "/../../controllers/clientsignup.controller.php";
             <div class="container relative z-3">
                 <div class="flex justify-center">
                     <div class="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-700 rounded-md">
-                        <a href="dashboard.php"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-32 h-auto" alt=""></a>
+                        <!-- <a href="home.php"> --><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-32 h-auto" alt=""></a>
                         <h5 class="my-6 text-xl font-semibold">Login</h5>
           
                             
@@ -47,7 +47,7 @@ require_once __DIR__ . "/../../controllers/clientsignup.controller.php";
                 Login / Sign in
             </button> changd this ^ to this v -->
             <button type="button" id="btn-client-login"
-            class="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">
+            class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md w-full">
                 Login
             </button>
         </div>
@@ -64,6 +64,9 @@ require_once __DIR__ . "/../../controllers/clientsignup.controller.php";
                        <!--  </form> -->
                     </div>
                 </div>
+            </div>
+            <div class="fixed bottom-3 end-3 z-10">
+                <a href="dashboard" class="btn btn-icon bg-blue-600 hover:bg-blue-700 text-white rounded-full"><i data-feather="arrow-left" class="size-4"></i></a>
             </div>
         </section><!--end section -->
 

@@ -10,7 +10,7 @@ $pass = $_POST["agentLoginPass"];
 
 $answer = (new ModelAgent)->mdlGetAgentCredentials('agent', 'agentEmail', $email);
 
-if (!empty($answer) && $answer["agentEmail"] == $email && $answer["agentPass"] == $pass) {
+if (!empty($answer) && $answer["agentEmail"] == $email &&  password_verify($pass, $answer["agentPass"])) { /* added 060726 */
 
     $_SESSION["loggedIn"] = "ok";
     $_SESSION["agentID"] = $answer["agentID"];

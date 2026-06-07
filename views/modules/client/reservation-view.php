@@ -142,7 +142,7 @@ $prequalColor = match($prequalStatus) {
                         </div>
 
                         <!-- SITE VISIT -->
-                        <a href="index.php?route=spouseInfoSheet&id=<?= $reservationID ?>">
+                        <a href="index.php?route=calendar&id=<?= $reservationID ?>">
 
                             <button
                                 id="btn-sitevisit"
@@ -166,7 +166,7 @@ $prequalColor = match($prequalStatus) {
                             </h5>
 
                             <!-- View Prequal -->
-                            <a href="index.php?route=spouseInfoSheet&id=<?= $reservationID ?>">
+                            <a href="index.php?route=pre-qual&id=<?= $reservationID ?>">
 
                                 <button
                                     id="btn-prequal"

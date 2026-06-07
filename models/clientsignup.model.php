@@ -94,8 +94,25 @@ class ModelClient{
 		return $stmt -> fetch();
 	}
 
+    // static public function mdlGetClientInfo($tableUsers, $item, $value){
+	// 	$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");
+	// 	$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
+	// 	$stmt -> execute();
+	// 	return $stmt->fetch(PDO::FETCH_ASSOC);
+	// }  before ga work naman ni kulang lang gmi and civstat
+
     static public function mdlGetClientInfo($tableUsers, $item, $value){
-		$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");
+		$stmt = (new Connection)->connect()->prepare("
+            SELECT 
+                c.*,
+                p.clientCivilStatus,
+                p.clientMonthlyIncome
+            FROM client c
+            LEFT JOIN prequal p ON c.clientID = p.clientID
+            WHERE c.$item = :$item
+            ORDER BY p.prequalID DESC
+            LIMIT 1
+        ");
 		$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
 		$stmt -> execute();
 		return $stmt->fetch(PDO::FETCH_ASSOC);

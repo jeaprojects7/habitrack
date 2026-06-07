@@ -232,10 +232,29 @@ function validatePage(page) {
             "input[name=sss_gsis]",
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text());
+        //     }
+        // });
+
         required.forEach(el => {
             let val = $(el).val();
+
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text());
+
+                let label = $(el)
+                    .closest(".mb-4")
+                    .find("label")
+                    .clone()
+                    .children()
+                    .remove()
+                    .end()
+                    .text()
+                    .trim();
+
+                errors.push(label);
             }
         });
     }
@@ -258,10 +277,29 @@ function validatePage(page) {
             "input[name=employeremail]"
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text() || el);
+        //     }
+        // });
+
         required.forEach(el => {
             let val = $(el).val();
+
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text() || el);
+
+                let label = $(el)
+                    .closest(".mb-4")
+                    .find("label")
+                    .clone()
+                    .children()
+                    .remove()
+                    .end()
+                    .text()
+                    .trim();
+
+                errors.push(label || el);
             }
         });
 
@@ -290,13 +328,31 @@ function validatePage(page) {
             "input[name=parentsphonenumber]"
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text());
+        //     }
+        // });
+
         required.forEach(el => {
             let val = $(el).val();
+
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text());
+
+                let label = $(el)
+                    .closest(".mb-4")
+                    .find("label")
+                    .clone()
+                    .children()
+                    .remove()
+                    .end()
+                    .text()
+                    .trim();
+
+                errors.push(label);
             }
         });
-
         // PHONE VALIDATION (PARENTS PHONE)
         let parentPhone = $("input[name=parentsphonenumber]").val().trim();
 

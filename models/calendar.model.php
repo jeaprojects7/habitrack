@@ -128,7 +128,7 @@ class AgentModel {
     {
         $sql = "SELECT siteVisitDate, siteVisitTime FROM sitevisit WHERE siteVisitStatus = :status ORDER BY siteVisitDate ASC";
         $stmt = $this->db->prepare($sql);
-        $status = 'BKD';
+        $status = 'Booked';
         $stmt->bindParam(':status', $status);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -144,7 +144,7 @@ class AgentModel {
                 VALUES (:siteVisitID, :clientID, :agentID, :propertyID, :status, :siteVisitDate, :siteVisitTime)";
 
         $siteVisitID = 'SV' . str_pad((string)mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
-        $status = 'BKD';
+        $status = 'Booked';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':siteVisitID', $siteVisitID);

@@ -65,11 +65,18 @@ class ModelAdmin{
     }
 
     static public function mdlGetAdminLogin($username, $upassword){
-		$encryptpass = $upassword;
-		$stmt = (new Connection)->connect()->prepare("SELECT adminID, adminEmail, adminPass FROM admin WHERE (adminEmail = '$username') AND (adminPass = '$encryptpass')");
+		$stmt = (new Connection)->connect()->prepare("SELECT adminID, adminEmail, adminPass FROM admin WHERE adminEmail = :email");
+        $stmt->bindParam(":email", $username, PDO::PARAM_STR);
+
 		$stmt -> execute();
-		return $stmt -> fetch();
+		$row = $stmt->fetch();
+        
+        if($row && password_verify($upassword, $row["adminPass"])){
+            return $row;
+        }
+        return false;
 	}
+
 
     static public function mdlGetAdminCredentials($tableUsers, $item, $value){
 		$stmt = (new Connection)->connect()->prepare("SELECT * FROM $tableUsers WHERE $item = :$item");

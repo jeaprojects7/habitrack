@@ -61,11 +61,11 @@ $sidebarMenus = [
             'icon'  => 'grid'
         ],
 
-        [
-            'title' => 'Explore Properties',
-            'route' => 'exploreproperty',
-            'icon'  => 'home'
-        ],
+        // [
+        //     'title' => 'Explore Properties',
+        //     'route' => 'exploreproperty',
+        //     'icon'  => 'home'
+        // ],
 
         // [
         //     'title' => 'Information Sheet',
@@ -73,11 +73,11 @@ $sidebarMenus = [
         //     'icon'  => 'heart'
         // ],
        
-        [
-            'title' => 'Spouse Information Sheet',
-            'route' => 'spouseInfoSheet',
-            'icon'  => 'heart'
-        ],
+        // [
+        //     'title' => 'Spouse Information Sheet',
+        //     'route' => 'spouseInfoSheet',
+        //     'icon'  => 'heart'
+        // ],
         
         [
             'title' => 'Reservations',
@@ -90,18 +90,19 @@ $sidebarMenus = [
         // [
         //     'title' => 'Site Visit',
         //     'route' => 'calendar',
+        //     'icon'  => 'calendar' from current
+        // ],
+        //from current
+        // [
+        //     'title' => 'Site Visit',
+        //     'route' => 'calendar',
         //     'icon'  => 'calendar'
         // ],
-        [
-            'title' => 'Site Visit',
-            'route' => 'calendar',
-            'icon'  => 'calendar'
-        ],
-        [
-            'title' => 'Pre-Qualification',
-            'route' => 'pre-qual',
-            'icon'  => 'calendar'
-        ],
+        // [
+        //     'title' => 'Pre-Qualification',
+        //     'route' => 'pre-qual',
+        //     'icon'  => 'calendar'
+        // ],
         
         
         

@@ -16,9 +16,38 @@ try {
     $connection = new Connection();
     $db = $connection->connect();
     $dashboardModel = new DashboardModel($db);
-    
+
     $action = isset($_GET['action']) ? $_GET['action'] : 'search';
-    
+
+    // ────────────────────────────────────────────────
+    //  VALIDATE PRICE RANGE
+    // ────────────────────────────────────────────────
+    function validatePriceRange($priceStart, $priceEnd) {
+        $errors = [];
+
+        if ($priceStart !== '' && !is_numeric($priceStart)) {
+            $errors[] = 'Price Start must be a valid number';
+        }
+        if ($priceStart !== '' && is_numeric($priceStart) && floatval($priceStart) < 0) {
+            $errors[] = 'Price Start cannot be negative';
+        }
+
+        if ($priceEnd !== '' && !is_numeric($priceEnd)) {
+            $errors[] = 'Price End must be a valid number';
+        }
+        if ($priceEnd !== '' && is_numeric($priceEnd) && floatval($priceEnd) < 0) {
+            $errors[] = 'Price End cannot be negative';
+        }
+
+        if ($priceStart !== '' && $priceEnd !== '' &&
+            is_numeric($priceStart) && is_numeric($priceEnd) &&
+            floatval($priceStart) > floatval($priceEnd)) {
+            $errors[] = 'Price Start cannot be greater than Price End';
+        }
+
+        return $errors;
+    }
+
     // ────────────────────────────────────────────────
     //  SEARCH: Filter properties and return markers
     // ────────────────────────────────────────────────
@@ -38,11 +67,21 @@ try {
             'priceEnd'       => $_REQUEST['priceEnd'] ?? '',
             'amenities'      => isset($_REQUEST['amenities']) ? (array) $_REQUEST['amenities'] : [],
         ];
-        
+
+        // Validate price range before processing
+        $priceErrors = validatePriceRange($filters['priceStart'], $filters['priceEnd']);
+        if (!empty($priceErrors)) {
+            echo json_encode([
+                'success' => false,
+                'error' => implode('; ', $priceErrors)
+            ]);
+            exit;
+        }
+
         $filters = array_filter($filters, function($v) {
             return $v !== '' && (!is_array($v) || !empty($v));
         });
-        
+
         $results = $dashboardModel->searchProperties($filters);
         
         // FIX: use explicit variables to avoid PHP string-concat operator precedence bug

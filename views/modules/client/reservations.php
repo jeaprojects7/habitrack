@@ -87,14 +87,14 @@ if (!$clientID) {
                         $resStatus   = htmlspecialchars($res['reserveStatus'] ?? 'Pending');
 
                         $prequalColor = match(strtolower($prequalStatus)) {
-                            'approved' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+                            'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
                             'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
                             default    => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
                         };
 
                         $statusColor = match(strtolower($resStatus)) {
-                            'confirmed' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-                            'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+                            'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
+                            'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
                             default     => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
                         };
                     ?>

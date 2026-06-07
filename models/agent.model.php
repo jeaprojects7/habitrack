@@ -88,10 +88,16 @@ class ModelAgent{
     }
 
     static public function mdlGetAgentLogin($username, $upassword){
-		$encryptpass = $upassword;
-		$stmt = (new Connection)->connect()->prepare("SELECT agentID, agentEmail, agentPass FROM agent WHERE (agentEmail = '$username') AND (agentPass = '$encryptpass')");
+		$stmt = (new Connection)->connect()->prepare("SELECT agentID, agentEmail, agentPass FROM agent WHERE agentEmail = :email");
+        $stmt->bindParam(":email", $username, PDO::PARAM_STR);
 		$stmt -> execute();
-		return $stmt -> fetch();
+
+		$row = $stmt->fetch();
+
+        if($row && password_verify($upassword, $row["agentPass"])){
+            return $row;
+        }
+        return false;
 	}
   
     static public function mdlGetAgentCredentials($tableUsers, $item, $value){

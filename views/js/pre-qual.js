@@ -30,10 +30,13 @@
 
 // ─── Show/hide notification and form on page load ─────────────────────────────
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   try {
     var notif = document.getElementById('prequal-notification');
     var form  = document.getElementById('prequal-form-container');
+
+    // Load existing data first so fields are populated before the user sees the form
+    await loadPrequalData();
 
     if (window._htPrequalAgentName && notif) {
       var nameEl = notif.querySelector('.prequal-agent-name');
@@ -44,8 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (notif) notif.style.display = 'none';
       if (form)  form.style.display  = 'block';
     }
-
-    loadPrequalData();
   } catch (e) {
     console.warn('pre-qual UI init failed', e);
   }
@@ -83,9 +84,83 @@ function toggleCoOwnerDetails() {
 
   if (coOwner && coOwner.value === 'yes') {
     coOwnerSection.classList.remove('hidden');
+
+    const firstNameEl = document.getElementById('co-owner-firstname');
+    const hasData     = firstNameEl && firstNameEl.value.trim() !== '';
+
+    // If fields empty and we have cached co-owner data, populate it
+    if (!hasData && window._htPrequalData && window._htPrequalData.coOwner) {
+      populateCoOwnerFields(window._htPrequalData.coOwner);
+    }
+
+    // Show financing section if it was set
+    toggleCoOwnerFinancing();
   } else {
     coOwnerSection.classList.add('hidden');
-    clearCoOwnerFields();
+  }
+}
+
+
+// ─── Populate Co-Owner Fields Only ───────────────────────────────────────────
+
+function populateCoOwnerFields(coOwner) {
+  var relationshipEl = document.getElementById('relationship');
+  if (relationshipEl && coOwner.relationship) relationshipEl.value = coOwner.relationship;
+
+  var firstNameEl = document.getElementById('co-owner-firstname');
+  if (firstNameEl && coOwner.firstname) firstNameEl.value = coOwner.firstname;
+
+  var lastNameEl = document.getElementById('co-owner-lastname');
+  if (lastNameEl && coOwner.lastname) lastNameEl.value = coOwner.lastname;
+
+  var miEl = document.getElementById('co-owner-mi');
+  if (miEl && coOwner.mi) miEl.value = coOwner.mi;
+
+  var suffixEl = document.getElementById('co-owner-suffix');
+  if (suffixEl && coOwner.suffix) suffixEl.value = coOwner.suffix;
+
+  var emailEl = document.getElementById('co-owner-email');
+  if (emailEl && coOwner.email) emailEl.value = coOwner.email;
+
+  var phoneEl = document.getElementById('co-owner-phone');
+  if (phoneEl && coOwner.phone) phoneEl.value = coOwner.phone;
+
+  var empEl = document.getElementById('co-owner-employment');
+  if (empEl && coOwner.employment_status) empEl.value = coOwner.employment_status;
+
+  var incomeEl = document.getElementById('co-owner-income');
+  if (incomeEl && coOwner.monthly_income) incomeEl.value = coOwner.monthly_income;
+
+  if (coOwner.financing_type) {
+    var coFinancingEl = document.getElementById('co-financing-type');
+    if (coFinancingEl) {
+      coFinancingEl.value = coOwner.financing_type;
+      toggleCoOwnerFinancing();
+    }
+
+    if (coOwner.financing_type === 'bank' && coOwner.bank) {
+      var coBankNameEl = document.getElementById('co-bank-name');
+      if (coBankNameEl && coOwner.bank.bank_name) coBankNameEl.value = coOwner.bank.bank_name;
+
+      if (coOwner.bank.existing_house_loan) {
+        var coExistingEl = document.querySelector('input[name="co_existing_house_loan"][value="' + coOwner.bank.existing_house_loan + '"]');
+        if (coExistingEl) coExistingEl.checked = true;
+      }
+      if (coOwner.bank.cancelled_house_loan) {
+        var coCancelledEl = document.querySelector('input[name="co_cancelled_house_loan"][value="' + coOwner.bank.cancelled_house_loan + '"]');
+        if (coCancelledEl) coCancelledEl.checked = true;
+      }
+    }
+
+    if (coOwner.financing_type === 'pagibig' && coOwner.pagibig) {
+      var coDateEl = document.getElementById('co-contribution-date');
+      if (coDateEl && coOwner.pagibig.contribution_start_date) coDateEl.value = coOwner.pagibig.contribution_start_date;
+
+      if (coOwner.pagibig.current_loan) {
+        var coLoanEl = document.querySelector('input[name="co_current_loan"][value="' + coOwner.pagibig.current_loan + '"]');
+        if (coLoanEl) coLoanEl.checked = true;
+      }
+    }
   }
 }
 
@@ -99,6 +174,16 @@ function clearCoOwnerFields() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+
+  const coFinancingEl = document.getElementById('co-financing-type');
+  if (coFinancingEl) coFinancingEl.value = '';
+  clearCoOwnerBankFields();
+  clearCoOwnerPagibigFields();
+
+  const coBankSection    = document.getElementById('co-bank-section');
+  const coPagibigSection = document.getElementById('co-pagibig-section');
+  if (coBankSection)    coBankSection.classList.add('hidden');
+  if (coPagibigSection) coPagibigSection.classList.add('hidden');
 }
 
 
@@ -111,8 +196,6 @@ function toggleFinancing() {
 
   bankSection.classList.add('hidden');
   pagibigSection.classList.add('hidden');
-  clearBankFields();
-  clearPagibigFields();
 
   if (financingType === 'bank') {
     bankSection.classList.remove('hidden');
@@ -134,6 +217,34 @@ function clearPagibigFields() {
   document.querySelectorAll('input[name="current_loan"]').forEach(r => r.checked = false);
 }
 
+function toggleCoOwnerFinancing() {
+  const coFinancingType  = document.getElementById('co-financing-type').value;
+  const coBankSection    = document.getElementById('co-bank-section');
+  const coPagibigSection = document.getElementById('co-pagibig-section');
+
+  if (coBankSection)    coBankSection.classList.add('hidden');
+  if (coPagibigSection) coPagibigSection.classList.add('hidden');
+
+  if (coFinancingType === 'bank') {
+    if (coBankSection) coBankSection.classList.remove('hidden');
+  } else if (coFinancingType === 'pagibig') {
+    if (coPagibigSection) coPagibigSection.classList.remove('hidden');
+  }
+}
+
+function clearCoOwnerBankFields() {
+  const bankName = document.getElementById('co-bank-name');
+  if (bankName) bankName.value = '';
+  document.querySelectorAll('input[name="co_existing_house_loan"]').forEach(r => r.checked = false);
+  document.querySelectorAll('input[name="co_cancelled_house_loan"]').forEach(r => r.checked = false);
+}
+
+function clearCoOwnerPagibigFields() {
+  const date = document.getElementById('co-contribution-date');
+  if (date) date.value = '';
+  document.querySelectorAll('input[name="co_current_loan"]').forEach(r => r.checked = false);
+}
+
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 
@@ -142,7 +253,7 @@ function validateForm() {
   const employmentStatus = document.getElementById('employment-status').value;
   const monthlyIncome  = document.getElementById('monthly-income').value;
   const financingType  = document.getElementById('financing-type').value;
-   const coOwner  = document.getElementById('coOwner-section').value;
+  const coOwner        = document.querySelector('input[name="co_owner"]:checked')?.value || 'no';
 
   if (!civilStatus) {
     alert('Please select a civil status.');
@@ -171,6 +282,7 @@ function validateForm() {
     const coOwnerEmail      = document.getElementById('co-owner-email').value.trim();
     const coOwnerPhone      = document.getElementById('co-owner-phone').value.trim();
     const coOwnerEmployment = document.getElementById('co-owner-employment').value;
+    const coOwnerIncome     = document.getElementById('co-owner-income').value;
 
     if (!coOwnerFirst || !coOwnerLast) {
       alert('Please enter co-owner first and last name.');
@@ -187,7 +299,48 @@ function validateForm() {
     if (!coOwnerEmployment) {
       alert('Please select co-owner employment status.');
       return false;
-    } 
+    }
+    if (!coOwnerIncome || parseFloat(coOwnerIncome) <= 0) {
+      alert('Please enter a valid co-owner monthly income.');
+      return false;
+    }
+
+    const coFinancingType = document.getElementById('co-financing-type').value;
+    if (!coFinancingType) {
+      alert('Please select a financing type for the co-owner.');
+      return false;
+    }
+
+    if (coFinancingType === 'bank') {
+      const coBankName      = document.getElementById('co-bank-name').value.trim();
+      const coExistingLoan  = document.querySelector('input[name="co_existing_house_loan"]:checked');
+      const coCancelledLoan = document.querySelector('input[name="co_cancelled_house_loan"]:checked');
+      if (!coBankName) {
+        alert('Please enter the co-owner bank name.');
+        return false;
+      }
+      if (!coExistingLoan) {
+        alert('Please answer: Does the co-owner have an existing house loan?');
+        return false;
+      }
+      if (!coCancelledLoan) {
+        alert('Please answer: Does the co-owner have a cancelled house loan?');
+        return false;
+      }
+    }
+
+    if (coFinancingType === 'pagibig') {
+      const coContribDate = document.getElementById('co-contribution-date').value;
+      const coCurrentLoan = document.querySelector('input[name="co_current_loan"]:checked');
+      if (!coContribDate) {
+        alert('Please enter the co-owner contribution start date.');
+        return false;
+      }
+      if (!coCurrentLoan) {
+        alert('Please answer: Does the co-owner have a current loan?');
+        return false;
+      }
+    }
   }
 
   // Validate bank fields
@@ -259,8 +412,23 @@ function collectFormData() {
       email:             document.getElementById('co-owner-email').value.trim(),
       phone:             document.getElementById('co-owner-phone').value.trim(),
       employment_status: document.getElementById('co-owner-employment').value,
-      monthly_income:    document.getElementById('co-owner-income').value
+      monthly_income:    document.getElementById('co-owner-income').value,
+      financing_type:    document.getElementById('co-financing-type').value
     };
+
+    const coFinancingType = document.getElementById('co-financing-type').value;
+    if (coFinancingType === 'bank') {
+      data.coOwner.bank = {
+        bank_name:            document.getElementById('co-bank-name').value.trim(),
+        existing_house_loan:  document.querySelector('input[name="co_existing_house_loan"]:checked')?.value ?? null,
+        cancelled_house_loan: document.querySelector('input[name="co_cancelled_house_loan"]:checked')?.value ?? null
+      };
+    } else if (coFinancingType === 'pagibig') {
+      data.coOwner.pagibig = {
+        contribution_start_date: document.getElementById('co-contribution-date').value,
+        current_loan:            document.querySelector('input[name="co_current_loan"]:checked')?.value ?? null
+      };
+    }
   }
 
   if (financingType === 'bank') {
@@ -286,6 +454,7 @@ function collectFormData() {
 
 async function loadPrequalData() {
   if (!window._htPrequalAgentId || !window._htSelectedPropertyID) {
+    console.warn('[Prequal] Skipping load — agentId:', window._htPrequalAgentId, 'propertyID:', window._htSelectedPropertyID);
     return;
   }
 
@@ -331,7 +500,7 @@ function populateFormWithData(data) {
     if (civilStatusEl) {
       civilStatusEl.value = data.civil_status;
       toggleCoOwner();
-    }
+    } 
   }
 
   if (data.employment_status) {
@@ -377,46 +546,21 @@ function populateFormWithData(data) {
     }
   }
 
-  if (data.co_owner === 'yes' && data.coOwner) {
-    var coOwnerRadio = document.querySelector('input[name="co_owner"][value="yes"]');
-    if (coOwnerRadio) {
-      coOwnerRadio.checked = true;
-      toggleCoOwnerDetails();
-    }
-
-    var relationshipEl = document.getElementById('relationship');
-    if (relationshipEl && data.coOwner.relationship) relationshipEl.value = data.coOwner.relationship;
-
-    var firstNameEl = document.getElementById('co-owner-firstname');
-    if (firstNameEl && data.coOwner.firstname) firstNameEl.value = data.coOwner.firstname;
-
-    var lastNameEl = document.getElementById('co-owner-lastname');
-    if (lastNameEl && data.coOwner.lastname) lastNameEl.value = data.coOwner.lastname;
-
-    var miEl = document.getElementById('co-owner-mi');
-    if (miEl && data.coOwner.mi) miEl.value = data.coOwner.mi;
-
-    var suffixEl = document.getElementById('co-owner-suffix');
-    if (suffixEl && data.coOwner.suffix) suffixEl.value = data.coOwner.suffix;
-
-    var emailEl = document.getElementById('co-owner-email');
-    if (emailEl && data.coOwner.email) emailEl.value = data.coOwner.email;
-
-    var phoneEl = document.getElementById('co-owner-phone');
-    if (phoneEl && data.coOwner.phone) phoneEl.value = data.coOwner.phone;
-
-    var coOwnerEmpEl = document.getElementById('co-owner-employment');
-    if (coOwnerEmpEl && data.coOwner.employment_status) coOwnerEmpEl.value = data.coOwner.employment_status;
-
-    var coOwnerIncomeEl = document.getElementById('co-owner-income');
-    if (coOwnerIncomeEl && data.coOwner.monthly_income) coOwnerIncomeEl.value = data.coOwner.monthly_income;
-  } else if (data.co_owner === 'no') {
-    var noPrincipalRadio = document.querySelector('input[name="co_owner"][value="no"]');
-    if (noPrincipalRadio) {
-      noPrincipalRadio.checked = true;
-      toggleCoOwnerDetails();
-    }
+  // Pre-fill co-owner fields if data exists
+  if (data.coOwner) {
+    populateCoOwnerFields(data.coOwner);
   }
+
+  // Always check the radio that matches what was saved
+  var savedCoOwner = data.co_owner === 'yes' ? 'yes' : 'no';
+  var radioToCheck = document.querySelector('input[name="co_owner"][value="' + savedCoOwner + '"]');
+  if (radioToCheck) {
+    radioToCheck.checked = true;
+  }
+
+  // Toggle co-owner section based on the saved flag — always call so the
+  // section shows when co-owner and hides when principal buyer
+  toggleCoOwnerDetails();
 }
 
 
@@ -444,11 +588,14 @@ async function submitForm() {
 
   if (window._htIsEditMode && window._htPrequalData) {
     formData.prequal_id = window._htPrequalData.prequalID;
+    formData.financing_id = window._htPrequalData.financingID || '';
+    formData.co_owner_id = window._htPrequalData.coOwnerID || '';
     endpoint = '/habitrack/ajax/prequal.ajax.php?action=updatePrequal';
     successMsg = 'Pre-qualification updated successfully.';
-  } else if (window._htIsCopyMode && window._htPrequalData) {
-    // In copy mode, reuse financing and co-owner IDs from source
-    formData.financing_id = window._htPrequalData.financingID || '';
+  }
+  // In copy mode, pass the existing co_owner_id so the server updates
+  // the existing clientcoprequal row instead of inserting a new one
+  if (window._htIsCopyMode && window._htPrequalData) {
     formData.co_owner_id = window._htPrequalData.coOwnerID || '';
   }
 

@@ -77,7 +77,7 @@ $reservationID = $res['reservationID'] ?? null;
                     <!-- Row 1: Name -->
                     <div class="grid grid-cols-4 gap-4 mt-4">
                         <div class="mb-4">
-                            <label class="font-medium text-gray-800 dark:text-white/70">First Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">First Name<span class="text-red-600">*</span></label>
                             <input name="firstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Kairi"> <!--cursor-not-allowed disabled -->
@@ -89,7 +89,7 @@ $reservationID = $res['reservationID'] ?? null;
                             dark:placeholder-white/30" placeholder="Benson"> <!--cursor-not-allowed disabled -->
                         </div>
                         <div class="mb-4">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Last Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Last Name<span class="text-red-600">*</span></label>
                             <input name="lastname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="McClain"> <!--cursor-not-allowed disabled -->
@@ -105,19 +105,19 @@ $reservationID = $res['reservationID'] ?? null;
                     <!-- Row 2: Contact -->
                     <div class="grid grid-cols-12 gap-4">
                         <div class="mb-4 col-span-4">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Email</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Email<span class="text-red-600">*</span></label>
                             <input name="email" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="kaimcclain@gmail.com"> <!--cursor-not-allowed disabled  -->
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Phone Number</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Phone Number<span class="text-red-600">*</span></label>
                             <input name="phonenumber" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="09876543211"> <!-- cursor-not-allowed disabled  -->
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Civil Status</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Civil Status<span class="text-red-600">*</span></label>
                             <!-- <input type="hidden" name="civilstatus" id="civilstatus" required> -->
                             <input type="text" name="civilstatus" id="civilstatus" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
@@ -144,7 +144,7 @@ $reservationID = $res['reservationID'] ?? null;
                             </div> -->
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Gender</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Gender<span class="text-red-600">*</span></label>
                             <div class="relative mt-3" id="gender-wrapper">
                                 <input type="hidden" name="gender" id="gender" required>
                                 <div id="gender-display" onclick="toggleGenderDropdown()" 
@@ -165,7 +165,7 @@ $reservationID = $res['reservationID'] ?? null;
                         </div>
                         
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Birthdate:</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Birthdate<span class="text-red-600">*</span></label>
                             <div class="relative mt-3">
                                 <input name="birthdate" id="birthdate" type="text" readonly
                                     class="form-input w-full font-normal bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 dark:placeholder-white/30 cursor-pointer"
@@ -182,19 +182,19 @@ $reservationID = $res['reservationID'] ?? null;
                     <!-- Row 3: Personal -->
                     <div class="grid grid-cols-4 gap-4">
                         <div class="mb-4 col-span-1">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Citizenship</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Citizenship<span class="text-red-600">*</span></label>
                             <input name="citizenship" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Japanese">
                         </div>
                         <div class="mb-4 col-span-1">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Religion</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Religion<span class="text-red-600">*</span></label>
                             <input name="religion" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Buddhism">
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Place of Birth</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Place of Birth<span class="text-red-600">*</span></label>
                             <input name="placeofbirth" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Bacolod City">
@@ -236,7 +236,7 @@ $reservationID = $res['reservationID'] ?? null;
                 <!-- ===== PAGE 2 ===== -->
                 <div id="page-2" class="hidden">
                     <!-- Home Address -->
-                    <h2 class="text-gray-800 dark:text-white font-bold text-lg">Home Address</h2>
+                    <h2 class="text-gray-800 dark:text-white font-bold text-lg">Home Address<span class="text-red-600">*</span></h2>
                     <div class="grid grid-cols-12 gap-4 mt-4">
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Unit No.</label>
@@ -257,19 +257,19 @@ $reservationID = $res['reservationID'] ?? null;
                             dark:placeholder-white/30" placeholder="City Heights">
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Barangay</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Barangay<span class="text-red-600">*</span></label>
                             <input name="barangay" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Barangay Taculing">
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">City / Municipality</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">City / Municipality<span class="text-red-600">*</span></label>
                             <input name="city" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Bacolod City">
                         </div>
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Province</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Province<span class="text-red-600">*</span></label>
                             <input name="province" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Negros Occidental">
@@ -403,7 +403,7 @@ $reservationID = $res['reservationID'] ?? null;
 
                                 <div class="mb-4 col-span-2">
                                     <label class="font-medium text-gray-800 dark:text-white/70">
-                                        In Elementary
+                                        In Elementary<span class="text-red-600">*</span>
                                     </label>
 
                                     <input name="elem" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -414,7 +414,7 @@ $reservationID = $res['reservationID'] ?? null;
 
                                 <div class="mb-4 col-span-2">
                                     <label class="font-medium text-gray-800 dark:text-white/70">
-                                        In Highschool
+                                        In Highschool<span class="text-red-600">*</span>
                                     </label>
 
                                     <input name="highschool" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -425,7 +425,7 @@ $reservationID = $res['reservationID'] ?? null;
 
                                 <div class="mb-4 col-span-2">
                                     <label class="font-medium text-gray-800 dark:text-white/70">
-                                        In College
+                                        In College<span class="text-red-600">*</span>
                                     </label>
 
                                     <input name="college" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -436,7 +436,7 @@ $reservationID = $res['reservationID'] ?? null;
 
                                 <div class="mb-4 col-span-2">
                                     <label class="font-medium text-gray-800 dark:text-white/70">
-                                        Not yet studying
+                                        Not yet studying<span class="text-red-600">*</span>
                                     </label>
 
                                     <input name="notstudying" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
@@ -484,7 +484,7 @@ $reservationID = $res['reservationID'] ?? null;
                     <div class="grid grid-cols-8 gap-4 mt-4">
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Gross Monthly Income</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Gross Monthly Income<span class="text-red-600">*</span></label>
                             <input name="gmi" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" 
@@ -492,7 +492,7 @@ $reservationID = $res['reservationID'] ?? null;
                         </div>
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Source of Income</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Source of Income<span class="text-red-600">*</span></label>
                             <div class="relative mt-3" id="sourceofincome-wrapper">
                                 <input type="hidden" name="sourceofincome" id="sourceofincome" required>
                                 <div id="sourceofincome-display" onclick="toggleSourceOfIncomeDropdown()"
@@ -514,14 +514,14 @@ $reservationID = $res['reservationID'] ?? null;
                         </div>
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Employer / Business Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Employer / Business Name<span class="text-red-600">*</span></label>
                             <input name="empbusinessname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Manolo Javier">
                         </div>
                        
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Nature of Business</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Nature of Business<span class="text-red-600">*</span></label>
                             <input name="natureofbusiness" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Manufacturing">
@@ -531,14 +531,14 @@ $reservationID = $res['reservationID'] ?? null;
 
                     <div class="grid grid-cols-12 gap-4 mt-4">
                         <div class="mb-4 col-span-6">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Business Address</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Business Address<span class="text-red-600">*</span></label>
                             <input name="businessaddress" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="L'Fisher Building, Lacson Street, Bacolod City">
                         </div>
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Appointment </label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Appointment<span class="text-red-600">*</span></label>
                             <div class="relative mt-3" id="appointment-wrapper">
                                 <input type="hidden" name="appointment" id="appointment" required>
                                 <div id="appointment-display"
@@ -594,7 +594,7 @@ $reservationID = $res['reservationID'] ?? null;
 
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">
-                                Place of Work
+                                Place of Work<span class="text-red-600">*</span>
                             </label>
 
                             <div class="relative mt-3" id="workplace-wrapper">
@@ -643,7 +643,7 @@ $reservationID = $res['reservationID'] ?? null;
                         </div>
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Date Hired</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Date Hired<span class="text-red-600">*</span></label>
                             <div class="relative mt-3">
                                 <input name="datehired" id="datehired" type="text" readonly
                                     class="form-input w-full font-normal bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 dark:placeholder-white/30 cursor-pointer"
@@ -661,28 +661,28 @@ $reservationID = $res['reservationID'] ?? null;
                     <div class="grid grid-cols-12 gap-4 mt-4">
 
                         <div class="mb-4 col-span-3">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Position</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Position<span class="text-red-600">*</span></label>
                             <input name="position" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Manager">
                         </div>
                        
                         <div class="mb-4 col-span-3">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Department</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Department<span class="text-red-600">*</span></label>
                             <input name="department" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="Accounting">
                         </div>
 
                         <div class="mb-4 col-span-3">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Employer Phone Number</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Employer Phone Number<span class="text-red-600">*</span></label>
                             <input name="employerphonenumber" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="09876543213" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
                         </div>
 
                         <div class="mb-4 col-span-3">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Employer Email</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Employer Email<span class="text-red-600">*</span></label>
                             <input name="employeremail" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="manolojavier@gmail.com">
@@ -725,14 +725,14 @@ $reservationID = $res['reservationID'] ?? null;
 
                      <div class="grid grid-cols-8 gap-4 mt-4">
                         <div class="mb-4 col-span-6">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Parents' Address</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Parents' Address<span class="text-red-600">*</span></label>
                             <input name="parentsaddress" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                                 dark:placeholder-white/30" placeholder="Block 12 Lot 4 Third Street, New View, Barangay Mandalagan">
                         </div>
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Parents' Phone Number</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Parents' Phone Number<span class="text-red-600">*</span></label>
                             <input name="parentsphonenumber" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" placeholder="09876543214" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
@@ -745,7 +745,7 @@ $reservationID = $res['reservationID'] ?? null;
                     <div class="grid grid-cols-8 gap-4 mt-2">
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Father's First Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Father's First Name<span class="text-red-600">*</span></label>
                             <input name="fathersfirstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                                 dark:placeholder-white/30" placeholder="Oliver">
@@ -760,7 +760,7 @@ $reservationID = $res['reservationID'] ?? null;
 
                         
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Father's Last Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Father's Last Name<span class="text-red-600">*</span></label>
                             <input name="fatherslastname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                                 dark:placeholder-white/30" placeholder="Ostern">
@@ -779,7 +779,7 @@ $reservationID = $res['reservationID'] ?? null;
                     <div class="grid grid-cols-8 gap-4 mt-2">
 
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Mother's First Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Mother's First Name<span class="text-red-600">*</span></label>
                             <input name="mothersfirstname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                                 dark:placeholder-white/30" placeholder="Elizabeth">
@@ -793,7 +793,7 @@ $reservationID = $res['reservationID'] ?? null;
                         </div>
                         
                         <div class="mb-4 col-span-2">
-                            <label class="font-medium text-gray-800 dark:text-white/70">Mother's Last Name</label>
+                            <label class="font-medium text-gray-800 dark:text-white/70">Mother's Last Name<span class="text-red-600">*</span></label>
                             <input name="motherslastname" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                                 dark:placeholder-white/30" placeholder="Wickman">

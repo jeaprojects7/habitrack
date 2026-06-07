@@ -406,7 +406,18 @@ function validatePage(page) {
         required.forEach(el => {
             let val = $(el).val();
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text());
+                // errors.push($(el).closest(".mb-4").find("label").text());
+                let label = $(el)
+                .closest(".mb-4")
+                .find("label")
+                .clone()
+                .children()
+                .remove()
+                .end()
+                .text()
+                .trim();
+
+            errors.push(label);
             }
         });
     }
@@ -443,7 +454,18 @@ function validatePage(page) {
         required.forEach(el => {
             let val = $(el).val();
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text() || el);
+                // errors.push($(el).closest(".mb-4").find("label").text() || el);
+                let label = $(el)
+                .closest(".mb-4")
+                .find("label")
+                .clone()
+                .children()
+                .remove()
+                .end()
+                .text()
+                .trim();
+
+            errors.push(label || el);
             }
         });
 
@@ -472,12 +494,31 @@ function validatePage(page) {
             "input[name=parentsphonenumber]"
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text());
+        //     }
+        // });
+
         required.forEach(el => {
-            let val = $(el).val();
-            if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text());
-            }
-        });
+        let val = $(el).val();
+
+        if (!val || val.trim() === "") {
+
+            let label = $(el)
+                .closest(".mb-4")
+                .find("label")
+                .clone()
+                .children()
+                .remove()
+                .end()
+                .text()
+                .trim();
+
+            errors.push(label);
+        }
+    });
 
         // PHONE VALIDATION (PARENTS PHONE)
         let parentPhone = $("input[name=parentsphonenumber]").val().trim();
@@ -531,6 +572,9 @@ function loadClientInfo() {
             $("input[name=suffix]").val(data.clientSuffix ? data.clientSuffix : " ") ;
             $("input[name=email]").val(data.clientEmail);
             $("input[name=phonenumber]").val(data.clientPhoneNum);
+
+            selectCivilStatus(data.clientCivilStatus, data.clientCivilStatus);
+            $("input[name=gmi]").val(data.clientMonthlyIncome);
         },
 
         error: function () {
