@@ -4,48 +4,53 @@ require_once "connection.php";
 
 class ClientReservationModel {
 
-    public function getReservationsByStatus($status) {
-        $whereStatus = '';
-        if ($status !== 'All') {
-            $whereStatus = "WHERE r.reserveStatus = :status";
-        }
+//amo ni kwaa cas ky gn editerist koni ky naguba for some reason tulokay lng kmi ni AI ano sala HAHAHA
+   public function getReservationsByStatus($status) {
 
-        $stmt = (new Connection)->connect()->prepare("
-            SELECT
-                r.reservationID,
-                r.reserveDate,
-                r.reserveTime,
-                r.reserveStatus,
-
-                pq.prequalID,
-                pq.prequalStatus,
-
-                c.clientID,
-                c.clientFName,
-                c.clientLName,
-
-                p.propertyID,
-                p.propertyName,
-                p.propertyType,
-                p.propertyCity,
-                p.propertyBrgy,
-                p.propertyPrice,
-                p.propertyLotArea
-            FROM reservations r
-            JOIN prequal pq ON r.prequalID = pq.prequalID
-            JOIN client c ON pq.clientID = c.clientID
-            JOIN properties p ON pq.propertyID = p.propertyID
-            $whereStatus
-            ORDER BY r.reserveDate DESC, r.reservationID DESC
-        ");
-
-        if ($status !== 'All') {
-            $stmt->bindParam(":status", $status, PDO::PARAM_STR);
-        }
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $whereStatus = '';
+    if ($status !== 'All') {
+        $whereStatus = "AND r.reserveStatus = :status";
     }
+
+    $stmt = (new Connection)->connect()->prepare("
+        SELECT
+            r.reservationID,
+            r.reserveDate,
+            r.reserveTime,
+            r.reserveStatus,
+
+            pq.prequalID,
+            pq.prequalStatus,
+
+            c.clientID,
+            c.clientFName,
+            c.clientLName,
+
+            p.propertyID,
+            p.propertyName,
+            p.propertyType,
+            p.propertyCity,
+            p.propertyBrgy,
+            p.propertyPrice,
+            p.propertyLotArea
+        FROM reservations r
+        JOIN prequal pq ON r.prequalID = pq.prequalID
+        JOIN client c ON pq.clientID = c.clientID
+        JOIN properties p ON pq.propertyID = p.propertyID
+        JOIN client_information ci ON ci.prequalID = pq.prequalID
+        WHERE pq.prequalStatus = 'Approved'
+        $whereStatus
+        ORDER BY r.reserveDate DESC, r.reservationID DESC
+    ");
+
+    if ($status !== 'All') {
+        $stmt->bindParam(":status", $status, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     public function getReservationDetails($reservationID) {
         $stmt = (new Connection)->connect()->prepare("
@@ -100,7 +105,7 @@ class ClientReservationModel {
                 cp.coOwnerMonthlyIncome,
 
                 ci.clientCISID,
-                ci.spouseCISID,
+                
                 ci.clientCitizenship,
                 ci.clientGender,
                 ci.clientReligion,
