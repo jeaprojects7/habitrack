@@ -7,7 +7,7 @@ return [
 
     // Fill these in before sending real emails. Do not use your normal Gmail password.
     'username' => 'jeaprojects7@gmail.com',
-    'password' => 'uvshmdiubambbbam',
+    'password' => 'bxfoxxcxfjxzfebq',
 
     // This is the sender shown in the agent's inbox.
     'from_email' => 'jeaprojects7@gmail.com',

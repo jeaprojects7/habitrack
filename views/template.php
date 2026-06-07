@@ -1,20 +1,11 @@
 <?php
 session_start();
-/* echo password_hash("admin1", PASSWORD_BCRYPT);
-exit(); */
-
+/* echo password_hash("ABCD000002", PASSWORD_BCRYPT);
+exit();    
+ */
 $static_url = '/habitrack/views/Adminassets';
 $logo_url = '/habitrack/views/assets'; // // added 52126
 
-/* if (($_GET['route'] ?? '') === 'print-properties') {
-    if (($_SESSION['loggedIn'] ?? '') === 'ok' && ($_SESSION['role'] ?? '') === 'Admin' && 'agent') {
-        include __DIR__ . "/../reports/print-properties.php";
-        exit;
-    }
-
-    http_response_code(403);
-    exit('Forbidden');
-} */
 
 $role = $_SESSION['role'] ?? '';
 

@@ -52,10 +52,10 @@ $hasCoOwner = !empty($prequal['coOwnerID']);
         <div class="max-w-5xl mx-auto space-y-5 pb-8">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <a href="index.php?route=clientPreQual"
+                    <!-- <a href="index.php?route=clientPreQual"
                        class="inline-flex items-center text-sm text-slate-500 hover:text-green-600 dark:text-slate-400 dark:hover:text-green-400">
                         <i class="mdi mdi-arrow-left mr-1"></i> Back
-                    </a>
+                    </a> -->
                     <h1 class="mt-3 text-2xl font-semibold text-slate-900 dark:text-white">
                     <?= htPrequalDetailsValue(trim(($prequal['clientFName'] ?? '') . ' ' . ($prequal['clientMName'] ?? '') . ' ' . ($prequal['clientLName'] ?? '') . ' ' . ($prequal['clientSuffix'] ?? '')), 'Client') ?>
                     </h1>
@@ -255,6 +255,10 @@ $hasCoOwner = !empty($prequal['coOwnerID']);
                     </div>
                 </section>
             <?php endif; ?>
+            <a href="index.php?route=clientPreQual"
+                       class="inline-flex items-center text-sm text-slate-500 hover:text-green-600 dark:text-slate-400 dark:hover:text-green-400">
+                        <i class="mdi mdi-arrow-left mr-1"></i> Back
+                    </a>
         </div>
 
     <?php endif; ?>
