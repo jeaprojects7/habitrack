@@ -578,7 +578,8 @@
 </div>
 
 <script>
-    var HT_CLIENT_LOGGED_IN = <?= isset($_SESSION['clientID']) ? 'true' : 'false'; ?>;
+    
+    var USER_ROLE = "<?= $_SESSION['role'] ?? 'guest' ?>"; //gn add kolng gaiss pra ma bal an cno g log in
 </script>
 <!-- Property modal logic (includes agent modal logic) -->
 <script src="/habitrack/views/js/property-modal.js"></script>

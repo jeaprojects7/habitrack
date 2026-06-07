@@ -7,9 +7,9 @@ $logo_url = '/habitrack/views/assets'; // added 52126
 $role = isset($_SESSION['role']) ? strtolower($_SESSION['role']) : null;
 
 $dashboard_url = match($role) {
-    'admin'  => 'adminDashboard',
-    'agent'  => 'agentDashboard',
-    'client' => 'home',
+    'admin'  => 'dashboard',
+    'agent'  => 'dashboard',
+    'client' => 'dashboard',
     default  => 'start', // fallback if no session
 };
 ?>

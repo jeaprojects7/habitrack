@@ -4,6 +4,10 @@ require_once __DIR__ . '/../../../controllers/reservations.controller.php';
 // require_once __DIR__ . '/../../../models/reservations.model.php';
 
 $reservations = ReservationController::ctrGetReservations();
+/* echo "<pre>";
+print_r($reservations);  
+echo "</pre>";
+exit(); */
 
 // at the top of your reservations module
 if (session_status() === PHP_SESSION_NONE) session_start();
@@ -73,14 +77,14 @@ if (!$clientID) {
                         $resStatus   = htmlspecialchars($res['reserveStatus'] ?? 'Pending');
 
                         $prequalColor = match(strtolower($prequalStatus)) {
-                            'approved' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+                            'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
                             'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
                             default    => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
                         };
 
                         $statusColor = match(strtolower($resStatus)) {
-                            'confirmed' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-                            'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+                            'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
+                            'rejected' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
                             default     => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
                         };
                     ?>

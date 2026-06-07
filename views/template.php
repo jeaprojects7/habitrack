@@ -4,14 +4,26 @@ session_start();
 $static_url = '/habitrack/views/Adminassets';
 $logo_url = '/habitrack/views/assets'; // // added 52126
 
-if (($_GET['route'] ?? '') === 'print-properties') {
-    if (($_SESSION['loggedIn'] ?? '') === 'ok' && ($_SESSION['role'] ?? '') === 'Admin') {
+/* if (($_GET['route'] ?? '') === 'print-properties') {
+    if (($_SESSION['loggedIn'] ?? '') === 'ok' && ($_SESSION['role'] ?? '') === 'Admin' && 'agent') {
         include __DIR__ . "/../reports/print-properties.php";
         exit;
     }
 
     http_response_code(403);
     exit('Forbidden');
+} */
+
+$role = $_SESSION['role'] ?? '';
+
+if (($_GET['route'] ?? '') === 'print-properties') {
+    if (
+        ($_SESSION['loggedIn'] ?? '') === 'ok' &&
+        ($role === 'Admin' || $role === 'Agent')
+    ) {
+        include __DIR__ . "/../reports/print-properties.php";
+        exit;
+    }
 }
 
 if (($_GET['route'] ?? '') === 'print-agents') {
@@ -30,6 +42,18 @@ if (($_GET['route'] ?? '') === 'print-agents') {
 <html lang="en" class="light scroll-smooth" dir="ltr">
 
 <head>
+    <script>
+        (function () {
+            if (localStorage.getItem('habitrackTheme') === 'dark') {
+                document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script>
+    window.USER_ROLE = "<?= $_SESSION['role'] ?? 'guest' ?>";
+    window.IS_LOGGED_IN = <?= isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] === 'ok' ? 'true' : 'false' ?>;
+</script>
     <meta charset="UTF-8">
 
     <title>Habitrack</title>
@@ -263,8 +287,8 @@ span.flatpickr-weekday {
                     'clientsignup',
                     'home',
                     'dashboard',
-                    'agentDashboard',
-                    'adminDashboard',
+                    /* 'agentDashboard',
+                    'adminDashboard', */
                     'logout'
                 ];
                 if (in_array($route, $allowedRoutes)) {
@@ -462,9 +486,9 @@ span.flatpickr-weekday {
                 "adminlogin.js"
             ],
 
-        "add-property" => [
-            "add-property.js"
-        ],
+            "add-property" => [
+                "add-property.js"
+            ],
           "edit-property" => [
             "edit-property.js"
         ],

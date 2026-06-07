@@ -54,13 +54,13 @@ $printQuery = http_build_query([
                 <h5 class="text-lg font-semibold">Explore Properties</h5>
 
                 <ul class="tracking-[0.5px] inline-block sm:mt-0 mt-3">
-                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-green-600 dark:hover:text-white">
+                    <li class="inline-block capitalize text-[16px] font-medium duration-500 dark:text-white/70 hover:text-blue-600 dark:hover:text-white">
                         <a href="adminDashboard">Habitrack</a>
                     </li>
                     <li class="inline-block text-base text-slate-950 dark:text-white/70 mx-0.5 ltr:rotate-0 rtl:rotate-180">
                         <i class="mdi mdi-chevron-right"></i>
                     </li>
-                    <li class="inline-block capitalize text-[16px] font-medium text-green-600 dark:text-white" aria-current="page">
+                    <li class="inline-block capitalize text-[16px] font-medium text-blue-600 dark:text-white" aria-current="page">
                         Explore Properties
                     </li>
                 </ul>
@@ -89,21 +89,25 @@ $printQuery = http_build_query([
 </div>
 </div>
 </form> -->
-<form method="GET" action="/habitrack/index.php" class="flex flex-wrap gap-3 items-end">
+<form method="GET" action="/habitrack/index.php" class="flex flex-wrap gap-3 items-end mt-6">
 
     <input type="hidden" name="route" value="exploreproperty">
 
     <!-- TYPE -->
     <select name="type"
-        class="px-4 py-3 text-lg rounded-full border border-gray-300 bg-white text-black focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[180px]">
+        class="px-4 py-4 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
         <option value="">All Types</option>
         <option value="House" <?= ($selectedType == 'House') ? 'selected' : '' ?>>House</option>
         <option value="Lot" <?= ($selectedType == 'Lot') ? 'selected' : '' ?>>Lot</option>
     </select>
 
-      <!-- STATUS (ADD LNG NI) -->
+    <!-- STATUS -->
     <select name="status"
-        class="px-4 py-3 text-lg rounded-full border border-gray-300 bg-white text-black focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[180px]">
+        class="px-4 py-4  rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[180px]">
         <option value="">Status</option>
         <option value="Available" <?= ($selectedStatus == 'Available') ? 'selected' : '' ?>>Available</option>
         <option value="Reserved" <?= ($selectedStatus == 'Reserved') ? 'selected' : '' ?>>Reserved</option>
@@ -115,31 +119,41 @@ $printQuery = http_build_query([
         name="city"
         placeholder="City"
         value="<?= htmlspecialchars($selectedCity) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           bg-white dark:bg-slate-800 text-black dark:text-white
+           placeholder-gray-400 dark:placeholder-white
+           focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
     <!-- MIN PRICE -->
     <input type="number"
         name="minPrice"
         placeholder="Min Price"
         value="<?= htmlspecialchars($selectedMinPrice) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-gray-200 
+               placeholder-gray-400 dark:placeholder-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
     <!-- MAX PRICE -->
     <input type="number"
         name="maxPrice"
         placeholder="Max Price"
         value="<?= htmlspecialchars($selectedMaxPrice) ?>"
-        class="px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 min-w-[140px]">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+               bg-white dark:bg-slate-800 text-black dark:text-gray-200 
+               placeholder-gray-400 dark:placeholder-white
+               focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
-    <!-- FILTER BUTTON (GREEN like your upload button) -->
+    <!-- FILTER BUTTON -->
     <button type="submit"
-        class="px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold transition">
+        class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
         Filter
     </button>
 
     <!-- PRINT -->
     <a href="/habitrack/index.php?<?= htmlspecialchars($printQuery) ?>" target="_blank"
-        class="px-4 py-3 rounded-full border border-gray-300 text-black hover:bg-gray-100 transition">
+        class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
+           text-black dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition">
         Print PDF
     </a>
 
@@ -149,7 +163,7 @@ $printQuery = http_build_query([
 
         <?php foreach ($properties as $item): ?>
             <a href="set-edit-session.php?type=property&id=<?= $item['propertyID'] ?>"
-    class="text-lg hover:text-green-600 font-medium ease-in-out duration-500"
+    class="text-lg hover:text-blue-600 font-medium ease-in-out duration-500"
 >
 
             <div class="group rounded-xl bg-white dark:bg-slate-900 shadow hover:shadow-xl dark:hover:shadow-xl dark:shadow-gray-700 dark:hover:shadow-gray-700 overflow-hidden ease-in-out duration-500">
@@ -189,7 +203,7 @@ $printQuery = http_build_query([
 
                         <li class="flex items-center me-4">
 
-                            <i class="mdi mdi-arrow-expand-all text-2xl me-2 text-green-600"></i>
+                            <i class="mdi mdi-arrow-expand-all text-2xl me-2 text-blue-600"></i>
 
                             <span>
                                 <?= $item['propertyCity']; ?> City
@@ -199,7 +213,7 @@ $printQuery = http_build_query([
 
                         <li class="flex items-center me-4">
 
-                            <i class="mdi mdi-map-marker text-2xl me-2 text-green-600"></i>
+                            <i class="mdi mdi-map-marker text-2xl me-2 text-blue-600"></i>
 
                             <span>
                                 <?= $item['propertyBrgy']; ?> Brgy
@@ -209,7 +223,7 @@ $printQuery = http_build_query([
 
                         <li class="flex items-center">
 
-                            <i class="mdi mdi-ruler-square text-2xl me-2 text-green-600"></i>
+                            <i class="mdi mdi-ruler-square text-2xl me-2 text-blue-600"></i>
 
                             <span>
                                 <?= $item['propertyLotArea']; ?> sqm

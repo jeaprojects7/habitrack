@@ -25,7 +25,7 @@ require_once __DIR__ . "/../../controllers/admin.controller.php"; //added 51626
             <div class="container relative z-3">
                 <div class="flex justify-center">
                     <div class="max-w-[400px] w-full m-auto p-6 bg-white dark:bg-slate-900 shadow-md dark:shadow-gray-700 rounded-md">
-                        <a href="home.php"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-32 h-auto" alt=""></a>
+                        <a href="dashboard.php"><img src="<?php echo $logo_url; ?>/images/jeaLogo.png" class="mx-auto w-32 h-auto" alt=""></a>
                         <h5 class="my-6 text-xl font-semibold">Login</h5>
           
                             
@@ -47,7 +47,7 @@ require_once __DIR__ . "/../../controllers/admin.controller.php"; //added 51626
                 Login / Sign in
             </button> changed this ^ to this v 51626 -->
             <button type="button" id="btn-admin-login"
-            class="btn bg-green-600 hover:bg-green-700 text-white rounded-md w-full">
+            class="btn bg-blue-600 hover:bg-blue-700 text-white rounded-md w-full">
                 Login
             </button>
         </div>

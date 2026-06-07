@@ -538,20 +538,35 @@ async function loadPropertiesByType(propertyType, selectId) {
                             <div>${amenities}</div>
                         </div>` : ''}
 
-                        <!-- Reserve + Agent buttons (only for logged-in clients) -->
-                        ${window.HT_CLIENT_LOGGED_IN ? `
-                        <button
-                            style="width:100%;padding:11px;background:#2151cc;color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-top:4px;"
-                            onmouseover="this.style.background='#1a42a8'"
-                            onmouseout="this.style.background='#2151cc'"
-                            onclick="htHandleReserveClick()">
-                            Reserve
-                        </button>
-                        ` : `
-                        <div style="margin-top:8px;padding:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px;text-align:center;font-size:.82rem;color:#6b7280;">
-                            <a href="clientlogin" style="color:#2151cc;font-weight:600;text-decoration:none;">Log in</a> to reserve or contact an agent.
-                        </div>
-                        `}
+                        <!-- Reserve + Agent buttons (only for logged-in clients) ari di ang log in thingy -->
+                        ${(() => {
+                                    const role = window.USER_ROLE || 'guest';
+
+                                    if (role === 'Client') {
+                                        return `
+                                            <button
+                                                style="width:100%;padding:11px;background:#2151cc;color:#fff;border:none;border-radius:9px;font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.02em;margin-top:4px;"
+                                                onmouseover="this.style.background='#1a42a8'"
+                                                onmouseout="this.style.background='#2151cc'"
+                                                onclick="htOpenAgentModal()">
+                                                Reserve
+                                            </button>
+                                        `;
+                                    }
+
+                                    if (role === 'guest') {
+                                        return `
+                                            <div style="margin-top:8px;padding:10px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px;text-align:center;font-size:.82rem;color:#6b7280;">
+                                                <a href="clientlogin" style="color:#2151cc;font-weight:600;text-decoration:none;">
+                                                    Log in
+                                                </a> to reserve or contact an agent.
+                                            </div>
+                                        `;
+                                    }
+
+                                    // if agent or admin no show
+                                    return '';
+                            })()}
 
                     </div><!-- /body -->
                 `;

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    var map = L.map('map').setView([9.7392, 118.7353], 13);
+    var map = L.map('map').setView([10.6713, 122.9511], 11);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -45,23 +45,72 @@ document.addEventListener('DOMContentLoaded', function () {
             if (this.value === 'House') houseAmenities.style.display = 'block';
         });
     }
-    $("#btn-add").click(function(e) {
-    e.preventDefault();  // Stop form submission
+ $("#btn-add").click(function(e) {
+    e.preventDefault();
+
+    const isDark = document.documentElement.classList.contains('dark');
+
+    const darkStyles = isDark ? {
+        background: '#1e293b',
+        color: '#f1f5f9',
+        confirmButtonColor: '#16a34a',
+    } : {};
+
+    const darkClass = isDark ? {
+        popup: 'swal-dark',
+    } : {};
+
+    let requiredFields = [
+        { id: "#property_type",  label: "Property Type"        },
+        { id: "#propertyLat",    label: "Latitude Coordinates"  },
+        { id: "#propertyLng",    label: "Longitude Coordinates" },
+        { id: "#propertyCity",   label: "City"                  },
+        { id: "#propertyName",   label: "Name/Model"            },
+        { id: "#propertyLotArea",label: "Lot Area"              },
+        { id: "#propertyPrice",  label: "Price"                 },
+    ];
+
+    let emptyFields = [];
+    requiredFields.forEach(function (field) {
+        let value = $(field.id).val();
+        if (!value || value.trim() === '') {
+            emptyFields.push(field.label);
+        }
+    });
+
+    if (emptyFields.length > 0) {
+        Swal.fire({
+            title: 'Required Fields Missing',
+            icon: 'warning',
+            html: `
+                <div style="text-align:center; color:${isDark ? '#f1f5f9' : 'inherit'}">
+                    <p style="margin-bottom:8px;">The following fields are required:</p>
+                    <ul style="display:inline-block; text-align:left; list-style:disc; padding-left:20px;">
+                        ${emptyFields.map(f => `<li style="margin-bottom:4px;">${f}</li>`).join('')}
+                    </ul>
+                </div>
+            `,
+            confirmButtonText: 'OK',
+            ...darkStyles,
+            customClass: darkClass
+        });
+        return;
+    }
+
     Swal.fire({
         title: 'Add this property?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, add it!',
-        cancelButtonText: 'Cancel'
-        // ... rest of your Swal config
+        cancelButtonText: 'Cancel',
+        ...darkStyles,
+        customClass: darkClass
     }).then(function (result) {
         if (result.value) {
             addProperty();
-              //document.querySelector('form').submit();
-            // Handle confirmation, e.g., submit form or redirect
         }
     });
-});  
+});
 
 
     function addProperty(){

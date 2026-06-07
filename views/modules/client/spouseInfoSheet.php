@@ -20,6 +20,7 @@ if($res['clientCISID']){
 
 
 $loggedInClientID = $_SESSION['clientID'] ?? null;
+$reservationID = $res['reservationID'] ?? null;
 
 // if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
 //     http_response_code(403);
@@ -203,13 +204,22 @@ $loggedInClientID = $_SESSION['clientID'] ?? null;
 
                     
                     <div class="flex justify-between items-center mt-6">
-                        <a href="index.php?route=reservation-view&id=<?= urlencode($reservationID) ?>"
+                        <!-- <a href="index.php?route=reservation-view&id=<?= urlencode($reservationID) ?>"
                                 class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                                 </svg>
                                 Back to Reservation View
-                            </a>
+                            </a> -->
+                             <div class="mt-6">
+                        <a href="javascript:history.back()"
+                        class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                                Back to Reservation View
+                        </a>
+                    </div>
                         <!-- Next Button -->
                         <div class="flex justify-end mt-6">
                             <button onclick="goToPage(2)" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">

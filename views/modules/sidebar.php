@@ -9,7 +9,7 @@ $sidebarMenus = [
 
         [
             'title' => 'Dashboard',
-            'route' => 'adminDashboard',
+            'route' => 'dashboard',
             'icon'  => 'grid'
         ],
 
@@ -41,7 +41,7 @@ $sidebarMenus = [
 
         [
             'title' => 'Dashboard',
-            'route' => 'agentDashboard',
+            'route' => 'dashboard',
             'icon'  => 'grid'
         ],
          [
@@ -60,11 +60,11 @@ $sidebarMenus = [
             'icon'  => 'grid'
         ],
 
-        /* [
-            'title' => 'Explore Properties',
-            'route' => 'exploreproperty',
-            'icon'  => 'home'
-        ], */
+        // [
+        //     'title' => 'Explore Properties',
+        //     'route' => 'exploreproperty',
+        //     'icon'  => 'home'
+        // ],
 
         // [
         //     'title' => 'Information Sheet',
@@ -72,17 +72,36 @@ $sidebarMenus = [
         //     'icon'  => 'heart'
         // ],
        
-       /*  [
-            'title' => 'Spouse Information Sheet',
-            'route' => 'spouseInfoSheet',
-            'icon'  => 'heart'
-        ], */
+        // [
+        //     'title' => 'Spouse Information Sheet',
+        //     'route' => 'spouseInfoSheet',
+        //     'icon'  => 'heart'
+        // ],
         
         [
             'title' => 'Reservations',
             'route' => 'reservations',
             'icon'  => 'heart'
         ],
+        
+
+
+        // [
+        //     'title' => 'Site Visit',
+        //     'route' => 'calendar',
+        //     'icon'  => 'calendar' from current
+        // ],
+        //from current
+        // [
+        //     'title' => 'Site Visit',
+        //     'route' => 'calendar',
+        //     'icon'  => 'calendar'
+        // ],
+        // [
+        //     'title' => 'Pre-Qualification',
+        //     'route' => 'pre-qual',
+        //     'icon'  => 'calendar'
+        // ],
         
         
         
@@ -201,7 +220,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
 
         <!-- Logo -->
         <div style="padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-            <a href="home" style="
+            <a href="dashboard" style="
        display:flex;
        align-items:center;
        gap:12px;
@@ -245,7 +264,7 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
             
 
             <!-- User Profile -->
-            <!-- <?php if ($role !== 'Guest'): ?>
+        <!--     <?php if ($role !== 'Guest'): ?>
                 <li>
                     <!-- <button class="sidebar-btn" onclick="toggleSubmenu('profile-submenu', this)">
                         <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
@@ -254,13 +273,35 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     </button> -->
                    <!--  <ul id="profile-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
                         <li><a href="userprofile">My Profile</a></li>
+<<<<<<< HEAD
                         <li><a href="#">Settings</a></li>
                     </ul> -->
+=======
+                        <li><a href="userSettings">Settings</a></li>
+                    </ul>
+                </li>
+            <?php endif; ?>
+ -->
+
+            
+            <!-- Pre-Qual Stuff -->
+          <!--   <?php if ($role === 'Agent'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('prequal-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>Pre-Qualification</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="prequal-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="clientPreQual">Pending</a></li>
+                        <li><a href="userSettings">Settings</a></li>
+                    </ul>
+>>>>>>> 7170c7af9ad10266dfcf2595a6a507763c4d0a2c
                 </li>
             <?php endif; ?> -->
 
               <!-- Pre-Qual Studd -->
-            <?php if ($role === 'Agent'): ?>
+            <!-- <?php if ($role === 'Agent'): ?>
                 <li>
                     <button class="sidebar-btn" onclick="toggleSubmenu('prequal-submenu', this)">
                         <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
@@ -270,10 +311,44 @@ class="sidebar fixed top-0 left-0 h-screen w-[300px] bg-slate-900 overflow-y-aut
                     <ul id="prequal-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
                         <li><a href="index.php?route=clientPreQual&status=Pending">Pending</a></li>
                         <li><a href="index.php?route=clientPreQual&status=Approved">Approved</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Rejected">Rejected</a></li>
                         <li><a href="index.php?route=clientPreQual&status=Archived">Archived</a></li>
                                             </ul>
                 </li>
+            <?php endif; ?> -->
+
+
+             <?php if ($role === 'Agent'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('prequal-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>Client Pre-Qualification</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="prequal-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="index.php?route=clientPreQual&status=Pending">Pending</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Approved">Approved</a></li>
+                        <li><a href="index.php?route=clientPreQual&status=Rejected">Rejected</a></li>
+                        <!-- <li><a href="index.php?route=clientPreQual&status=Archived">Archived</a></li> -->
+                                            </ul>
+                </li>
             <?php endif; ?>
+            <?php if ($role === 'Admin'): ?>
+                <li>
+                    <button class="sidebar-btn" onclick="toggleSubmenu('reservation-submenu', this)">
+                        <i data-feather="user" style="width:18px;height:18px;flex-shrink:0;"></i>
+                        <span>Client Reservations</span>
+                        <i data-feather="chevron-right" class="submenu-arrow"></i>
+                    </button>
+                    <ul id="reservation-submenu" class="sidebar-submenu" style="list-style:none;padding:0;">
+                        <li><a href="index.php?route=clientReservation">All</a></li>
+                        <li><a href="index.php?route=clientReservation&status=Pending">Pending</a></li>
+                        <li><a href="index.php?route=clientReservation&status=Approved">Approved</a></li>
+                        <li><a href="index.php?route=clientReservation&status=Rejected">Rejected</a></li>
+                                            </ul>
+                </li>
+            <?php endif; ?>
+
 
 
            
