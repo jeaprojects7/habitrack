@@ -72,7 +72,7 @@ $static_url = '/habitrack/views/Adminassets';
                         </div>
                         <div class="col-span-12 mb-8">
                             <label class="font-medium">Price:</label>
-                            <input type="number" id="propertyPrice" name="propertyPrice" class="form-input mt-2" placeholder="Price">
+                            <input type="number" min="0" id="propertyPrice" name="propertyPrice" class="form-input mt-2" placeholder="Price">
                         </div>
                         <!-- <br> -->
 <!-- 
@@ -100,22 +100,22 @@ $static_url = '/habitrack/views/Adminassets';
 
         <div class="md:col-span-12 col-span-12">
             <label class="font-medium">Floor Area:</label>
-            <input type="number" id="houseFloorArea" name="houseFloorArea" class="form-input mt-2" placeholder="Floor Area (sqm)">
+            <input type="number" id="houseFloorArea" min="0" name="houseFloorArea" class="form-input mt-2" placeholder="Floor Area (sqm)">
         </div>
 
         <div class="md:col-span-12 col-span-12">
             <label class="font-medium">Storey:</label>
-            <input type="number" id="houseStorey" name="houseStorey" class="form-input mt-2" placeholder="Storey">
+            <input type="number" id="houseStorey" min="0" name="houseStorey" class="form-input mt-2" placeholder="Storey">
         </div>
 
         <div class="md:col-span-6 col-span-12">
             <label class="font-medium">Bedroom:</label>
-            <input type="number" id="houseBedroom" name="houseBedroom" class="form-input mt-2" placeholder="Bedrooms">
+            <input type="number" id="houseBedroom" min="0"  name="houseBedroom" class="form-input mt-2" placeholder="Bedrooms">
         </div>
 
         <div class="md:col-span-6 col-span-12">
             <label class="font-medium">Toilet and Bath:</label>
-            <input type="number" id="houseTandB" name="houseTandB" class="form-input mt-2" placeholder="Toilet and Bath">
+            <input type="number" id="houseTandB" min="0" name="houseTandB" class="form-input mt-2" placeholder="Toilet and Bath">
         </div>
 
     </div>

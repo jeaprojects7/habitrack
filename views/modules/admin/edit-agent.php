@@ -143,13 +143,15 @@ ob_start();  */
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="trans_type" value="Update">
+                <input type="hidden" id="agentID" value="<?= htmlspecialchars($agent['agentID']) ?>">
 
              <div class="xl:col-span-9 lg:col-span-8 md:col-span-8">
                     <div class="grid grid-cols-1 gap-6">
                         <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
                             <h5 class="text-lg font-semibold mb-4">Agent Personal Details :</h5>
                             <form>
-                                
+                              
                                 <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
                                     <div class>
                                         <label class="form-label font-medium">First Name : <span class="text-red-600">*</span></label>

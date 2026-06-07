@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../controllers/add-property.controller.php'; */
 
 
 
+
 /*  ob_start();
 $navlink_content = ob_get_clean();
 
@@ -107,11 +108,14 @@ ob_start() */;
 
                 </div>
 
+                
                 <div class="xl:col-span-9 lg:col-span-8 md:col-span-8">
                     <div class="grid grid-cols-1 gap-6">
                         <div class="p-6 relative rounded-md shadow dark:shadow-gray-700 bg-white dark:bg-slate-900">
                             <h5 class="text-lg font-semibold mb-4">Agent Personal Details :</h5>
                             <form>
+                                 
+    
                                 
                                 <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
                                     <div class>

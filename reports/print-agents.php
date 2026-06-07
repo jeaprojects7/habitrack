@@ -196,7 +196,7 @@ $pdf->SetAuthor('Habitrack');
 $pdf->SetTitle('Filtered Agents Report');
 
 $pdf->SetMargins(10, 12, 10);
-$pdf->SetAutoPageBreak(true, 12);
+
 
 $pdf->setPrintHeader(false);
 $pdf->setPrintFooter(false);
@@ -206,6 +206,10 @@ $pdf->AddPage();
 $pdf->SetFont('helvetica', '', 10);
 
 $pdf->writeHTML($html, true, false, true, false, '');
+$pdf->SetAutoPageBreak(false);
+$pdf->SetFont('helvetica', 'I', 8);
+$pdf->SetXY(10, $pdf->getPageHeight() - 10);
+$pdf->Cell(0, 10, 'Generated: ' . (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('F d, Y h:i A'), 0, 0, 'L');
 
 $pdf->Output('filtered-agents.pdf', 'I');
 

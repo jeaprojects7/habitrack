@@ -127,20 +127,22 @@ $printQuery = http_build_query([
     <!-- MIN PRICE -->
     <input type="number"
         name="minPrice"
+        min="0"
         placeholder="Min Price"
         value="<?= htmlspecialchars($selectedMinPrice) ?>"
         class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
-               bg-white dark:bg-slate-800 text-black dark:text-gray-200 
+               bg-white dark:bg-slate-800 text-black dark:text-white 
                placeholder-gray-400 dark:placeholder-white
                focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
     <!-- MAX PRICE -->
     <input type="number"
         name="maxPrice"
+        min="0"
         placeholder="Max Price"
         value="<?= htmlspecialchars($selectedMaxPrice) ?>"
         class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
-               bg-white dark:bg-slate-800 text-black dark:text-gray-200 
+               bg-white dark:bg-slate-800 text-black dark:text-white 
                placeholder-gray-400 dark:placeholder-white
                focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[140px]">
 
@@ -154,7 +156,7 @@ $printQuery = http_build_query([
     <a href="/habitrack/index.php?<?= htmlspecialchars($printQuery) ?>" target="_blank"
         class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
            text-black dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition">
-        Print PDF
+        <i class="mdi mdi-printer"> </i>Print PDF
     </a>
 
 </form>

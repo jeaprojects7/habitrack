@@ -46,13 +46,23 @@ if (!$clientID) {
             </div>
 
             <!-- SEARCH BAR -->
-            <div class="mb-4">
+            <div class="mb-4 flex items-center justify-between">
                 <input 
                     id="reservation-search"
                     type="text"
                     placeholder="Search reservations..."
                     class="border p-2 rounded w-96"
                 />
+                  <!-- PRINT BUTTON -->
+                    <?php if (!empty($reservations)): ?>
+                    <a 
+                        href="/habitrack/reports/generate-client-reservations.php"
+                        target="_blank"
+                        class="btn bg-blue-600 hover:bg-blue-700 border-blue-600 text-white rounded-md px-4 py-2 inline-flex items-center gap-2"
+                    >
+                        <i class="mdi mdi-printer"></i> Print PDF
+                    </a>
+                    <?php endif; ?>
             </div>
 
 

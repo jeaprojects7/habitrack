@@ -52,12 +52,18 @@ $("#btn-register").click(function(e) {
         });
         return;
     }
+    /*  let trans_type = $("#trans_type").val();
+        if (trans_type == 'New'){
+            var text = 'Register new agent?';
+        }else{
+            var text = 'Update existing agent?';
+        } */
 
     Swal.fire({
-        title: 'Update this agent?',
+        title: 'Register new agent?',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes, update it!',
+        confirmButtonText: 'Yes',
         cancelButtonText: 'Cancel',
         ...darkStyles,
         customClass: darkClass
@@ -69,8 +75,8 @@ $("#btn-register").click(function(e) {
 });
 
     function addAgent(){
-        //let trans_type = $("#trans_type").val();
-        let trans_type = "New";
+        /* let trans_type = $("#trans_type").val(); */
+        let trans_type = "New"; 
        // let propertyType = $("#property_type").val();
         let agentID = $("#agentID").val();
         //let agentPass = $("#agentPass").val();

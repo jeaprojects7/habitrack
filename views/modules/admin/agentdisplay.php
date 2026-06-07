@@ -139,6 +139,7 @@ $printQuery = http_build_query([
     <!-- MIN SOLD -->
     <input type="number"
         name="minSoldUnits"
+        min="0"
         placeholder="Min Sold Units"
         value="<?= htmlspecialchars($selectedMinSoldUnits) ?>"
         class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
@@ -149,6 +150,7 @@ $printQuery = http_build_query([
      <!-- MAX SOLD -->
     <input type="number"
         name="maxSoldUnits"
+        min="0"
         placeholder="Max Sold Units"
         value="<?= htmlspecialchars($selectedMaxSoldUnits) ?>"
         class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
@@ -167,7 +169,7 @@ $printQuery = http_build_query([
     <a href="/habitrack/index.php?<?= htmlspecialchars($printQuery) ?>" target="_blank"
         class="px-4 py-3 rounded-full border border-gray-300 dark:border-slate-600 
            text-black dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition">
-        Print PDF
+        <i class="mdi mdi-printer"> </i>Print PDF
     </a> 
 
 </form>

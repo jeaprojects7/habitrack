@@ -22,10 +22,22 @@ function htPrequalListE($value) {
         z-index:20;
     "
     >
-<div class="mb-5">
+<div class="mb-5 flex items-center justify-between">
+    <div>
     <h1 class="text-2xl font-semibold text-slate-900 dark:text-white"><?= htPrequalListE($status) ?> Prequalifications</h1>
     <p class="text-sm text-slate-500 dark:text-slate-400">Click a prequalification to view the submitted details.</p>
+    </div>
+
+     <!-- PRINT BUTTON -->
+    <?php if (!empty($prequals)): ?>
+        <a href="/habitrack/reports/generate-agent-prequals.php?status=<?= urlencode($status) ?>"
+           target="_blank"
+           class="inline-flex items-center gap-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md">
+            <i class="mdi mdi-printer"></i> Print PDF
+        </a>
+        <?php endif; ?>
 </div>
+
 
 <?php if (empty($prequals)): ?>
     <div class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-8 text-center">
@@ -33,6 +45,7 @@ function htPrequalListE($value) {
         <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">There are no <?= htPrequalListE(strtolower($status)) ?> prequalifications assigned to you.</p>
     </div>
 <?php endif; ?>
+
 
 <?php foreach ($prequals as $app): ?>
 
@@ -67,6 +80,7 @@ function htPrequalListE($value) {
         <span class="<?= $statusColor ?> text-white text-xs px-2.5 py-1 rounded-full">
             <?= htPrequalListE($app['prequalStatus'] ?? 'Pending') ?>
         </span>
+        
 
     </div>
 

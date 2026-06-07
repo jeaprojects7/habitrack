@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#btn-register").click(function(e) {
     e.preventDefault();  // Stop form submission
     Swal.fire({
-        title: 'Register this agent?',
+        title: 'Update this agent?',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Yes, add it!',
+        confirmButtonText: 'Yes',
         cancelButtonText: 'Cancel'
         // ... rest of your Swal config
     }).then(function (result) {

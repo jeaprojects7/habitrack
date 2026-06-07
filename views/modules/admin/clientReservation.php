@@ -23,10 +23,19 @@ function htAdminReservationListMoney($value) {
     class="fixed top-[90px] right-0 mb-10 overflow-y-auto px-6 transition-all duration-300"
     style="left:300px;bottom:0;z-index:20;"
 >
-    <div class="mb-5">
+    <div class="mb-5 flex items-center justify-between">
+        <div>
         <h1 class="text-2xl font-semibold text-slate-900 dark:text-white"><?= htAdminReservationListE($status) ?> Reservations</h1>
         <p class="text-sm text-slate-500 dark:text-slate-400">Click a reservation to view the client, property, prequalification, and financing details.</p>
     </div>
+    <?php if (!empty($reservations)): ?>
+    <a href="/habitrack/reports/generate-admin-reservations.php?status=<?= urlencode($status) ?>"
+       target="_blank"
+       class="inline-flex items-center gap-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md whitespace-nowrap">
+        <i class="mdi mdi-printer"></i> Print PDF
+    </a>
+    <?php endif; ?>
+</div>
 
     <?php if (empty($reservations)): ?>
         <div class="bg-white dark:bg-slate-900 rounded-xl shadow dark:shadow-gray-700 p-8 text-center">

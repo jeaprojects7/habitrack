@@ -250,6 +250,10 @@ $html = '
 ';
 
 $pdf->writeHTML($html, true, false, true, false, '');
+$pdf->SetAutoPageBreak(false);
+$pdf->SetFont('helvetica', 'I', 8);
+$pdf->SetXY(10, $pdf->getPageHeight() - 10);
+$pdf->Cell(0, 10, 'Generated: ' . (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('F d, Y h:i A'), 0, 0, 'L');
 
 $pdf->Output('agent-information-' . $agentID . '.pdf', 'I');
 exit;
