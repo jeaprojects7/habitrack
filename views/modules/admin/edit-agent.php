@@ -167,7 +167,7 @@ ob_start();  */
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
                                             <input type="text" id="agentMName" name="agentMName" class="form-input ps-12 w-full py-2 px-3 h-10 bg-white dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Middle Name:" id="middlename" name="name" required=""
-                                            value="<?= htmlspecialchars($agent['agentMName']) ?>">
+                                            value="<?= htmlspecialchars($agent['agentMName']?? '') ?>">
                                         </div>
                                     </div>
                               
@@ -186,7 +186,7 @@ ob_start();  */
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
                                             <input type="text" id="agentSuffix" name="agentSuffix" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Suffix:" id="suffixname" name="name"
-                                            value="<?= htmlspecialchars($agent['agentSuffix']) ?>">
+                                            value="<?= htmlspecialchars($agent['agentSuffix']?? '') ?>">
                                         </div>
                                     </div>
                                         <!-- Gender + Birthdate (single grid cell) -->
@@ -287,7 +287,7 @@ ob_start();  */
                                         <div class="form-icon relative mt-2">
                                             <i data-feather="bookmark" class="size-4 absolute top-3 start-4"></i>
                                             <input name="agentFB" id="agentFB" type="text" class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="FB Name :"
-                                            value="<?= htmlspecialchars($agent['agentFB']) ?>">
+                                            value="<?= htmlspecialchars($agent['agentFB']?? '') ?>">
                                         </div>
                                     </div>
 

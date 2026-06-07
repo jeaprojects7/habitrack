@@ -136,7 +136,7 @@ $static_url = '/habitrack/views/Adminassets';
                             <div class="preview-box flex justify-center rounded-md shadow dark:shadow-gray-800 overflow-hidden bg-gray-50 dark:bg-slate-800 text-slate-400 p-2 text-center small w-auto max-h-60">Supports JPG and PNG. Max file size : 10MB.</div>
                             <!-- <input type="file" id="input-file" name="input-file" accept="image/*" onchange={handleChange()} hidden> -->
                              <input type="file" id="propertyPhotos" name="propertyPhotos[]" multiple accept="image/*" hidden>
-                            <label class="btn-upload btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="propertyPhotos">Upload Image</label>
+                            <label class="btn-upload btn bg-blue-600 hover:bg-blue-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="propertyPhotos">Upload Image</label>
                         </div>
                         
 </div>

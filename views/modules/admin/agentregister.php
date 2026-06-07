@@ -76,7 +76,7 @@ ob_start() */;
                                         class="btn bg-green-600 hover:bg-green-700 text-white rounded-md mt-3 cursor-pointer  block text-center">
                                         Upload Images
                                     </label> -->
-                                    <label class="btn-upload btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="agentPhoto">Upload Image</label>
+                                    <label class="btn-upload btn bg-blue-600 hover:bg-blue-700 border-green-600 hover:border-green-700 text-white rounded-md mt-6 cursor-pointer" for="agentPhoto">Upload Image</label>
 
                                 </div>
 
@@ -138,7 +138,7 @@ ob_start() */;
                                     <div>
                                         <label class="form-label font-medium">Last Name : <span class="text-red-600">*</span></label>
                                         <div class="form-icon relative mt-2">
-                                            <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
+                                            <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
                                             <input type="text" id="agentLName" name="agentLName" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Last Name:" id="lastname" name="name" required="">
                                         </div>
                                     </div>
@@ -146,7 +146,7 @@ ob_start() */;
                                     <div>
                                         <label class="form-label font-medium">Suffix : </label>
                                         <div class="form-icon relative mt-2">
-                                            <i data-feather="user-check" class="size-4 absolute top-3 start-4"></i>
+                                            <i data-feather="user" class="size-4 absolute top-3 start-4"></i>
                                             <input type="text" id="agentSuffix" name="agentSuffix" class="form-input ps-11 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0" placeholder="Suffix:" id="suffixname" name="name">
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ ob_start() */;
                                             <!-- Gender -->
                                             <div>
                                                 <label class="form-label font-medium">Gender : <span class="text-red-600">*</span></label>
-                                                <select id="agentGender" name="agentGender" class="form-input w-full mt-2 bg-white dark:bg-slate-800 text-gray-800 white:text-gray-200 border-gray-300 dark:border-slate-700">
+                                                <select id="agentGender" name="agentGender"  class="form-input w-full mt-2 text-gray-500 bg-transparent dark:bg-slate-900 white:text-slate-200 rounded outline-none border border-gray-200 focus:border-green-600 dark:border-gray-800 dark:focus:border-green-600 focus:ring-0">
                                                     <option value="">Select Gender</option>
                                                     <option>Male</option>
                                                     <option>Female</option>
@@ -167,7 +167,7 @@ ob_start() */;
                                             <div>
                                                 <label class="form-label font-medium">Birthdate : <span class="text-red-600">*</span></label>
                                                 <input type="date" id="agentBirthdate" name="agentBirthdate"
-                                                    class="form-input w-full mt-2 bg-transparent dark:bg-slate-900 text-gray-800 white:text-gray-200 border border-gray-200 dark:border-slate-700 rounded">
+                                                    class="form-input w-full mt-2 bg-transparent dark:bg-slate-900 text-gray-800 white:text-gray-200 border  rounded" placeholder="mm-dd-yyyy">
                                             </div>
 
                                         </div>
@@ -246,7 +246,7 @@ ob_start() */;
 
                                         </div><!--end grid-->
 
-                                        <button type="submit" id="btn-register" class="btn bg-green-600 hover:bg-green-700 border-green-600 hover:border-green-700 text-white rounded-md mt-5">Register Agent</button>
+                                        <button type="submit" id="btn-register" class="btn bg-blue-600 hover:bg-blue-700 border-blue-600 hover:border-green-700 text-white rounded-md mt-5">Register Agent</button>
                                     </form>
                                 </div><!--end col-->
                                 

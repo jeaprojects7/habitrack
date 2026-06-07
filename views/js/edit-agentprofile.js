@@ -1,24 +1,84 @@
 document.addEventListener('DOMContentLoaded', function () {
 
  
-    $("#btn-register").click(function(e) {
-    e.preventDefault();  // Stop form submission
+   
+$("#btn-register").click(function(e) {
+    e.preventDefault();
+
+    const isDark = document.documentElement.classList.contains('dark');
+
+    const darkStyles = isDark ? {
+        background: '#1e293b',
+        color: '#f1f5f9',
+        confirmButtonColor: '#16a34a',
+    } : {};
+
+    const darkClass = isDark ? {
+        popup: 'swal-dark',
+    } : {};
+
+    let requiredFields = [
+        { id: "#agentFName",     label: "First Name"    },
+        { id: "#agentLName",     label: "Last Name"     },
+        { id: "#agentAddress",   label: "Address"       },
+        { id: "#agentGender",    label: "Gender"        },
+        { id: "#agentBirthdate", label: "Birthdate"     },
+        { id: "#agentPhoneNum",  label: "Phone Number"  },
+        { id: "#agentEmail",     label: "Email"         },
+    ];
+
+    let emptyFields = [];
+    requiredFields.forEach(function (field) {
+        let value = $(field.id).val();
+        if (!value || value.trim() === '') {
+            emptyFields.push(field.label);
+        }
+    });
+
+    if (emptyFields.length > 0) {
+        Swal.fire({
+            title: 'Required Fields Missing',
+            icon: 'warning',
+            html: `
+                <div style="text-align:center; color:${isDark ? '#f1f5f9' : 'inherit'}">
+                    <p style="margin-bottom:8px;">The following fields are required:</p>
+                    <ul style="display:inline-block; text-align:left; list-style:disc; padding-left:20px;">
+                        ${emptyFields.map(f => `<li style="margin-bottom:4px;">${f}</li>`).join('')}
+                    </ul>
+                </div>
+            `,
+            confirmButtonText: 'OK',
+            ...darkStyles,
+            customClass: darkClass
+        });
+        return;
+    }
+    /*  let trans_type = $("#trans_type").val();
+        if (trans_type == 'New'){
+            var text = 'Register new agent?';
+        }else{
+            var text = 'Update existing agent?';
+        } */
+
     Swal.fire({
-        title: 'Update this agent?',
+        title: 'Update this agent profile?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel'
-        // ... rest of your Swal config
+        cancelButtonText: 'Cancel',
+        ...darkStyles,
+        customClass: darkClass
     }).then(function (result) {
         if (result.value) {
             editAgent();
-              //document.querySelector('form').submit();
-            // Handle confirmation, e.g., submit form or redirect
         }
     });
-});  
-
+});
+flatpickr("#agentBirthdate", {
+    dateFormat: "Y-m-d", // value sent to server
+    altInput: true,
+    altFormat: "m-d-Y"   // displayed to user
+});
 
     function editAgent(){
         //let trans_type = $("#trans_type").val();

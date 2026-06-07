@@ -1,5 +1,7 @@
 <?php
 session_start();
+/* echo password_hash("admin1", PASSWORD_BCRYPT);
+exit(); */
 
 $static_url = '/habitrack/views/Adminassets';
 $logo_url = '/habitrack/views/assets'; // // added 52126

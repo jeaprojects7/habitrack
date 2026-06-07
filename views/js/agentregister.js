@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    
 
  //may darkmode na ang error trap
 $("#btn-register").click(function(e) {
@@ -72,6 +73,11 @@ $("#btn-register").click(function(e) {
             addAgent();
         }
     });
+});
+flatpickr("#agentBirthdate", {
+    dateFormat: "Y-m-d", // value sent to server
+    altInput: true,
+    altFormat: "m-d-Y"   // displayed to user
 });
 
     function addAgent(){
