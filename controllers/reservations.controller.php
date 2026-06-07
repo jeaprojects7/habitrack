@@ -22,4 +22,9 @@ class ReservationController {
             $clientValidID
         );
     }
+
+    public static function ctrApproveReservation($reservationID)
+    {
+        return ModelReservation::mdlApproveReservation($reservationID);
+    }
 }

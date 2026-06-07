@@ -28,7 +28,9 @@ return [
         'edit-property',
         'dashboard',
         'print-properties',
-        'logout'
+        'logout',
+        'siteVisit',
+        'siteVisitDetails'
     ],
     'Client' => [
         'clientsignup',

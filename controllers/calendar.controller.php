@@ -12,7 +12,6 @@ class AgentController {
 
     /**
      * Handle incoming AJAX requests.
-     * Route: ?action=getAgents
      */
     public function handleRequest(): void {
         // Only allow AJAX/XHR requests
@@ -45,6 +44,12 @@ class AgentController {
             case 'saveSiteVisit':
                 $this->saveSiteVisit();
                 break;
+            case 'getClientBookings':
+                $this->getClientBookings();
+                break;
+            case 'cancelSiteVisit':
+                $this->cancelSiteVisit();
+                break;
             default:
                 $this->jsonResponse(['success' => false, 'message' => 'Unknown action.'], 400);
                 break;
@@ -53,14 +58,6 @@ class AgentController {
 
     /**
      * Return all agents as JSON for the dropdown.
-     * Response shape:
-     * {
-     *   "success": true,
-     *   "agents": [
-     *     { "id": 1, "agentID": "C0001", "fullName": "Juan A. dela Cruz" },
-     *     ...
-     *   ]
-     * }
      */
     private function getAgents(): void {
         $rows   = $this->agentModel->getAllAgents();
@@ -79,14 +76,6 @@ class AgentController {
 
     /**
      * Return all properties as JSON for the dropdown.
-     * Response shape:
-     * {
-     *   "success": true,
-     *   "properties": [
-     *     { "id": 1, "propertyID": "P001", "propertyName": "Akina Villas" },
-     *     ...
-     *   ]
-     * }
      */
     private function getProperties(): void {
         $rows       = $this->agentModel->getAllProperties();
@@ -139,16 +128,13 @@ class AgentController {
             return;
         }
 
-        // Get agent details - handle both numeric ID and agentID string
         $agent = null;
         $agentID = $reservation['agentID'];
-        
-        // Try to get agent by numeric ID first
+
         if (is_numeric($agentID)) {
             $agent = $this->agentModel->getAgentById((int)$agentID);
         }
-        
-        // If not found, try to get by agentID string
+
         if (!$agent) {
             $agents = $this->agentModel->getAllAgents();
             foreach ($agents as $a) {
@@ -158,42 +144,29 @@ class AgentController {
                 }
             }
         }
-        
+
         $agentName = $agent ? AgentModel::buildFullName($agent) : '';
         $agentDbId = $agent ? $agent['id'] : $agentID;
 
         $this->jsonResponse([
-            'success' => true,
-            'agentID' => $agentDbId,
-            'agentCode' => $agentID,
-            'agentName' => $agentName,
-            'propertyID' => $reservation['propertyID'],
+            'success'      => true,
+            'agentID'      => $agentDbId,
+            'agentCode'    => $agentID,
+            'agentName'    => $agentName,
+            'propertyID'   => $reservation['propertyID'],
             'propertyName' => $reservation['propertyName'],
         ]);
     }
 
     /**
-     * Send a JSON response and exit.
+     * Return all BOOKED site visits for the currently logged-in client.
+     * Used to populate the cancel-visit selection modal.
      */
-    private function jsonResponse(array $data, int $statusCode = 200): void {
-        http_response_code($statusCode);
-        header('Content-Type: application/json; charset=UTF-8');
-        echo json_encode($data);
-        exit;
-    }
-
-    /**
-     * Handle saving a site visit booking via AJAX POST.
-     * Expects: agentID, propertyID, siteVisitDate, siteVisitTime
-     */
-    private function saveSiteVisit(): void {
-        // Ensure session is started so we can read current user/client
+    private function getClientBookings(): void {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // Determine client id from session (support common keys)
-        // Login sets $_SESSION['clientID'], so check that first (case-sensitive)
         $clientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
 
         if (!$clientID) {
@@ -201,8 +174,61 @@ class AgentController {
             return;
         }
 
-        $agentID = isset($_POST['agentID']) ? trim($_POST['agentID']) : null;
-        $propertyID = isset($_POST['propertyID']) ? trim($_POST['propertyID']) : null;
+        $bookings = $this->agentModel->getBookingsByClientId((string)$clientID);
+        $this->jsonResponse(['success' => true, 'bookings' => $bookings]);
+    }
+
+    /**
+     * Cancel a site visit booking.
+     * Expects: siteVisitID in POST.
+     * Only cancels visits that belong to the logged-in client.
+     */
+    private function cancelSiteVisit(): void {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $clientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
+
+        if (!$clientID) {
+            $this->jsonResponse(['success' => false, 'message' => 'User not authenticated.'], 401);
+            return;
+        }
+
+        $siteVisitID = isset($_POST['siteVisitID']) ? trim($_POST['siteVisitID']) : null;
+
+        if (!$siteVisitID) {
+            $this->jsonResponse(['success' => false, 'message' => 'Missing siteVisitID.'], 400);
+            return;
+        }
+
+        $cancelled = $this->agentModel->cancelSiteVisit($siteVisitID, (string)$clientID);
+
+        if ($cancelled) {
+            $this->jsonResponse(['success' => true, 'message' => 'Booking cancelled successfully.']);
+        } else {
+            $this->jsonResponse(['success' => false, 'message' => 'Could not cancel booking. It may already be cancelled or not belong to your account.'], 409);
+        }
+    }
+
+    /**
+     * Handle saving a site visit booking via AJAX POST.
+     * Expects: agentID, propertyID, siteVisitDate, siteVisitTime
+     */
+    private function saveSiteVisit(): void {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $clientID = $_SESSION['clientID'] ?? $_SESSION['userid'] ?? $_SESSION['clientid'] ?? null;
+
+        if (!$clientID) {
+            $this->jsonResponse(['success' => false, 'message' => 'User not authenticated.'], 401);
+            return;
+        }
+
+        $agentID       = isset($_POST['agentID'])       ? trim($_POST['agentID'])       : null;
+        $propertyID    = isset($_POST['propertyID'])    ? trim($_POST['propertyID'])    : null;
         $siteVisitDate = isset($_POST['siteVisitDate']) ? trim($_POST['siteVisitDate']) : null;
         $siteVisitTime = isset($_POST['siteVisitTime']) ? trim($_POST['siteVisitTime']) : null;
 
@@ -211,7 +237,6 @@ class AgentController {
             return;
         }
 
-        // Normalize time to explicit 12-hour AM/PM format to fit VARCHAR(8).
         $normalizedTime = strtoupper(date('h:i A', strtotime($siteVisitTime)));
         if (!$normalizedTime) {
             $this->jsonResponse(['success' => false, 'message' => 'Invalid time format.'], 400);
@@ -219,7 +244,6 @@ class AgentController {
         }
         $siteVisitTime = $normalizedTime;
 
-        // Prevent booking dates before today.
         $bookingDate = DateTime::createFromFormat('Y-m-d', $siteVisitDate);
         $today = new DateTime('today');
         if (!$bookingDate) {
@@ -227,19 +251,14 @@ class AgentController {
             return;
         }
         if ($bookingDate < $today) {
-            $this->jsonResponse(['success' => false, 'message' => 'Cannot book past dates. Please choose a current or future date.' ], 400);
+            $this->jsonResponse(['success' => false, 'message' => 'Cannot book past dates. Please choose a current or future date.'], 400);
             return;
         }
 
-        // Prevent selecting a time earlier than now when booking today.
         $todayString = $today->format('Y-m-d');
         if ($siteVisitDate === $todayString) {
-            // Parse the booking time - format is like "01:30 AM" or "01:30 PM"
             $bookingDateTime = DateTime::createFromFormat('Y-m-d h:i A', $siteVisitDate . ' ' . $siteVisitTime);
-           
-            // Get current time
             $now = new DateTime();
-            
             if ($bookingDateTime <= $now) {
                 $this->jsonResponse(['success' => false, 'message' => 'Please choose a future time for today. Selected time has already passed.'], 400);
                 return;
@@ -251,7 +270,6 @@ class AgentController {
             return;
         }
 
-        // Save using model
         try {
             $saved = $this->agentModel->saveSiteVisit($clientID, $agentID, $propertyID, $siteVisitDate, $siteVisitTime);
             if ($saved === false) {
@@ -260,21 +278,23 @@ class AgentController {
             }
 
             $this->jsonResponse([
-                'success' => true,
-                'message' => 'Booking saved.',
-                'id' => $saved['id'],
+                'success'     => true,
+                'message'     => 'Booking saved.',
+                'id'          => $saved['id'],
                 'siteVisitID' => $saved['siteVisitID'],
             ]);
         } catch (Exception $e) {
             $this->jsonResponse(['success' => false, 'message' => 'Server error: ' . $e->getMessage()], 500);
         }
     }
+
+    /**
+     * Send a JSON response and exit.
+     */
+    private function jsonResponse(array $data, int $statusCode = 200): void {
+        http_response_code($statusCode);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($data);
+        exit;
+    }
 }
-
-
-// ── Bootstrap (entry point) ──────────────────────────────────────────────────
-// Place this block in a dedicated file, e.g. ajax/agents.php
-//
-// require_once __DIR__ . '/../config/database.php'; // your DB connection
-// $controller = new AgentController($db);            // pass PDO instance
-// $controller->handleRequest();

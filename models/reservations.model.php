@@ -57,6 +57,7 @@ class ModelReservation {
 
         pq.prequalID,
         pq.prequalStatus,
+        pq.submissionDate,
         COALESCE(cc.coOwnerID, pq.coOwnerID) AS coOwnerID,
 
         cc.coOwnerFName,
@@ -66,6 +67,9 @@ class ModelReservation {
         cc.coOwnerPhoneNum,
         cc.coOwnerRelationship,
         pq.agentID,
+        a.agentFName,
+        a.agentMName,
+        a.agentLName,
 
         p.propertyID,
         p.propertyName,
@@ -97,6 +101,9 @@ class ModelReservation {
 
         LEFT JOIN clientcoprequal cc
             ON pq.prequalID = cc.prequalID
+
+        LEFT JOIN agent a
+            ON pq.agentID = a.agentID
 
         JOIN properties p
             ON pq.propertyID = p.propertyID
@@ -174,6 +181,31 @@ class ModelReservation {
         ");
 
         $stmt->bindParam(":clientValidID", $imagePath, PDO::PARAM_STR);
+        $stmt->bindParam(":reservationID", $reservationID, PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            return "ok";
+        }
+
+        return "error";
+    }
+
+    public static function mdlApproveReservation($reservationID)
+    {
+        $stmt = (new Connection)->connect()->prepare("
+            UPDATE reservations
+            SET
+                reserveStatus = 'Reserved',
+                reserveDate = :reserveDate,
+                reserveTime = :reserveTime
+            WHERE reservationID = :reservationID
+        ");
+
+        $reserveDate = date('Y-m-d');
+        $reserveTime = date('H:i:s');
+
+        $stmt->bindParam(":reserveDate", $reserveDate, PDO::PARAM_STR);
+        $stmt->bindParam(":reserveTime", $reserveTime, PDO::PARAM_STR);
         $stmt->bindParam(":reservationID", $reservationID, PDO::PARAM_STR);
 
         if ($stmt->execute()) {

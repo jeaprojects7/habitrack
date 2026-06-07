@@ -114,6 +114,7 @@ $reservationID = $_GET['id'] ?? null;
                         </div>
 
                         <button type="button" id="book-visit-btn" class="mt-2 w-full rounded-3xl bg-white/15 px-4 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-white/25 focus:outline-none focus:ring-2 focus:ring-white/30">Book Visit</button>
+                        <button type="button" id="cancel-visit-btn" class="mt-2 w-full rounded-3xl bg-red-500/20 px-4 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-red-500/35 focus:outline-none focus:ring-2 focus:ring-red-400/40">Cancel Visit</button>
 
                     </div>
                 </div>
