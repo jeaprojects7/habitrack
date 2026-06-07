@@ -238,12 +238,30 @@ function validatePage(page) {
             "input[name=notstudying]"
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text());
+        //     }
+        // });
         required.forEach(el => {
-            let val = $(el).val();
-            if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text());
-            }
-        });
+        let val = $(el).val();
+
+        if (!val || val.trim() === "") {
+
+            let label = $(el)
+                .closest(".mb-4")
+                .find("label")
+                .clone()
+                .children()
+                .remove()
+                .end()
+                .text()
+                .trim();
+
+            errors.push(label);
+        }
+    });
     }
 
     // ================= PAGE 4 =================
@@ -264,10 +282,29 @@ function validatePage(page) {
             "input[name=employeremail]"
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text() || el);
+        //     }
+        // });
+
         required.forEach(el => {
             let val = $(el).val();
+
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text() || el);
+
+                let label = $(el)
+                    .closest(".mb-4")
+                    .find("label")
+                    .clone()
+                    .children()
+                    .remove()
+                    .end()
+                    .text()
+                    .trim();
+
+                errors.push(label || el);
             }
         });
 
@@ -296,10 +333,29 @@ function validatePage(page) {
             "input[name=parentsphonenumber]"
         ];
 
+        // required.forEach(el => {
+        //     let val = $(el).val();
+        //     if (!val || val.trim() === "") {
+        //         errors.push($(el).closest(".mb-4").find("label").text());
+        //     }
+        // });
+
         required.forEach(el => {
             let val = $(el).val();
+
             if (!val || val.trim() === "") {
-                errors.push($(el).closest(".mb-4").find("label").text());
+
+                let label = $(el)
+                    .closest(".mb-4")
+                    .find("label")
+                    .clone()
+                    .children()
+                    .remove()
+                    .end()
+                    .text()
+                    .trim();
+
+                errors.push(label);
             }
         });
 
@@ -416,9 +472,6 @@ function loadCoOwnerInfo() {
 
             // ================= PAGE 4 (EXAMPLE YOU ALREADY HAVE DATA FOR) =================
             $("input[name=gmi]").val(d.coOwnerMonthlyIncome || "");
-
-            // dropdown hidden fields
-            $("#sourceofincome").val(d.coOwnerEmpStatus || "");
         }
     });
 }

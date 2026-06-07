@@ -205,7 +205,7 @@ if ($reservationID && !$agentID) {
     <!-- Row 1: Civil status / Employment / Income -->
     <div class="row row-3">
       <div class="field">
-        <label for="civil-status">Civil status</label>
+        <label for="civil-status">Civil Status</label>
         <select id="civil-status" name="civil_status">
           <option value="">— select —</option>
           <option value="married">Married</option>
@@ -215,7 +215,7 @@ if ($reservationID && !$agentID) {
         </select>
       </div>
       <div class="field">
-        <label for="employment-status">Employment status</label>
+        <label for="employment-status">Employment Status</label>
         <select id="employment-status" name="employment_status">
           <option value="">— select —</option>
           <option value="local">Local</option>
@@ -223,23 +223,23 @@ if ($reservationID && !$agentID) {
         </select>
       </div>
       <div class="field">
-        <label for="monthly-income">Monthly income</label>
+        <label for="monthly-income">Monthly Income</label>
         <input type="number" id="monthly-income" name="monthly_income" placeholder="0.00" min="0" step="0.01" />
       </div>
     </div>
 
     <!-- Principal buyer Co-Owner? — always visible -->
     <div id="ownership-section" class="section-box">
-      <span class="yn-label">Principal buyer Co-Owner?</span>
+      <span class="yn-label">Buyer Type</span>
       <div class="radio-row">
-        <label><input type="radio" name="co_owner" value="yes" onchange="toggleCoOwnerDetails()" /> co-owner</label>
-        <label><input type="radio" name="co_owner" value="no"  onchange="toggleCoOwnerDetails()" /> Principal buyer</label>
+        <label><input type="radio" name="co_owner" value="yes" onchange="toggleCoOwnerDetails()" /> Co-owner</label>
+        <label><input type="radio" name="co_owner" value="no"  onchange="toggleCoOwnerDetails()" /> Principal Buyer</label>
       </div>
     </div>
 
     <!-- Co-Owner details — shown only when YES is selected -->
     <div id="coOwner-section" class="section-box hidden">
-      <div class="section-title">Co-Owner details</div>
+      <div class="section-title">Co-Owner Details</div>
       <div class="row" style="grid-template-columns: 2fr 2fr 2fr 1fr 1fr;">
         <div class="field">
           <label for="relationship">Relationship with Co-owner</label>
@@ -253,16 +253,16 @@ if ($reservationID && !$agentID) {
           </select>
         </div>
         <div class="field">
-          <label for="co-owner-firstname">First name</label>
+          <label for="co-owner-firstname">First Name</label>
           <input type="text" id="co-owner-firstname" name="co-owner_firstname" />
         </div>
         <div class="field">
-          <label for="co-owner-lastname">Last name</label>
+          <label for="co-owner-lastname">Last Name</label>
           <input type="text" id="co-owner-lastname" name="co-owner_lastname" />
         </div>
         <div class="field">
-          <label for="co-owner-mi">M.I.</label>
-          <input type="text" id="co-owner-mi" name="co-owner_mi" maxlength="3" />
+          <label for="co-owner-mi">Middle Initial</label>
+          <input type="text" id="co-owner-mi" name="co-owner_mi"/>
         </div>
         <div class="field">
           <label for="co-owner-suffix">Suffix</label>
@@ -275,13 +275,13 @@ if ($reservationID && !$agentID) {
           <input type="email" id="co-owner-email" name="co-owner_email" />
         </div>
         <div class="field">
-          <label for="co-owner-phone">Phone number</label>
+          <label for="co-owner-phone">Phone Number</label>
           <input type="tel" id="co-owner-phone" name="co-owner_phone" />
         </div>
       </div>
       <div class="row row-2">
         <div class="field">
-          <label for="co-owner-employment">Employment status</label>
+          <label for="co-owner-employment">Employment Status</label>
           <select id="co-owner-employment" name="co-owner_employment_status">
             <option value="">— select —</option>
             <option value="local">Local</option>
@@ -289,7 +289,7 @@ if ($reservationID && !$agentID) {
           </select>
         </div>
         <div class="field">
-          <label for="co-owner-income">Monthly income</label>
+          <label for="co-owner-income">Monthly Income</label>
           <input type="number" id="co-owner-income" name="co-owner_monthly_income" placeholder="0.00" min="0" step="0.01" />
         </div>
       </div>
@@ -297,7 +297,7 @@ if ($reservationID && !$agentID) {
       <!-- Co-Owner Financing type -->
       <div class="row" style="grid-template-columns:240px; margin-top:8px;">
         <div class="field">
-          <label for="co-financing-type">Financing type</label>
+          <label for="co-financing-type">Financing Type</label>
           <select id="co-financing-type" name="co_financing_type" onchange="toggleCoOwnerFinancing()">
             <option value="">— select —</option>
             <option value="bank">Bank</option>
@@ -310,20 +310,20 @@ if ($reservationID && !$agentID) {
       <div id="co-bank-section" class="section-box hidden">
         <div class="three-col">
           <div class="field">
-            <label for="co-bank-name">Bank name</label>
+            <label for="co-bank-name">Bank Name</label>
             <input type="text" id="co-bank-name" name="co_bank_name" />
           </div>
           <div class="yn-group">
             <span class="yn-label">Do you have existing house loan?</span>
             <div class="radio-row">
-              <label><input type="radio" name="co_existing_house_loan" value="yes" /> YES</label>
+              <label><input type="radio" name="co_existing_house_loan" value="yes" /> Yes</label>
               <label><input type="radio" name="co_existing_house_loan" value="no"  /> No</label>
             </div>
           </div>
           <div class="yn-group">
             <span class="yn-label">Do you have cancelled house loan?</span>
             <div class="radio-row">
-              <label><input type="radio" name="co_cancelled_house_loan" value="yes" /> YES</label>
+              <label><input type="radio" name="co_cancelled_house_loan" value="yes" /> Yes</label>
               <label><input type="radio" name="co_cancelled_house_loan" value="no"  /> No</label>
             </div>
           </div>
@@ -334,13 +334,13 @@ if ($reservationID && !$agentID) {
       <div id="co-pagibig-section" class="section-box hidden">
         <div class="row row-2" style="max-width:480px">
           <div class="field">
-            <label for="co-contribution-date">Contribution start date</label>
+            <label for="co-contribution-date">Contribution Start Date</label>
             <input type="date" id="co-contribution-date" name="co_contribution_start_date" />
           </div>
           <div class="yn-group" style="padding-top:4px">
             <span class="yn-label">Do you have current loan?</span>
             <div class="radio-row">
-              <label><input type="radio" name="co_current_loan" value="yes" /> YES</label>
+              <label><input type="radio" name="co_current_loan" value="yes" /> Yes</label>
               <label><input type="radio" name="co_current_loan" value="no"  /> No</label>
             </div>
           </div>
@@ -370,14 +370,14 @@ if ($reservationID && !$agentID) {
         <div class="yn-group">
           <span class="yn-label">Do you have existing house loan?</span>
           <div class="radio-row">
-            <label><input type="radio" name="existing_house_loan" value="yes" /> YES</label>
+            <label><input type="radio" name="existing_house_loan" value="yes" /> Yes</label>
             <label><input type="radio" name="existing_house_loan" value="no"  /> No</label>
           </div>
         </div>
         <div class="yn-group">
           <span class="yn-label">Do you have cancelled house loan?</span>
           <div class="radio-row">
-            <label><input type="radio" name="cancelled_house_loan" value="yes" /> YES</label>
+            <label><input type="radio" name="cancelled_house_loan" value="yes" /> Yes</label>
             <label><input type="radio" name="cancelled_house_loan" value="no"  /> No</label>
           </div>
         </div>
@@ -388,13 +388,13 @@ if ($reservationID && !$agentID) {
     <div id="pagibig-section" class="section-box hidden">
       <div class="row row-2" style="max-width:480px">
         <div class="field">
-          <label for="contribution-date">Contribution start date</label>
+          <label for="contribution-date">Contribution Start Date</label>
           <input type="date" id="contribution-date" name="contribution_start_date" />
         </div>
         <div class="yn-group" style="padding-top:4px">
           <span class="yn-label">Do you have current loan?</span>
           <div class="radio-row">
-            <label><input type="radio" name="current_loan" value="yes" /> YES</label>
+            <label><input type="radio" name="current_loan" value="yes" /> Yes</label>
             <label><input type="radio" name="current_loan" value="no"  /> No</label>
           </div>
         </div>
