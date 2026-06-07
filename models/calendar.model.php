@@ -105,7 +105,7 @@ class AgentModel {
      */
     public function isDateBooked($siteVisitDate)
     {
-        $sql = "SELECT COUNT(*) AS count FROM sitevisit WHERE siteVisitDate = :siteVisitDate";
+        $sql = "SELECT COUNT(*) AS count FROM sitevisit WHERE siteVisitDate = :siteVisitDate AND siteVisitStatus = 'Booked'";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':siteVisitDate', $siteVisitDate);
         $stmt->execute();
@@ -118,7 +118,7 @@ class AgentModel {
      */
     public function getBookedDates()
     {
-        $sql = "SELECT DISTINCT siteVisitDate FROM sitevisit ORDER BY siteVisitDate ASC";
+        $sql = "SELECT DISTINCT siteVisitDate FROM sitevisit WHERE siteVisitStatus = 'Booked' ORDER BY siteVisitDate ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'siteVisitDate');
@@ -163,5 +163,78 @@ class AgentModel {
         }
 
         return false;
+    }
+
+    /**
+     * Get all BOOKED site visits for a given client.
+     * Joins with properties and agent tables for display info.
+     * Returns id, siteVisitID, siteVisitDate, siteVisitTime, propertyName, agentName.
+     */
+    public function getBookingsByClientId(string $clientID): array
+    {
+        $sql = "SELECT
+                    sv.id,
+                    sv.siteVisitID,
+                    sv.siteVisitDate,
+                    sv.siteVisitTime,
+                    sv.propertyID,
+                    sv.agentID,
+                    p.propertyName,
+                    a.agentFName,
+                    a.agentMName,
+                    a.agentLName,
+                    a.agentSuffix
+                FROM sitevisit sv
+                LEFT JOIN properties p ON p.propertyID = sv.propertyID
+                LEFT JOIN agent a ON a.agentID = sv.agentID
+                WHERE sv.clientID = :clientID
+                  AND sv.siteVisitStatus = 'Booked'
+                ORDER BY sv.siteVisitDate ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':clientID', $clientID);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $result = [];
+        foreach ($rows as $row) {
+            $agentParts = array_filter([
+                trim($row['agentFName'] ?? ''),
+                trim($row['agentMName'] ?? ''),
+                trim($row['agentLName'] ?? ''),
+                trim($row['agentSuffix'] ?? ''),
+            ]);
+            $result[] = [
+                'id'            => $row['id'],
+                'siteVisitID'   => $row['siteVisitID'],
+                'siteVisitDate' => $row['siteVisitDate'],
+                'siteVisitTime' => $row['siteVisitTime'],
+                'propertyName'  => $row['propertyName'] ?? $row['propertyID'],
+                'agentName'     => implode(' ', $agentParts) ?: $row['agentID'],
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Cancel a site visit booking.
+     * Only cancels if the siteVisitID belongs to the given clientID (security check).
+     * Returns true on success, false on failure/not found.
+     */
+    public function cancelSiteVisit(string $siteVisitID, string $clientID): bool
+    {
+        $sql = "UPDATE sitevisit
+                SET siteVisitStatus = 'Cancelled'
+                WHERE siteVisitID = :siteVisitID
+                  AND clientID = :clientID
+                  AND siteVisitStatus = 'Booked'";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':siteVisitID', $siteVisitID);
+        $stmt->bindParam(':clientID', $clientID);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 }

@@ -30,6 +30,8 @@ return [
     'agentuserProfile'   => 'modules/agent/agentuserProfile.php',
     'clientPreQual'   => 'modules/agent/clientPreQual.php',
     'clientPreDetails'   => 'modules/agent/clientPreDetails.php',
+    'siteVisit'   => 'modules/agent/siteVisit.php',
+    'siteVisitDetails'   => 'modules/agent/siteVisitDetails.php',
     'logout'            => 'modules/logout.php',
     'calendar'          => 'modules/client/calendar.php',
     'pre-qual'          => 'modules/client/pre-qual.php',

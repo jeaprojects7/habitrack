@@ -57,6 +57,7 @@ class ModelReservation {
 
         pq.prequalID,
         pq.prequalStatus,
+        pq.submissionDate,
         COALESCE(cc.coOwnerID, pq.coOwnerID) AS coOwnerID,
 
         cc.coOwnerFName,
@@ -66,6 +67,9 @@ class ModelReservation {
         cc.coOwnerPhoneNum,
         cc.coOwnerRelationship,
         pq.agentID,
+        a.agentFName,
+        a.agentMName,
+        a.agentLName,
 
         p.propertyID,
         p.propertyName,
@@ -97,6 +101,9 @@ class ModelReservation {
 
         LEFT JOIN clientcoprequal cc
             ON pq.prequalID = cc.prequalID
+
+        LEFT JOIN agent a
+            ON pq.agentID = a.agentID
 
         JOIN properties p
             ON pq.propertyID = p.propertyID

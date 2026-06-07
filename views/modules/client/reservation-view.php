@@ -290,7 +290,7 @@ $prequalColor = match($prequalStatus) {
                                 </label>
 
                                 <input
-                                    value="<?= $resStatus === 'approved' ? $res['reserveDate'] : '' ?>"
+                                    value="<?= ($resStatus === 'approved' && !empty($res['reserveDate'])) ? date('m-d-Y', strtotime($res['reserveDate'])) : '' ?>"
                                     class="form-input w-full"
                                     disabled
                                 >
@@ -303,6 +303,30 @@ $prequalColor = match($prequalStatus) {
 
                                 <input
                                     value="<?= $resStatus === 'approved' ? $res['reserveTime'] : '' ?>"
+                                    class="form-input w-full"
+                                    disabled
+                                >
+                            </div>
+
+                            <div>
+                                <label class="form-label font-medium">
+                                    Agent Assigned
+                                </label>
+
+                                <input
+                                    value="<?= htmlspecialchars(trim(($res['agentFName'] ?? '') . ' ' . ($res['agentMName'] ? $res['agentMName'] . ' ' : '') . ($res['agentLName'] ?? ''))) ?>"
+                                    class="form-input w-full"
+                                    disabled
+                                >
+                            </div>
+
+                            <div>
+                                <label class="form-label font-medium">
+                                    Pre Qualification Submission Date
+                                </label>
+
+                                <input
+                                    value="<?= !empty($res['submissionDate']) ? date('m-d-Y', strtotime($res['submissionDate'])) : '' ?>"
                                     class="form-input w-full"
                                     disabled
                                 >
