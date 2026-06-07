@@ -180,16 +180,35 @@ class ClientReservationModel {
 
     $db = (new Connection)->connect();
 
-    // 1. Update reservation status
-    $stmt = $db->prepare("
-        UPDATE reservations
-        SET reserveStatus = :status
-        WHERE reservationID = :reservationID
-        AND reserveStatus = 'Pending'
-    ");
+    // 1. Update reservation status (and stamp date/time on approval)
+    if ($status === 'Approved') {
+        $reserveDate = date('Y-m-d');
+        $reserveTime = date('H:i:s');
 
-    $stmt->bindParam(":status", $status, PDO::PARAM_STR);
-    $stmt->bindParam(":reservationID", $reservationID, PDO::PARAM_STR);
+        $stmt = $db->prepare("
+            UPDATE reservations
+            SET reserveStatus = :status,
+                reserveDate   = :reserveDate,
+                reserveTime   = :reserveTime
+            WHERE reservationID = :reservationID
+            AND reserveStatus = 'Pending'
+        ");
+
+        $stmt->bindParam(":status",      $status,      PDO::PARAM_STR);
+        $stmt->bindParam(":reserveDate", $reserveDate, PDO::PARAM_STR);
+        $stmt->bindParam(":reserveTime", $reserveTime, PDO::PARAM_STR);
+        $stmt->bindParam(":reservationID", $reservationID, PDO::PARAM_STR);
+    } else {
+        $stmt = $db->prepare("
+            UPDATE reservations
+            SET reserveStatus = :status
+            WHERE reservationID = :reservationID
+            AND reserveStatus = 'Pending'
+        ");
+
+        $stmt->bindParam(":status",        $status,        PDO::PARAM_STR);
+        $stmt->bindParam(":reservationID", $reservationID, PDO::PARAM_STR);
+    }
 
     $success = $stmt->execute();
 

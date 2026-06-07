@@ -261,8 +261,8 @@ if ($reservationID && !$agentID) {
           <input type="text" id="co-owner-lastname" name="co-owner_lastname" />
         </div>
         <div class="field">
-          <label for="co-owner-mi">M.I.</label>
-          <input type="text" id="co-owner-mi" name="co-owner_mi" maxlength="3" />
+          <label for="co-owner-mi">Middle Name</label>
+          <input type="text" id="co-owner-mi" name="co-owner_mi" />
         </div>
         <div class="field">
           <label for="co-owner-suffix">Suffix</label>
