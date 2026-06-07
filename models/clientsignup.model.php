@@ -118,6 +118,28 @@ class ModelClient{
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
+    static public function mdlGetClientProfileInfo($tableUsers, $item, $value){
+
+        $stmt = (new Connection)->connect()->prepare("
+            SELECT 
+                c.*,
+                ci.*
+            FROM client c
+            INNER JOIN prequal p 
+                ON c.clientID = p.clientID
+            INNER JOIN client_information ci 
+                ON ci.prequalID = p.prequalID
+            WHERE c.$item = :$item
+            ORDER BY p.prequalID DESC
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":".$item, $value, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public static function mdlCheckClientInfo($prequalID){
 		$stmt = (new Connection)->connect()->prepare("
 			SELECT * FROM client_information 

@@ -8,7 +8,7 @@ $(document).ready(function () {
 
 function loadClientInfo() {
     $.ajax({
-        url: "/habitrack/ajax/clientInfoSheet.get.ajax.php",
+        url: "/habitrack/ajax/clientProfileInfo.get.ajax.php",
         method: "POST",
         dataType: "json",
 
@@ -25,13 +25,29 @@ function loadClientInfo() {
             
             $("#clientGender").val(safe(data.clientGender));
 
+            // $("#clientBirthdate").val(
+            //     data.clientBirthdate ? data.clientBirthdate.substring(0, 10) : ""
+            // );
+
             $("#clientBirthdate").val(
-                data.clientBirthdate ? data.clientBirthdate.substring(0, 10) : ""
+                data.clientBirthdate
+                    ? data.clientBirthdate.substring(5, 7) + "-" +
+                    data.clientBirthdate.substring(8, 10) + "-" +
+                    data.clientBirthdate.substring(0, 4)
+                    : ""
             );
 
             $("#clientPhoneNum").val(safe(data.clientPhoneNum));
             $("#clientEmail").val(safe(data.clientEmail));
             $("#clientAddress").val(safe(data.clientAddress));
+            $("#clientGender").val(data.clientGender);
+            // $("#clientBirthdate").val(data.clientBirthdate);
+            $("#clientAddress").val(data.clientAddress);
         }
     });
 }
+// let raw_birthdate = data.clientBirthdate;
+//             let birthdate = "";
+//             let parts = raw_birthdate.split("-");
+//             let birthdate = parts[1] + "-" + parts[2] + "-" + parts[0]
+//             $("#clientBirthdate").val(birthdate);

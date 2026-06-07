@@ -94,25 +94,8 @@ $static_url = '/habitrack/views/Adminassets';
 
                         </div>
 
-                        <div class="mt-5">
-                            <label class="form-label">Address</label>
-                            <textarea
-                                id="clientAddress"
-                                class="form-input w-full h-28"
-                                placeholder="Address"
-                            disabled></textarea>
-                        </div>
+                        <div class="grid grid-cols-2 gap-8 mt-4">
 
-                    </div>
-
-                    <!-- CONTACT INFO -->
-                    <div class="p-6 mt-6 bg-white dark:bg-slate-900 rounded-md shadow">
-
-                        <h5 class="text-lg font-semibold mb-4">
-                            Contact Info
-                        </h5>
-
-                        <div class="grid gap-5">
 
                             <div>
                                 <label class="form-label">Phone Number</label>
@@ -126,14 +109,31 @@ $static_url = '/habitrack/views/Adminassets';
 
                         </div>
 
-                        <button
-                            id="btn-register"
-                            class="btn bg-green-600 text-white mt-5"
-                        >
-                            Client Profile
-                        </button>
+                        <div class="mt-5">
+                            <label class="form-label">Address</label>
+                            <input
+                                id="clientAddress"
+                                class="form-input"
+                                placeholder="Address"
+                            disabled></input>
+                        </div>
 
                     </div>
+
+                   <div class="flex justify-start mt-20 mx-5">
+
+                            <a href="dashboard"
+                                class="px-6 py-2 bg-gray-200 dark:bg-slate-700 hover:bg-gray-300 dark:hover:bg-slate-600 text-gray-700 dark:text-white font-medium rounded-md transition-colors duration-200 flex items-center gap-2">
+
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+
+                                Back to Dashboard
+                            </a>
+
+                        </div>
+                   
 
                 </div>
 
