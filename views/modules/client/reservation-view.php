@@ -18,14 +18,20 @@ if (!$res) {
 }
 
 $prequalID = $res['prequalID'] ?? null;
-$coOwnerID = $res['coOwnerID'] ?? null; // if already joined in query
-$hasCoOwner = !empty((new ControllerCoOwner)::ctrGetCoOwnerByID($res['coOwnerID']));
+$coOwnerID = $res['coOwnerID'] ?? null;
+$coOwnerRelationship = trim($res['coOwnerRelationship'] ?? '');
+$hasCoOwnerRelationship = ($coOwnerRelationship !== '');
+$isSpouseRelationship = strcasecmp($coOwnerRelationship, 'Spouse') === 0;
 $spouse = ModelSpouse::mdlGetSpouseInfo($prequalID);
-$hasSpouse = $spouse["clientCISID"] ?? false;
+$spouseInfo = ModelSpouse::mdlGetSpouseIS($prequalID);
+$hasSpouse = is_array($spouseInfo) && !empty($spouseInfo);
+$coOwnerInfo = ControllerCoOwner::ctrGetCoOwnerIS($prequalID);
+$hasCoOwner = !empty($coOwnerInfo);
 // echo "<pre>";
 // print_r(ModelSpouse::mdlGetSpouseInfo($prequalID));
 // echo "</pre>";
 // die();
+
 
 require_once __DIR__ . '/../../../controllers/clientsignup.controller.php';
 
@@ -43,16 +49,25 @@ if (!$loggedInClientID || $res['clientID'] !== $loggedInClientID) {
     die("Access denied.");
 }
 
+
+
+
 $resStatus = strtolower($res['reserveStatus'] ?? 'pending');
 
+
 $statusColor = match($resStatus) {
-    'confirmed' => 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+    'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-blue-300',
     'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
     'pending'   => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
     default     => 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
 };
 
 $prequalStatus = strtolower($res['prequalStatus'] ?? 'pending');
+$requirementsDisabled = ($prequalStatus !== 'approved');  //gn add komn ni pra sa whole n m disable ang buttons if indi p sya approved
+$showSpouseRequirement = $hasCoOwnerRelationship && $isSpouseRelationship;
+$showCoOwnerRequirement = $hasCoOwnerRelationship && !$isSpouseRelationship;
+$relationshipRequirementFilled = (!$showSpouseRequirement || $hasSpouse) && (!$showCoOwnerRequirement || $hasCoOwner);
+$allRequirementsComplete = $hasFilled && $relationshipRequirementFilled && $hasValidIDSaved;
 
 $prequalColor = match($prequalStatus) {
     'approved' => 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
@@ -275,7 +290,7 @@ $prequalColor = match($prequalStatus) {
                                 </label>
 
                                 <input
-                                    value="<?= $resStatus === 'reserved' ? $res['reserveDate'] : '' ?>"
+                                    value="<?= $resStatus === 'approved' ? $res['reserveDate'] : '' ?>"
                                     class="form-input w-full"
                                     disabled
                                 >
@@ -287,7 +302,7 @@ $prequalColor = match($prequalStatus) {
                                 </label>
 
                                 <input
-                                    value="<?= $resStatus === 'reserved' ? $res['reserveTime'] : '' ?>"
+                                    value="<?= $resStatus === 'approved' ? $res['reserveTime'] : '' ?>"
                                     class="form-input w-full"
                                     disabled
                                 >
@@ -371,18 +386,13 @@ $prequalColor = match($prequalStatus) {
 
                     </div>
 
-                    <!-- Reservation Requirements (same style as sections) -->
-                    <!-- <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6"> before-->
-                    <!-- Reservation Requirements -->
                     <div class="bg-white dark:bg-slate-900 rounded-xl shadow p-6 mt-6 min-h-[180px]">
 
                         <h5 class="text-xl font-semibold text-gray-800 dark:text-white text-left mb-4">
                             Reservation Requirements
                         </h5>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
-
-                            <!-- 1. Information Sheet -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 items-start">
                             <div class="flex flex-col">
                                 <label class="form-label font-medium">Information Sheet</label>
                                 <?php if ($hasFilled): ?>
@@ -392,107 +402,25 @@ $prequalColor = match($prequalStatus) {
                                     </a>
                                 <?php else: ?>
                                     <a href="index.php?route=clientInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                    id=fillUpBtn>
+                                    class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-blue-700' ?>" id=fillUpBtn >
                                         Fill Up
                                     </a>
                                 <?php endif; ?>
                             </div>
-
-
-                            <div class="flex flex-col">
-                                <label class="form-label font-medium">Spouse</label>
-                                <?php if ($hasSpouse): ?>
-                                    <a href="index.php?route=spouseInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
-                                        View
-                                    </a>
-                                <?php else: ?>
-                                    <a href="index.php?route=spouseInfoSheet&id=<?= urlencode($prequalID) ?>"
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                        id=fillUpBtnSpouse>
-                                            Fill Up
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                                    
-                            <div class="flex flex-col">
-                                <label class="form-label font-medium">Co-owner</label>
-                                <?php if ($hasCoOwner): ?>
-                                    <a href="index.php?route=co-ownerInfoSheet-view&id=<?= urlencode($prequalID) ?>"
-                                    class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
-                                        View
-                                    </a>
-                                <?php else: ?>
-                                <div class="flex flex-col">
-                                    <a href="index.php?route=co-ownerInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                        id=fillUpBtnCo>
-                                            Fill Up
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                            <!-- CoOwner Information Sheet -->
-                            <!-- <div class="flex flex-col">
-                                <label class="form-label font-medium">Co-owner</label> -->
-
-                                <!-- <?php if (!$hasCoOwner): ?> -->
-
-                                    <!-- <button
-                                        type="button"
-                                        
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 text-white rounded-lg ">
-                                        Fill Up
-                                    </button> -->
-
-
-                                <!-- <?php else: ?> -->
-
-                                    <!-- <?php
-                                    // $existingCoOwner = ControllerClient::ctrCheckCoOwnerInfo($prequalID);
-                                    // $hasCoOwnerFilled = !empty($existingCoOwner);
-                                    ?>
-
-                                    <?php if ($hasCoOwnerFilled): ?>
-
-                                        <a href="index.php?route=coOwnerInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
-                                        class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
-                                            View
-                                        </a>
-
-                                    <?php else: ?>
-
-                                        <a href="index.php?route=coOwnerInfoSheet&id=<?= urlencode($reservationID) ?>"
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer"
-                                        id="cofillUpBtn">
-                                            Fill Up
-                                        </a>
-
-                                    <?php endif; ?>
-
-                                <?php endif; ?> -->
-                            <!-- </div> -->
-
-
-                            <!-- 2. Upload Valid ID -->
-                            <div class="flex flex-col">
+                             <div class="flex flex-col">
                                 <label class="form-label font-medium">Valid ID</label>
 
                                 <?php if ($hasValidIDSaved): ?>
-
                                     <button type="button"
                                         onclick="openSavedValidIDModal()"
                                         class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg">
                                         View
                                     </button>
-
                                 <?php else: ?>
-
                                     <label for="valid-id-upload"
-                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer">
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>">
                                         Upload
                                     </label>
-
                                 <?php endif; ?>
 
                                 <div class="flex items-center justify-center gap-2 mt-2">
@@ -506,20 +434,98 @@ $prequalColor = match($prequalStatus) {
                                     </button>
                                 </div>
 
-                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden"
+                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden" <?= $requirementsDisabled ? 'disabled' : '' ?>
                                     onchange="handleValidIDChange(event)">
                             </div>
 
-                            <!-- 3. Submit -->
-                            <div class="flex flex-col">
+                            <?php if ($showSpouseRequirement): ?>
+                                <div class="flex flex-col">
+                                    <label class="form-label font-medium">Spouse</label>
+                                    <?php if ($hasSpouse): ?>
+                                        <a href="index.php?route=spouseInfoSheet-view&prequalID=<?= urlencode($prequalID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                            View
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="index.php?route=spouseInfoSheet&id=<?= urlencode($prequalID) ?>"
+                                            class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : '' ?>"
+                                            id=fillUpBtnSpouse>
+                                            Fill Up
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($showCoOwnerRequirement): ?>
+                                <div class="flex flex-col">
+                                    <label class="form-label font-medium">Co-owner</label>
+                                    <?php if ($hasCoOwner): ?>
+                                        <a href="index.php?route=co-ownerInfoSheet-view&id=<?= urlencode($prequalID) ?>"
+                                        class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg cursor-pointer">
+                                            View
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="index.php?route=co-ownerInfoSheet&id=<?= urlencode($reservationID) ?>"
+                                            class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 pointer-events-none' : '' ?>"
+                                            id=fillUpBtnCo>
+                                            Fill Up
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
+                              <div class="flex flex-col">
                                 <label class="form-label font-medium invisible">Submit</label>
                                 <button type="button" id="submit-valid-id-btn"
-                                    class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= ($hasFilled && $hasValidIDSaved) ? 'opacity-50 cursor-not-allowed' : '' ?>"
-                                    <?= ($hasFilled && $hasValidIDSaved) ? 'disabled' : '' ?>>
+                                 <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= $allRequirementsComplete ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                                    <?= $allRequirementsComplete ? 'disabled' : '' ?>>
                                     Submit
                                 </button>
                             </div>
+                        </div>
+                     
 
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-start mt-6 pt-6 border-t border-slate-100 dark:border-gray-800">
+                           <!--  <div class="flex flex-col">
+                                <label class="form-label font-medium">Valid ID</label>
+
+                                <?php if ($hasValidIDSaved): ?>
+                                    <button type="button"
+                                        onclick="openSavedValidIDModal()"
+                                        class="w-full text-center px-5 py-2.5 bg-emerald-600 text-white rounded-lg">
+                                        View
+                                    </button>
+                                <?php else: ?>
+                                    <label for="valid-id-upload"
+                                        class="w-full text-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer <?= $requirementsDisabled ? 'opacity-50 cursor-not-allowed' : '' ?>">
+                                        Upload
+                                    </label>
+                                <?php endif; ?>
+
+                                <div class="flex items-center justify-center gap-2 mt-2">
+                                    <span id="file-name" class="text-xs text-gray-500 dark:text-white/70 break-all">
+                                        <?= $hasValidIDSaved ? 'Uploaded' : 'No file chosen' ?>
+                                    </span>
+                                    <button type="button" id="preview-label"
+                                            class="text-xs text-blue-600 hover:underline hidden"
+                                            onclick="openValidIDModal()">
+                                        Preview
+                                    </button>
+                                </div>
+
+                                <input id="valid-id-upload" type="file" accept="image/*" class="hidden" <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    onchange="handleValidIDChange(event)">
+                            </div> -->
+
+                            <!-- <div class="flex flex-col">
+                                <label class="form-label font-medium invisible">Submit</label>
+                                <button type="button" id="submit-valid-id-btn"
+                                 <?= $requirementsDisabled ? 'disabled' : '' ?>
+                                    class="w-full px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 <?= $allRequirementsComplete ? 'opacity-50 cursor-not-allowed' : '' ?>"
+                                    <?= $allRequirementsComplete ? 'disabled' : '' ?>>
+                                    Submit
+                                </button>
+                            </div> -->
                         </div>
                     </div>
 
@@ -567,6 +573,11 @@ $prequalColor = match($prequalStatus) {
     let validIDImageSrc = "";
     let hasValidID      = false;
     var hasFilled       = <?= $hasFilled ? 'true' : 'false' ?>;
+    var hasSavedValidID = <?= $hasValidIDSaved ? 'true' : 'false' ?>;
+    var requiresSpouse  = <?= $showSpouseRequirement ? 'true' : 'false' ?>;
+    var hasSpouseInfo   = <?= $hasSpouse ? 'true' : 'false' ?>;
+    var requiresCoOwner = <?= $showCoOwnerRequirement ? 'true' : 'false' ?>;
+    var hasCoOwnerInfo  = <?= $hasCoOwner ? 'true' : 'false' ?>;
     var reservationID   = <?= json_encode($reservationID) ?>;
     var savedValidIDPath = <?= json_encode($validIDPath) ?>;
     console.log(savedValidIDPath);
@@ -630,32 +641,45 @@ $prequalColor = match($prequalStatus) {
 
 function submitValidID() {
 
-if (!hasValidID && !hasFilled) {
+    const missingRequirements = [];
+
+    if (!hasFilled) {
+        missingRequirements.push('Client Information Sheet');
+    }
+
+    if (requiresSpouse && !hasSpouseInfo) {
+        missingRequirements.push('Spouse Information Sheet');
+    }
+
+    if (requiresCoOwner && !hasCoOwnerInfo) {
+        missingRequirements.push('Co-owner Information Sheet');
+    }
+
+    if (!hasSavedValidID && !hasValidID) {
+        missingRequirements.push('Valid ID');
+    }
+
+    if (missingRequirements.length > 0) {
         Swal.fire({
             icon: 'warning',
             title: 'Missing Requirements',
             html: `
-                Please complete the Information Sheet<br>
-                and upload a Valid ID first.
-            `
+            <div style="text-align:center;">
+                <p style="margin-bottom:8px;">Please complete the following before submitting:</p>
+                <ul style="display:inline-block; text-align:left; list-style:disc; padding-left:20px;">
+                    ${missingRequirements.map(item => `<li style="margin-bottom:4px;">${item}</li>`).join('')}
+                </ul>
+            </div>
+        `
         });
         return;
     }
 
-    if (!hasValidID) {
+    if (hasSavedValidID) {
         Swal.fire({
-            icon: 'warning',
-            title: 'Missing Valid ID',
-            text: 'Please upload a Valid ID first.'
-        });
-        return;
-    }
-
-    if (!hasFilled) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Incomplete Requirement',
-            text: 'Please complete the Information Sheet first.'
+            icon: 'info',
+            title: 'Already Submitted',
+            text: 'All reservation requirements are already complete.'
         });
         return;
     }
