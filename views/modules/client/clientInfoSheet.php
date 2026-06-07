@@ -505,7 +505,7 @@ if (!$prequalID) {
 
                         <div class="mb-4 col-span-2">
                             <label class="font-medium text-gray-800 dark:text-white/70">Gross Monthly Income</label>
-                            <input name="gmi" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
+                            <input id= "gmi" name="gmi" type="text" class="form-input mt-3 font-normal placeholder:font-bold bg-white 
                             dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-800 dark:text-white/70 placeholder-gray-400 
                             dark:placeholder-white/30" 
                             oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="20000">

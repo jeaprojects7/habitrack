@@ -10,7 +10,7 @@ $pass = $_POST["adminLoginPass"];
 
 $answer = (new ModelAdmin)->mdlGetAdminCredentials('admin', 'adminEmail', $email);
 
-if (!empty($answer) && $answer["adminEmail"] == $email && $answer["adminPass"] == $pass) {
+if (!empty($answer) && $answer["adminEmail"] == $email && password_verify($pass, $answer["adminPass"])) { /* added 060726 */
 
     $_SESSION["loggedIn"] = "ok";
     $_SESSION["adminID"] = $answer["adminID"];

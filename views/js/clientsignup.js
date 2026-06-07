@@ -129,9 +129,9 @@
 
             let errors = [];
 
-            // 1. length check (max 10 only)
-            if (password.length > 10) {
-                errors.push("Must not exceed 10 characters");
+            // 1. length check (min 8)
+            if (password.length < 8) {
+                errors.push("Must be atleast 8 characters");
             }
 
             // 2. uppercase check
